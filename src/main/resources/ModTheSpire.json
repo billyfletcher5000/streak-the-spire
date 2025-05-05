@@ -1,0 +1,14 @@
+{
+  "modid": "streak_the_spire",
+  "name": "Streak The Spire",
+  "author_list": [
+    "billyfletcher5000"
+  ],
+  "description": "A Slay The Spire mod to automatically track your streaks, both individual and rotating, with each character.",
+  "version": "0.0.1",
+  "sts_version": "12-22-2020",
+  "mts_version": "3.18.2",
+  "dependencies": [
+    "basemod"
+  ]
+}
