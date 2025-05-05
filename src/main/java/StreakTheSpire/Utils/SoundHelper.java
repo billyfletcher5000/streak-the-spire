@@ -1,4 +1,4 @@
-package StreakTheSpire.utils;
+package StreakTheSpire.Utils;
 
 public class SoundHelper {
 }

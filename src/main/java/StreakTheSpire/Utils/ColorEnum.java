@@ -1,4 +1,4 @@
-package StreakTheSpire.utils;
+package StreakTheSpire.Utils;
 
 import com.badlogic.gdx.graphics.Color;
 import easel.utils.colors.EaselColors;

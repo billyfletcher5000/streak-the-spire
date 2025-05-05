@@ -1,4 +1,4 @@
-package StreakTheSpire.utils;
+package StreakTheSpire.Utils;
 
 import basemod.IUIElement;
 import basemod.ModPanel;
