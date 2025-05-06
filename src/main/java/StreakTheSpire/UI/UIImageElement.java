@@ -36,15 +36,15 @@ public class UIImageElement extends UIElement {
     public void setTexture(Texture texture) { this.texture = texture; }
 
     public UIImageElement(Vector2 position, Texture texture) {
-        this(position, VectorOne, texture);
+        this(position, VectorOne.cpy(), texture);
     }
 
     public UIImageElement(Vector2 position, Texture texture, Vector2 size) {
-        this(position, VectorOne, texture, size, Color.WHITE);
+        this(position, VectorOne.cpy(), texture, size, Color.WHITE);
     }
     
     public UIImageElement(Vector2 position, Texture texture, Color color) {
-        this(position, VectorOne, texture, color);
+        this(position, VectorOne.cpy(), texture, color);
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, Texture texture) {

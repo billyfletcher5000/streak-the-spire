@@ -13,6 +13,7 @@ import basemod.interfaces.AddAudioSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
 import basemod.interfaces.PostUpdateSubscriber;
 import basemod.interfaces.RenderSubscriber;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -27,6 +28,7 @@ import java.io.IOException;
 @SpireInitializer
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, AddAudioSubscriber {
     public static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
+    public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
 
     public static final String modId = "streak_the_spire";
     public static final String modName = "StreakTheSpire";
@@ -95,6 +97,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         testModel.testString.setValue("Blamonge!");
 
         testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.MOD_ICON.getTexture());
+        testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
 
     }
 
@@ -113,6 +116,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     @Override
     public void receivePostUpdate() {
         gameStateModel.gameMode.setValue(CardCrawlGame.mode);
+
+        testImage.setLocalScale(testImage.getLocalScale().scl(1 + (0.1f * getDeltaTime())));
     }
 
     @Override
