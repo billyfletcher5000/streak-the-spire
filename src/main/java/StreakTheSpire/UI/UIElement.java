@@ -11,6 +11,7 @@ import java.util.Map;
 public class UIElement {
     public static final Vector2 VectorOne = new Vector2(1f, 1f);
     protected Vector2 localPosition = Vector2.Zero.cpy();
+    protected float localRotation = 0f; //degrees
     protected Vector2 localScale = VectorOne.cpy();
     protected Vector2 dimensions = Vector2.Zero.cpy();
     protected int layer = 0;
@@ -50,11 +51,10 @@ public class UIElement {
 
     public Vector2 getLocalPosition() { return localPosition.cpy(); }
     public void setLocalPosition(Vector2 localPosition) { this.localPosition.set(localPosition); }
+    public float getLocalRotation() { return localRotation; }
+    public void setLocalRotation(float localRotation) { this.localRotation = localRotation; }
     public Vector2 getLocalScale() { return localScale.cpy(); }
-    public void setLocalScale(Vector2 localScale) {
-        this.localScale.set(localScale);
-        StreakTheSpire.logger.info("Setting local scale to " + localScale);
-    }
+    public void setLocalScale(Vector2 localScale) { this.localScale.set(localScale); }
     public Vector2 getDimensions() { return dimensions.cpy(); }
     public void setDimensions(Vector2 dimensions) { this.dimensions.set(dimensions); }
     public int getLayer() { return layer; }
@@ -63,9 +63,11 @@ public class UIElement {
     public Matrix3 getLocalTransform() {
         Matrix3 translation = new Matrix3();
         translation.setToTranslation(localPosition);
+        Matrix3 rotation = new Matrix3();
+        rotation.setToRotation(-localRotation); // Matrix3.setToRotation appears to be the wrong way around and goes counter-clockwise
         Matrix3 scale = new Matrix3();
         scale.setToScaling(localScale);
-        return translation.mul(scale);
+        return translation.mul(rotation).mul(scale);
     }
 
     public final void render(SpriteBatch spriteBatch) {

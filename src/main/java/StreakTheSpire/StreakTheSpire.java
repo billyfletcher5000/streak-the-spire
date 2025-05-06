@@ -118,6 +118,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         gameStateModel.gameMode.setValue(CardCrawlGame.mode);
 
         testImage.setLocalScale(testImage.getLocalScale().scl(1 + (0.1f * getDeltaTime())));
+        testImage.setLocalRotation(testImage.getLocalRotation() + (10f * getDeltaTime()));
     }
 
     @Override
