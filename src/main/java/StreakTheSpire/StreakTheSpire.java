@@ -4,16 +4,17 @@ import StreakTheSpire.Data.CharacterDisplayModel;
 import StreakTheSpire.Data.CharacterDisplaySetModel;
 import StreakTheSpire.Data.GameStateModel;
 import StreakTheSpire.Data.StreakDataModel;
+import StreakTheSpire.UI.UIImageElement;
 import StreakTheSpire.Utils.Property;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import basemod.BaseMod;
-import basemod.ModImage;
 import basemod.ModPanel;
 import basemod.interfaces.AddAudioSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
 import basemod.interfaces.PostUpdateSubscriber;
 import basemod.interfaces.RenderSubscriber;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -58,7 +59,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
 
     private ModPanel settingsPanel;
-    private ModImage testImage;
+    private UIImageElement testImage;
 
     private GameStateModel gameStateModel;
     private StreakDataModel streakDataModel;
@@ -72,9 +73,18 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receivePostInitialize() {
+        StreakTheSpireTextureDatabase.loadAll();
+
+        initialiseGameStateModel();
+        initialiseCharacterDisplayModels();
+        initialiseStreakDataModel();
+
+        settingsPanel = createModPanel();
+        BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
 
         testModel = new TestModel();
         testModel.testString.addOnChangedSubscriber(new Property.ValueChangedSubscriber() {
+            @Override
             public void onValueChanged(Property value) {
                 String s = (String)value.getValue();
                 logger.info("testString changed to: " + s);
@@ -84,13 +94,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         logger.info("testString value: " + testModel.testString.getValue());
         testModel.testString.setValue("Blamonge!");
 
-        StreakTheSpireTextureDatabase.loadAll();
+        testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.MOD_ICON.getTexture());
 
-        testImage = new ModImage(1000, 800, StreakTheSpireTextureDatabase.MOD_ICON.getTexture());
-
-
-        settingsPanel = createModPanel();
-        BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
 
     private ModPanel createModPanel() {
@@ -132,7 +137,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         streakDataModel.setStreak(AbstractPlayer.PlayerClass.WATCHER, 69);
     }
 
-    protected void initialiseCharacterDisplays() {
+    protected void initialiseCharacterDisplayModels() {
         characterDisplaySetModel = new CharacterDisplaySetModel();
 
         characterDisplaySetModel.addCharacterDisplayModel(new CharacterDisplayModel(

@@ -1,5 +1,6 @@
 package StreakTheSpire.UI;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
@@ -7,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class UIElement {
-    private final Vector2 VectorOne = new Vector2(1f, 1f);
+    public static final Vector2 VectorOne = new Vector2(1f, 1f);
     protected Vector2 localPosition;
     protected Vector2 localScale;
+    protected Vector2 dimensions = Vector2.Zero;
     protected int layer = 0;
     protected UIElement parent = null;
     protected ArrayList<UIElement> children = new ArrayList<UIElement>();
@@ -56,19 +58,19 @@ public class UIElement {
         return translation.mul(scale);
     }
 
-    public final void render() {
+    public final void render(SpriteBatch spriteBatch) {
         Matrix3 identity = new Matrix3();
         identity.idt();
-        render(identity);
+        render(identity, spriteBatch);
     }
 
-    public final void render(Matrix3 transformationStack) {
+    public final void render(Matrix3 transformationStack, SpriteBatch spriteBatch) {
         Matrix3 newTransformationStack = new Matrix3(transformationStack);
         newTransformationStack.mul(getLocalTransform());
-        elementRender(newTransformationStack);
+        elementRender(newTransformationStack, spriteBatch);
         children.sort((elementA, elementB) -> elementA.layer < elementB.layer ? -1 : 1);
-        children.forEach(child -> child.render(newTransformationStack));
+        children.forEach(child -> child.render(newTransformationStack, spriteBatch));
     }
 
-    protected void elementRender(Matrix3 transformationMatrix) {}
+    protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
 }

@@ -22,8 +22,8 @@ public class Property<T> {
         }
     }
 
-    public interface ValueChangedSubscriber {
-        void onValueChanged(Property value);
+    public static class ValueChangedSubscriber {
+        public void onValueChanged(Property value) {}
     }
 
     public void addOnChangedSubscriber(ValueChangedSubscriber subscriber) {
