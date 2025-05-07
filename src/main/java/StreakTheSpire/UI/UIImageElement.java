@@ -4,6 +4,7 @@ import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
@@ -28,12 +29,12 @@ public class UIImageElement extends UIElement {
     }
 
     protected Color color = Color.WHITE;
-    protected Texture texture;
+    protected TextureRegion textureRegion;
     
     public Color getColor() { return color; }
     public void setColor(Color color) { this.color = color; }
-    public Texture getTexture() { return texture; }
-    public void setTexture(Texture texture) { this.texture = texture; }
+    public Texture getTexture() { return textureRegion.getTexture(); }
+    public void setTexture(Texture texture) { textureRegion.setTexture(texture); }
 
     public UIImageElement(Vector2 position, Texture texture) {
         this(position, VectorOne.cpy(), texture);
@@ -56,13 +57,36 @@ public class UIImageElement extends UIElement {
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, Texture texture, Vector2 size, Color color) {
+        this(position, scale, new TextureRegion(texture), size, color);
+    }
+
+    public UIImageElement(Vector2 position, TextureRegion textureRegion) {
+        this(position, VectorOne.cpy(), textureRegion);
+    }
+
+    public UIImageElement(Vector2 position, TextureRegion textureRegion, Vector2 size) {
+        this(position, VectorOne.cpy(), textureRegion, size, Color.WHITE);
+    }
+
+    public UIImageElement(Vector2 position, TextureRegion textureRegion, Color color) {
+        this(position, VectorOne.cpy(), textureRegion, color);
+    }
+
+    public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion) {
+        this(position, scale, textureRegion, Color.WHITE);
+    }
+
+    public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Color color) {
+        this(position, scale, textureRegion, new Vector2(textureRegion.getRegionWidth(), textureRegion.getRegionHeight()), color);
+    }
+
+    public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Vector2 size, Color color) {
         this.localPosition = position;
         this.localScale = scale;
-        this.texture = texture;
+        this.textureRegion = textureRegion;
         this.dimensions = size;
         this.color = color;
     }
-
 
     @Override
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {
@@ -82,30 +106,30 @@ public class UIImageElement extends UIElement {
         vertices[vertexIndex + VertexComponent.X] = topLeft.x;
         vertices[vertexIndex + VertexComponent.Y] = topLeft.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = 0f;
-        vertices[vertexIndex + VertexComponent.V] = 0f;
+        vertices[vertexIndex + VertexComponent.U] = textureRegion.getU();
+        vertices[vertexIndex + VertexComponent.V] = textureRegion.getV();
 
         vertexIndex = VertexID.TR * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = topRight.x;
         vertices[vertexIndex + VertexComponent.Y] = topRight.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = 1f;
-        vertices[vertexIndex + VertexComponent.V] = 0f;
+        vertices[vertexIndex + VertexComponent.U] = textureRegion.getU2();
+        vertices[vertexIndex + VertexComponent.V] = textureRegion.getV();
 
         vertexIndex = VertexID.BR * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = bottomRight.x;
         vertices[vertexIndex + VertexComponent.Y] = bottomRight.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = 1f;
-        vertices[vertexIndex + VertexComponent.V] = 1f;
+        vertices[vertexIndex + VertexComponent.U] = textureRegion.getU2();
+        vertices[vertexIndex + VertexComponent.V] = textureRegion.getV2();
 
         vertexIndex = VertexID.BL * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = bottomLeft.x;
         vertices[vertexIndex + VertexComponent.Y] = bottomLeft.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = 0f;
-        vertices[vertexIndex + VertexComponent.V] = 1f;
+        vertices[vertexIndex + VertexComponent.U] = textureRegion.getU();
+        vertices[vertexIndex + VertexComponent.V] = textureRegion.getV2();
         
-        spriteBatch.draw(texture, vertices, 0, VertexID.NUM * VertexComponent.NUM);
+        spriteBatch.draw(textureRegion.getTexture(), vertices, 0, VertexID.NUM * VertexComponent.NUM);
     }
 }
