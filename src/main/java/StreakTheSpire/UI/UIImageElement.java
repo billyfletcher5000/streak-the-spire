@@ -81,10 +81,10 @@ public class UIImageElement extends UIElement {
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Vector2 size, Color color) {
-        this.localPosition = position;
-        this.localScale = scale;
+        this.setLocalPosition(position);
+        this.setLocalScale(scale);
         this.textureRegion = textureRegion;
-        this.dimensions = size;
+        this.setDimensions(size);
         this.color = color;
     }
 
@@ -94,7 +94,7 @@ public class UIImageElement extends UIElement {
 
         float[] vertices = new float[VertexID.NUM * VertexComponent.NUM];
 
-        Vector2 extents = dimensions.cpy().scl(0.5f);
+        Vector2 extents = getDimensions().cpy().scl(0.5f);
         Vector2 topLeft = extents.cpy().scl(-1f, 1f).mul(transformationMatrix);
         Vector2 topRight = extents.cpy().scl(1f, 1f).mul(transformationMatrix);
         Vector2 bottomRight = extents.cpy().scl(1f, -1f).mul(transformationMatrix);

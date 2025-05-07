@@ -1,14 +1,13 @@
 package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import dorkbox.tweenEngine.TweenAccessor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
 public class UIElement implements TweenAccessor<UIElement> {
     public static class TweenTypes {
@@ -22,13 +21,19 @@ public class UIElement implements TweenAccessor<UIElement> {
     }
 
     public static final Vector2 VectorOne = new Vector2(1f, 1f);
-    protected Vector2 localPosition = Vector2.Zero.cpy();
-    protected float localRotation = 0f; //degrees
-    protected Vector2 localScale = VectorOne.cpy();
-    protected Vector2 dimensions = Vector2.Zero.cpy();
+    public static final float Epsilon = 0.000000000001f;
+    private Vector2 localPosition = Vector2.Zero.cpy();
+    private float localRotation = 0f; //degrees
+    private Vector2 localScale = VectorOne.cpy();
+    private Vector2 dimensions = Vector2.Zero.cpy();
     protected int layer = 0;
     protected UIElement parent = null;
     protected ArrayList<UIElement> children = new ArrayList<UIElement>();
+
+    protected Matrix3 localTransform;
+    protected Matrix3 localToWorldTransform;
+    protected boolean localTransformDirty = true;
+    protected boolean worldTransformDirty = true;
 
     public UIElement getParent() { return parent; }
     public UIElement[] getChildren() { return children.toArray(new UIElement[children.size()]); }
@@ -62,24 +67,76 @@ public class UIElement implements TweenAccessor<UIElement> {
     protected void elementUpdate(float deltaTime) {}
 
     public Vector2 getLocalPosition() { return localPosition.cpy(); }
-    public void setLocalPosition(Vector2 localPosition) { this.localPosition.set(localPosition); }
     public float getLocalRotation() { return localRotation; }
-    public void setLocalRotation(float localRotation) { this.localRotation = localRotation; }
     public Vector2 getLocalScale() { return localScale.cpy(); }
-    public void setLocalScale(Vector2 localScale) { this.localScale.set(localScale); }
     public Vector2 getDimensions() { return dimensions.cpy(); }
+
+    public void setLocalPosition(Vector2 localPosition) {
+        if(!this.localPosition.epsilonEquals(localPosition, Epsilon)) {
+            this.localPosition.set(localPosition);
+            invalidateLocalTransform();
+            invalidateWorldTransform();
+        }
+    }
+
+    public void setLocalRotation(float localRotation) {
+        if(Math.abs(this.localRotation - localRotation) > Epsilon) {
+            this.localRotation = localRotation;
+            invalidateLocalTransform();
+            invalidateWorldTransform();
+        }
+    }
+
+    public void setLocalScale(Vector2 localScale) {
+        if(!this.localScale.epsilonEquals(localScale, Epsilon)) {
+            this.localScale.set(localScale);
+            invalidateLocalTransform();
+            invalidateWorldTransform();
+        }
+    }
+
     public void setDimensions(Vector2 dimensions) { this.dimensions.set(dimensions); }
     public int getLayer() { return layer; }
     public void setLayer(int layer) { this.layer = layer; }
 
     public Matrix3 getLocalTransform() {
-        Matrix3 translation = new Matrix3();
-        translation.setToTranslation(localPosition);
-        Matrix3 rotation = new Matrix3();
-        rotation.setToRotation(-localRotation); // Matrix3.setToRotation appears to be the wrong way around and goes counter-clockwise
-        Matrix3 scale = new Matrix3();
-        scale.setToScaling(localScale);
-        return translation.mul(rotation).mul(scale);
+        if(localTransformDirty) {
+            localTransform = new Matrix3();
+            localTransform.setToTranslation(localPosition);
+            Matrix3 rotation = new Matrix3();
+            rotation.setToRotation(-localRotation); // Matrix3.setToRotation appears to be the wrong way around and goes counter-clockwise
+            Matrix3 scale = new Matrix3();
+            scale.setToScaling(localScale);
+            localTransform.mul(rotation).mul(scale);
+
+            localTransformDirty = false;
+        }
+
+        return localTransform;
+    }
+
+    public Matrix3 getLocalToWorldTransform() {
+        if(worldTransformDirty) {
+            ArrayList<Matrix3> transforms = new ArrayList<>();
+            UIElement element = this;
+            while (element != null) {
+                transforms.add(element.getLocalTransform());
+                element = element.parent;
+            }
+
+            localToWorldTransform = new Matrix3().idt();
+            for (int i = transforms.size() - 1; i >= 0; i--) {
+                Matrix3 matrix = transforms.get(i);
+                localToWorldTransform.mul(matrix);
+            }
+        }
+
+        return localToWorldTransform;
+    }
+
+    public Matrix3 getWorldToLocalTransform() {
+        Matrix3 localToWorld = getLocalToWorldTransform();
+        return localToWorld.inv();
     }
 
     public final void render(SpriteBatch spriteBatch) {
@@ -97,6 +154,16 @@ public class UIElement implements TweenAccessor<UIElement> {
     }
 
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
+
+    protected void invalidateLocalTransform() {
+        localTransformDirty = true;
+    }
+
+    protected void invalidateWorldTransform() {
+        worldTransformDirty = true;
+        for(UIElement child : children)
+            child.invalidateWorldTransform();
+    }
 
     @Override
     public int getValues(UIElement target, int tweenType, float[] returnValues) {
@@ -140,33 +207,31 @@ public class UIElement implements TweenAccessor<UIElement> {
 
         switch (tweenType) {
             case TweenTypes.POSITION_XY:
-                target.localPosition.x = newValues[0];
-                target.localPosition.y = newValues[1];
+                target.setLocalPosition(new Vector2(newValues[0], newValues[1]));
                 break;
 
             case TweenTypes.POSITION_X:
-                target.localPosition.x = newValues[0];
+                target.setLocalPosition(new Vector2(newValues[0], target.localPosition.y));
                 break;
 
             case TweenTypes.POSITION_Y:
-                target.localPosition.y = newValues[0];
+                target.setLocalPosition(new Vector2(target.localPosition.x, newValues[0]));
                 break;
 
             case TweenTypes.ROTATION:
-                target.localRotation = newValues[0];
+                target.setLocalRotation(newValues[0]);
                 break;
 
             case TweenTypes.SCALE_XY:
-                target.localScale.x = newValues[0];
-                target.localScale.y = newValues[1];
+                target.setLocalScale(new Vector2(newValues[0], newValues[1]));
                 break;
 
             case TweenTypes.SCALE_X:
-                target.localScale.x = newValues[0];
+                target.setLocalScale(new Vector2(newValues[0], target.localScale.y));
                 break;
 
             case TweenTypes.SCALE_Y:
-                target.localScale.y = newValues[0];
+                target.setLocalScale(new Vector2(target.localScale.x, newValues[0]));
                 break;
         }
     }
