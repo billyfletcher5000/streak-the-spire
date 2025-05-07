@@ -4,6 +4,7 @@ import StreakTheSpire.Data.CharacterDisplayModel;
 import StreakTheSpire.Data.CharacterDisplaySetModel;
 import StreakTheSpire.Data.GameStateModel;
 import StreakTheSpire.Data.StreakDataModel;
+import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.UI.UIImageElement;
 import StreakTheSpire.Utils.Property;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
@@ -20,6 +21,9 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
+import dorkbox.tweenEngine.Timeline;
+import dorkbox.tweenEngine.TweenEngine;
+import dorkbox.tweenEngine.TweenEquations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,7 +62,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         }
     }
 
-
+    private TweenEngine tweenEngine;
 
     private ModPanel settingsPanel;
     private UIImageElement testImage;
@@ -75,6 +79,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receivePostInitialize() {
+        tweenEngine = TweenEngine.build();
+
         StreakTheSpireTextureDatabase.loadAll();
 
         initialiseGameStateModel();
@@ -99,6 +105,11 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.MOD_ICON.getTexture());
         testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
 
+        Timeline sequence = tweenEngine.createSequential();
+        sequence.push(tweenEngine.to(testImage, UIElement.TweenTypes.POSITION_XY, 5.0f).target(200, 400).ease(TweenEquations.Linear));
+        sequence.push(tweenEngine.to(testImage, UIElement.TweenTypes.POSITION_XY, 5.0f).target(1000, 400).ease(TweenEquations.Linear));
+        sequence.repeatAutoReverse(10, 1f);
+        sequence.start();
     }
 
     private ModPanel createModPanel() {
@@ -117,8 +128,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public void receivePostUpdate() {
         gameStateModel.gameMode.setValue(CardCrawlGame.mode);
 
-        testImage.setLocalScale(testImage.getLocalScale().scl(1 + (0.1f * getDeltaTime())));
-        testImage.setLocalRotation(testImage.getLocalRotation() + (10f * getDeltaTime()));
+        tweenEngine.update(Gdx.graphics.getDeltaTime());
     }
 
     @Override

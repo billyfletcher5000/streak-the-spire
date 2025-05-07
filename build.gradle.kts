@@ -22,12 +22,15 @@ repositories {
 
 dependencies {
     compileOnly(fileTree(compileOnlyLibs))
+    implementation("com.dorkbox:TweenEngine:8.3")
 }
 
 
 tasks.register<Jar>("buildJAR") {
     group = "Slay the Spire"
     description = "Builds a fat (includes runtime dependencies) JAR in the build/libs folder"
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     // Main code
     from(sourceSets.main.get().output)

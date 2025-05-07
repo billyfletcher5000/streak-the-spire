@@ -4,11 +4,23 @@ import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
+import dorkbox.tweenEngine.TweenAccessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
-public class UIElement {
+public class UIElement implements TweenAccessor<UIElement> {
+    public static class TweenTypes {
+        public static final int POSITION_XY = 0;
+        public static final int POSITION_X = 1;
+        public static final int POSITION_Y = 2;
+        public static final int ROTATION = 3;
+        public static final int SCALE_XY = 4;
+        public static final int SCALE_X = 5;
+        public static final int SCALE_Y = 6;
+    }
+
     public static final Vector2 VectorOne = new Vector2(1f, 1f);
     protected Vector2 localPosition = Vector2.Zero.cpy();
     protected float localRotation = 0f; //degrees
@@ -85,4 +97,77 @@ public class UIElement {
     }
 
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
+
+    @Override
+    public int getValues(UIElement target, int tweenType, float[] returnValues) {
+        switch (tweenType) {
+            case TweenTypes.POSITION_XY:
+                returnValues[0] = target.localPosition.x;
+                returnValues[1] = target.localPosition.y;
+                return 2;
+
+            case TweenTypes.POSITION_X:
+                returnValues[0] = target.localPosition.x;
+                return 1;
+
+            case TweenTypes.POSITION_Y:
+                returnValues[0] = target.localPosition.y;
+                return 1;
+
+            case TweenTypes.ROTATION:
+                returnValues[0] = target.localRotation;
+                return 1;
+
+            case TweenTypes.SCALE_XY:
+                returnValues[0] = target.localScale.x;
+                returnValues[1] = target.localScale.y;
+                return 2;
+
+            case TweenTypes.SCALE_X:
+                returnValues[0] = target.localScale.x;
+                return 1;
+
+            case TweenTypes.SCALE_Y:
+                returnValues[0] = target.localScale.y;
+                return 1;
+        }
+
+        return 0;
+    }
+
+    @Override
+    public void setValues(UIElement target, int tweenType, float[] newValues) {
+
+        switch (tweenType) {
+            case TweenTypes.POSITION_XY:
+                target.localPosition.x = newValues[0];
+                target.localPosition.y = newValues[1];
+                break;
+
+            case TweenTypes.POSITION_X:
+                target.localPosition.x = newValues[0];
+                break;
+
+            case TweenTypes.POSITION_Y:
+                target.localPosition.y = newValues[0];
+                break;
+
+            case TweenTypes.ROTATION:
+                target.localRotation = newValues[0];
+                break;
+
+            case TweenTypes.SCALE_XY:
+                target.localScale.x = newValues[0];
+                target.localScale.y = newValues[1];
+                break;
+
+            case TweenTypes.SCALE_X:
+                target.localScale.x = newValues[0];
+                break;
+
+            case TweenTypes.SCALE_Y:
+                target.localScale.y = newValues[0];
+                break;
+        }
+    }
 }
