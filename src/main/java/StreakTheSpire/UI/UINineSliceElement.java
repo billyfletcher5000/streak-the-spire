@@ -1,19 +1,15 @@
 package StreakTheSpire.UI;
 
-import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Arrays;
-
-public class UINineSliceElement extends UIElement {
+public class UINineSliceElement extends UIVisualElement {
     private NineSliceTexture nineSliceTexture;
-    protected Color color = Color.WHITE;
 
     public UINineSliceElement(Vector2 position, NineSliceTexture texture, Vector2 size) {
-        this(position, VectorOne.cpy(), texture, size, Color.WHITE);
+        this(position, VectorOne.cpy(), texture, size, Color.WHITE.cpy());
     }
 
     public UINineSliceElement(Vector2 position, NineSliceTexture texture, Vector2 size, Color color) {
@@ -37,9 +33,6 @@ public class UINineSliceElement extends UIElement {
                 setDimensions(getDimensions()); // Ensures our dimensions are never below minimums
         }
     }
-
-    public Color getColor() { return color; }
-    public void setColor(Color color) { this.color = color; }
 
     @Override
     public void setDimensions(Vector2 dimensions) {

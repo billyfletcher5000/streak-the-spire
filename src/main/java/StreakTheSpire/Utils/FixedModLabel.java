@@ -23,7 +23,7 @@ public class FixedModLabel implements IUIElement {
     public BitmapFont font;
 
     public FixedModLabel(String labelText, float xPos, float yPos, ModPanel p, Consumer<FixedModLabel> updateFunc) {
-        this(labelText, xPos, yPos, Color.WHITE, FontHelper.buttonLabelFont, p, updateFunc);
+        this(labelText, xPos, yPos, Color.WHITE.cpy(), FontHelper.buttonLabelFont, p, updateFunc);
     }
 
     public FixedModLabel(String labelText, float xPos, float yPos, Color color, ModPanel p, Consumer<FixedModLabel> updateFunc) {
@@ -31,7 +31,7 @@ public class FixedModLabel implements IUIElement {
     }
 
     public FixedModLabel(String labelText, float xPos, float yPos, BitmapFont font, ModPanel p, Consumer<FixedModLabel> updateFunc) {
-        this(labelText, xPos, yPos, Color.WHITE, font, p, updateFunc);
+        this(labelText, xPos, yPos, Color.WHITE.cpy(), font, p, updateFunc);
     }
 
     public FixedModLabel(String labelText, float xPos, float yPos, Color color, BitmapFont font, ModPanel p, Consumer<FixedModLabel> updateFunc) {

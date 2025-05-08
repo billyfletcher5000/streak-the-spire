@@ -7,13 +7,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
-public class UIImageElement extends UIElement {
-
-    protected Color color = Color.WHITE;
+public class UIImageElement extends UIVisualElement {
     protected TextureRegion textureRegion;
-    
-    public Color getColor() { return color; }
-    public void setColor(Color color) { this.color = color; }
+
     public Texture getTexture() { return textureRegion.getTexture(); }
     public void setTexture(Texture texture) { textureRegion.setTexture(texture); }
 
@@ -22,7 +18,7 @@ public class UIImageElement extends UIElement {
     }
 
     public UIImageElement(Vector2 position, Texture texture, Vector2 size) {
-        this(position, VectorOne.cpy(), texture, size, Color.WHITE);
+        this(position, VectorOne.cpy(), texture, size, Color.WHITE.cpy());
     }
     
     public UIImageElement(Vector2 position, Texture texture, Color color) {
@@ -30,7 +26,7 @@ public class UIImageElement extends UIElement {
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, Texture texture) {
-        this(position, scale, texture, Color.WHITE);
+        this(position, scale, texture, Color.WHITE.cpy());
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, Texture texture, Color color) {
@@ -46,7 +42,7 @@ public class UIImageElement extends UIElement {
     }
 
     public UIImageElement(Vector2 position, TextureRegion textureRegion, Vector2 size) {
-        this(position, VectorOne.cpy(), textureRegion, size, Color.WHITE);
+        this(position, VectorOne.cpy(), textureRegion, size, Color.WHITE.cpy());
     }
 
     public UIImageElement(Vector2 position, TextureRegion textureRegion, Color color) {
@@ -54,7 +50,7 @@ public class UIImageElement extends UIElement {
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion) {
-        this(position, scale, textureRegion, Color.WHITE);
+        this(position, scale, textureRegion, Color.WHITE.cpy());
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Color color) {

@@ -1,5 +1,6 @@
 package StreakTheSpire.UI;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
@@ -146,12 +147,16 @@ public class UIElement implements TweenAccessor<UIElement> {
     public final void render(Matrix3 transformationStack, SpriteBatch spriteBatch) {
         Matrix3 newTransformationStack = new Matrix3(transformationStack);
         newTransformationStack.mul(getLocalTransform());
+        elementPreRender(newTransformationStack, spriteBatch);
         elementRender(newTransformationStack, spriteBatch);
+        elementPostRender(newTransformationStack, spriteBatch);
         children.sort((elementA, elementB) -> elementA.layer < elementB.layer ? -1 : 1);
         children.forEach(child -> child.render(newTransformationStack, spriteBatch));
     }
 
+    protected void elementPreRender(Matrix3 transformationStack, SpriteBatch spriteBatch) {}
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
+    protected void elementPostRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
 
     public final void update(float deltaTime) {
         elementUpdate(deltaTime);

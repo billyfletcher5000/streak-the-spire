@@ -4,10 +4,7 @@ import StreakTheSpire.Data.CharacterDisplayModel;
 import StreakTheSpire.Data.CharacterDisplaySetModel;
 import StreakTheSpire.Data.GameStateModel;
 import StreakTheSpire.Data.StreakDataModel;
-import StreakTheSpire.UI.NineSliceTexture;
-import StreakTheSpire.UI.UIElement;
-import StreakTheSpire.UI.UIImageElement;
-import StreakTheSpire.UI.UINineSliceElement;
+import StreakTheSpire.UI.*;
 import StreakTheSpire.Utils.Property;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import basemod.BaseMod;
@@ -114,8 +111,17 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         sequence.repeatAutoReverse(10, 1f);
         sequence.start();
 
+
+
         NineSliceTexture nineSliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.TIP_BOX_NINESLICE.getTexture(), 48, 48, 35, 35);
         nineSliceTest = new UINineSliceElement(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
+
+        Timeline alphaSequence = tweenEngine.createSequential();
+        alphaSequence.push(tweenEngine.to(nineSliceTest, UIVisualElement.TweenTypes.COLOR_A, 5.0f).target(0f));
+        alphaSequence.push(tweenEngine.to(nineSliceTest, UIVisualElement.TweenTypes.COLOR_A, 5.0f).target(1f));
+        alphaSequence.delay(10.0f);
+        alphaSequence.repeat(10, 0f);
+        alphaSequence.start();
     }
 
     private ModPanel createModPanel() {
