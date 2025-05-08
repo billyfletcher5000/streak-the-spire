@@ -1,4 +1,4 @@
-﻿package StreakTheSpire.UI;
+package StreakTheSpire.UI;
 
 public class VertexWindingID {
     public static final int TL = 0;

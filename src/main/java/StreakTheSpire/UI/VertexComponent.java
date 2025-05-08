@@ -1,4 +1,4 @@
-﻿package StreakTheSpire.UI;
+package StreakTheSpire.UI;
 
 public class VertexComponent {
     public static final int X = 0;

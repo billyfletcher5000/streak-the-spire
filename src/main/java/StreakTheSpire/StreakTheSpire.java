@@ -4,8 +4,10 @@ import StreakTheSpire.Data.CharacterDisplayModel;
 import StreakTheSpire.Data.CharacterDisplaySetModel;
 import StreakTheSpire.Data.GameStateModel;
 import StreakTheSpire.Data.StreakDataModel;
+import StreakTheSpire.UI.NineSliceTexture;
 import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.UI.UIImageElement;
+import StreakTheSpire.UI.UINineSliceElement;
 import StreakTheSpire.Utils.Property;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import basemod.BaseMod;
@@ -66,6 +68,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private ModPanel settingsPanel;
     private UIImageElement testImage;
+    private UINineSliceElement nineSliceTest;
 
     private GameStateModel gameStateModel;
     private StreakDataModel streakDataModel;
@@ -110,6 +113,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         sequence.push(tweenEngine.to(testImage, UIElement.TweenTypes.POSITION_XY, 5.0f).target(1000, 400).ease(TweenEquations.Linear));
         sequence.repeatAutoReverse(10, 1f);
         sequence.start();
+
+        NineSliceTexture nineSliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.TIP_BOX_NINESLICE.getTexture(), 48, 48, 35, 35);
+        nineSliceTest = new UINineSliceElement(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
     }
 
     private ModPanel createModPanel() {
@@ -121,6 +127,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     @Override
     public void receiveRender(SpriteBatch sb) {
         testImage.render(sb);
+        nineSliceTest.render(sb);
     }
 
 
