@@ -38,6 +38,9 @@ public class UINineSliceElement extends UIElement {
         }
     }
 
+    public Color getColor() { return color; }
+    public void setColor(Color color) { this.color = color; }
+
     @Override
     public void setDimensions(Vector2 dimensions) {
         if(nineSliceTexture != null) {
@@ -57,10 +60,10 @@ public class UINineSliceElement extends UIElement {
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {
         super.elementRender(transformationMatrix, spriteBatch);
 
-        // So this is the CPU way of doing things, which will preserve batching because if we did it via changing shader
-        // it would mean another draw call/invalidating the batch. In the bizarre event you're in a situation where you
-        // need hyper performant 9-slice images AND you're ordering rendering to allow it, this could be more efficient
-        // as a shader process.
+        // So this is a (very, very verbose) CPU way of doing things, which will preserve batching because if we did it
+        // via changing shader it would mean another draw call/invalidating the batch. In the bizarre event you're in a
+        // situation where you need hyper performant 9-slice images AND you're ordering rendering to allow it, this could
+        // be more efficient as a shader process.
         int vertexCount = VertexWindingID.NUM * VertexComponent.NUM * 9;
         float[] vertexComponents = new float[vertexCount];
 
@@ -69,100 +72,83 @@ public class UINineSliceElement extends UIElement {
 
         Vector2 dimensions = getDimensions();
         Vector2 extents = dimensions.cpy().scl(0.5f);
-        Vector2 outerTopLeft = extents.cpy().scl(-1f, -1f);
-        Vector2 outerBottomRight = extents.cpy();
+        Vector2 outerBottomLeft = extents.cpy().scl(-1f, -1f);
+        Vector2 outerTopRight = extents.cpy().scl(1f, 1f);
 
         float middleMarginX = dimensions.x - nineSliceTexture.leftMargin - nineSliceTexture.rightMargin;
         float middleMarginY = dimensions.y - nineSliceTexture.topMargin - nineSliceTexture.bottomMargin;
 
         float normalisedLeftSize = (float)nineSliceTexture.leftMargin / textureWidth;
-        float normalisedRightSize = (float)nineSliceTexture.rightMargin / textureWidth;
         float normalisedTopSize = (float)nineSliceTexture.topMargin / textureHeight;
-        float normalisedBottomSize = (float)nineSliceTexture.bottomMargin / textureHeight;
 
         float normalisedMiddleSizeX = (textureWidth - nineSliceTexture.leftMargin - nineSliceTexture.rightMargin) / textureWidth;
         float normalisedMiddleSizeY = (textureHeight - nineSliceTexture.topMargin - nineSliceTexture.bottomMargin) / textureHeight;
 
-        StreakTheSpire.logger.info("dimensions: " + dimensions + ", extents: " + extents + ", outerTopLeft: " + outerTopLeft + ", outerBottomRight: " + outerBottomRight);
-        StreakTheSpire.logger.info("middleMarginX: " + middleMarginX + ", middleMarginY: " + middleMarginY);
-        StreakTheSpire.logger.info("normalisedLeftSize: " + normalisedLeftSize + ", normalisedRightSize: " + normalisedRightSize + ", normalisedTopSize: " + normalisedTopSize + ", normalisedBottomSize: " + normalisedBottomSize);
-        StreakTheSpire.logger.info("normalisedMiddleSizeX: " + normalisedMiddleSizeX + ", normalisedMiddleSizeY: " + normalisedMiddleSizeY);
-
         // TODO: Add tiling support via repeat drawing section quads
 
-        // top left
-        Vector2 sectionTopLeft = outerTopLeft.cpy();
-        Vector2 sectionBottomRight = new Vector2(outerTopLeft.x + nineSliceTexture.leftMargin, outerTopLeft.y + nineSliceTexture.topMargin);
+        // bottom left
+        Vector2 sectionBottomLeft = outerBottomLeft.cpy();
+        Vector2 sectionTopRight = new Vector2(outerBottomLeft.x + nineSliceTexture.leftMargin, outerBottomLeft.y + nineSliceTexture.topMargin);
         Vector2 uv1 = new Vector2(0, 0);
         Vector2 uv2 = new Vector2(normalisedLeftSize, normalisedTopSize);
-        StreakTheSpire.logger.info("top left");
-        drawSection(vertexComponents, 0, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
-
-        // top middle
-        sectionTopLeft.x += nineSliceTexture.leftMargin;
-        sectionBottomRight.x += middleMarginX;
-        uv1.x += normalisedLeftSize;
-        uv2.x += normalisedMiddleSizeX;
-        StreakTheSpire.logger.info("top middle");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
-
-        // top right
-        sectionTopLeft.x += middleMarginX;
-        sectionBottomRight.x = textureWidth;
-        uv1.x += normalisedMiddleSizeX;
-        uv2.x = 1;
-        StreakTheSpire.logger.info("top right");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 2, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
-
-        // middle left
-        sectionTopLeft.set(outerTopLeft.x, outerTopLeft.y + nineSliceTexture.topMargin);
-        sectionBottomRight.set(outerTopLeft.x + nineSliceTexture.leftMargin, outerTopLeft.y + nineSliceTexture.topMargin + middleMarginY);
-        uv1.set(normalisedLeftSize + normalisedMiddleSizeX, normalisedTopSize);
-        uv2.set(normalisedLeftSize + normalisedMiddleSizeX, normalisedTopSize + normalisedMiddleSizeY);
-        StreakTheSpire.logger.info("middle left");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 3, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
-
-        // middle middle
-        sectionTopLeft.x += nineSliceTexture.leftMargin;
-        sectionBottomRight.x += middleMarginX;
-        uv1.x += normalisedLeftSize;
-        uv2.x += normalisedMiddleSizeX;
-        StreakTheSpire.logger.info("middle middle");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 4, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
-
-        // middle right
-        sectionTopLeft.x += middleMarginX;
-        sectionBottomRight.x = textureWidth;
-        uv1.x += normalisedMiddleSizeX;
-        uv2.x = 1;
-        StreakTheSpire.logger.info("middle right");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 5, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
-
-        // bottom left
-        sectionTopLeft.set(outerTopLeft.x, outerTopLeft.y + nineSliceTexture.topMargin + middleMarginY);
-        sectionBottomRight.set(outerTopLeft.x + nineSliceTexture.leftMargin, outerTopLeft.y + textureHeight);
-        uv1.set(0, normalisedTopSize + normalisedMiddleSizeY);
-        uv2.set(normalisedLeftSize, 1);
-        StreakTheSpire.logger.info("bottom left");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 6, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
+        drawSection(vertexComponents, 0, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
 
         // bottom middle
-        sectionTopLeft.x += nineSliceTexture.leftMargin;
-        sectionBottomRight.x += middleMarginX;
+        sectionBottomLeft.x += nineSliceTexture.leftMargin;
+        sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;
-        StreakTheSpire.logger.info("bottom middle");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 7, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
 
         // bottom right
-        sectionTopLeft.x += middleMarginX;
-        sectionBottomRight.x = textureWidth;
+        sectionBottomLeft.x += middleMarginX;
+        sectionTopRight.x = outerTopRight.x;
         uv1.x += normalisedMiddleSizeX;
         uv2.x = 1;
-        StreakTheSpire.logger.info("bottom right");
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 8, transformationMatrix, sectionTopLeft, sectionBottomRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 2, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
 
-        StreakTheSpire.logger.info("VertexComponents: " + Arrays.toString(vertexComponents));
+        // middle left
+        sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.topMargin);
+        sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.leftMargin, outerBottomLeft.y + nineSliceTexture.topMargin + middleMarginY);
+        uv1.set(0, normalisedTopSize);
+        uv2.set(normalisedLeftSize, normalisedTopSize + normalisedMiddleSizeY);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 3, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+
+        // middle middle
+        sectionBottomLeft.x += nineSliceTexture.leftMargin;
+        sectionTopRight.x += middleMarginX;
+        uv1.x += normalisedLeftSize;
+        uv2.x += normalisedMiddleSizeX;
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 4, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+
+        // middle right
+        sectionBottomLeft.x += middleMarginX;
+        sectionTopRight.x = outerTopRight.x;
+        uv1.x += normalisedMiddleSizeX;
+        uv2.x = 1;
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 5, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+
+        // top left
+        sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.topMargin + middleMarginY);
+        sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.leftMargin, outerTopRight.y);
+        uv1.set(0, normalisedTopSize + normalisedMiddleSizeY);
+        uv2.set(normalisedLeftSize, 1);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 6, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+
+        // top middle
+        sectionBottomLeft.x += nineSliceTexture.leftMargin;
+        sectionTopRight.x += middleMarginX;
+        uv1.x += normalisedLeftSize;
+        uv2.x += normalisedMiddleSizeX;
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 7, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+
+        // top right
+        sectionBottomLeft.x += middleMarginX;
+        sectionTopRight.x = outerTopRight.x;
+        uv1.x += normalisedMiddleSizeX;
+        uv2.x = 1;
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 8, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+
         // Finally, draw everything!
         spriteBatch.draw(nineSliceTexture.texture, vertexComponents, 0, vertexCount);
     }
@@ -173,44 +159,32 @@ public class UINineSliceElement extends UIElement {
 
         float colorBits = color.toFloatBits();
 
-
-        StreakTheSpire.logger.info("offset: " + offset + ", topLeft: " + topLeft + ", bottomRight: " + bottomRight + ", uv1: " + uv1 + ", uv2: " + uv2);
-        StreakTheSpire.logger.info("topLeftTransformed: " + topLeftTransformed + ", bottomRightTransformed: " + bottomRightTransformed);
-
-        int vertexIndex = offset + (VertexWindingID.TL * VertexComponent.NUM);
-        StreakTheSpire.logger.info("vertexIndex: " + vertexIndex);
+        int vertexIndex = offset;
         vertices[vertexIndex + VertexComponent.X] = topLeftTransformed.x;
         vertices[vertexIndex + VertexComponent.Y] = topLeftTransformed.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = uv1.x;
-        vertices[vertexIndex + VertexComponent.V] = uv2.y;
-        //vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv1.y; // Invert y as UV space has Y=0 at the top and Y=1 at the bottom
 
         vertexIndex = offset + (VertexWindingID.TR * VertexComponent.NUM);
-        StreakTheSpire.logger.info("vertexIndex: " + vertexIndex);
         vertices[vertexIndex + VertexComponent.X] = bottomRightTransformed.x;
         vertices[vertexIndex + VertexComponent.Y] = topLeftTransformed.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = uv2.x;
-        vertices[vertexIndex + VertexComponent.V] = uv2.y;
-        //vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv1.y;
 
         vertexIndex = offset + (VertexWindingID.BR * VertexComponent.NUM);
-        StreakTheSpire.logger.info("vertexIndex: " + vertexIndex);
         vertices[vertexIndex + VertexComponent.X] = bottomRightTransformed.x;
         vertices[vertexIndex + VertexComponent.Y] = bottomRightTransformed.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = uv2.x;
-        vertices[vertexIndex + VertexComponent.V] = uv2.y;
-        //vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
 
         vertexIndex = offset + (VertexWindingID.BL * VertexComponent.NUM);
-        StreakTheSpire.logger.info("vertexIndex: " + vertexIndex);
         vertices[vertexIndex + VertexComponent.X] = topLeftTransformed.x;
         vertices[vertexIndex + VertexComponent.Y] = bottomRightTransformed.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = uv1.x;
-        vertices[vertexIndex + VertexComponent.V] = uv2.y;
-        //vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
     }
 }
