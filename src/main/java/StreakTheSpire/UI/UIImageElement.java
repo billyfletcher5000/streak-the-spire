@@ -1,6 +1,5 @@
 package StreakTheSpire.UI;
 
-import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,25 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Arrays;
-
 public class UIImageElement extends UIElement {
-    private static class VertexComponent {
-        public static final int X = 0;
-        public static final int Y = 1;
-        public static final int COLOR = 2;
-        public static final int U = 3;
-        public static final int V = 4;
-        public static final int NUM = 5;
-    }
-
-    private static class VertexID {
-        public static final int TL = 0;
-        public static final int TR = 1;
-        public static final int BR = 2;
-        public static final int BL = 3;
-        public static final int NUM = 4;
-    }
 
     protected Color color = Color.WHITE;
     protected TextureRegion textureRegion;
@@ -92,7 +73,7 @@ public class UIImageElement extends UIElement {
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {
         super.elementRender(transformationMatrix, spriteBatch);
 
-        float[] vertices = new float[VertexID.NUM * VertexComponent.NUM];
+        float[] vertices = new float[VertexWindingID.NUM * VertexComponent.NUM];
 
         Vector2 extents = getDimensions().cpy().scl(0.5f);
         Vector2 topLeft = extents.cpy().scl(-1f, 1f).mul(transformationMatrix);
@@ -102,34 +83,34 @@ public class UIImageElement extends UIElement {
         
         float colorBits = color.toFloatBits();
 
-        int vertexIndex = VertexID.TL * VertexComponent.NUM;
+        int vertexIndex = VertexWindingID.TL * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = topLeft.x;
         vertices[vertexIndex + VertexComponent.Y] = topLeft.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = textureRegion.getU();
         vertices[vertexIndex + VertexComponent.V] = textureRegion.getV();
 
-        vertexIndex = VertexID.TR * VertexComponent.NUM;
+        vertexIndex = VertexWindingID.TR * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = topRight.x;
         vertices[vertexIndex + VertexComponent.Y] = topRight.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = textureRegion.getU2();
         vertices[vertexIndex + VertexComponent.V] = textureRegion.getV();
 
-        vertexIndex = VertexID.BR * VertexComponent.NUM;
+        vertexIndex = VertexWindingID.BR * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = bottomRight.x;
         vertices[vertexIndex + VertexComponent.Y] = bottomRight.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = textureRegion.getU2();
         vertices[vertexIndex + VertexComponent.V] = textureRegion.getV2();
 
-        vertexIndex = VertexID.BL * VertexComponent.NUM;
+        vertexIndex = VertexWindingID.BL * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = bottomLeft.x;
         vertices[vertexIndex + VertexComponent.Y] = bottomLeft.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
         vertices[vertexIndex + VertexComponent.U] = textureRegion.getU();
         vertices[vertexIndex + VertexComponent.V] = textureRegion.getV2();
         
-        spriteBatch.draw(textureRegion.getTexture(), vertices, 0, VertexID.NUM * VertexComponent.NUM);
+        spriteBatch.draw(textureRegion.getTexture(), vertices, 0, VertexWindingID.NUM * VertexComponent.NUM);
     }
 }
