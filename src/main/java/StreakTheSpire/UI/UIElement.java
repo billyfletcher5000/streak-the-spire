@@ -1,7 +1,5 @@
 package StreakTheSpire.UI;
 
-import StreakTheSpire.StreakTheSpire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
@@ -26,9 +24,9 @@ public class UIElement implements TweenAccessor<UIElement> {
     private float localRotation = 0f; //degrees
     private Vector2 localScale = VectorOne.cpy();
     private Vector2 dimensions = Vector2.Zero.cpy();
-    protected int layer = 0;
-    protected UIElement parent = null;
-    protected ArrayList<UIElement> children = new ArrayList<UIElement>();
+    private int layer = 0;
+    private UIElement parent = null;
+    private ArrayList<UIElement> children = new ArrayList<UIElement>();
 
     protected Matrix3 localTransform;
     protected Matrix3 localToWorldTransform;
@@ -36,6 +34,13 @@ public class UIElement implements TweenAccessor<UIElement> {
     protected boolean worldTransformDirty = true;
 
     public UIElement getParent() { return parent; }
+    public void setParent(UIElement parent) {
+        if(this.parent != parent) {
+            this.parent = parent;
+            invalidateWorldTransform();
+        }
+    }
+
     public UIElement[] getChildren() { return children.toArray(new UIElement[children.size()]); }
 
     public void addChild(UIElement child) {
@@ -48,7 +53,7 @@ public class UIElement implements TweenAccessor<UIElement> {
         if(child.parent != null)
             child.parent.removeChild(child);
 
-        child.parent = this;
+        child.setParent(this);
     }
 
     public void removeChild(UIElement child) {
@@ -56,15 +61,8 @@ public class UIElement implements TweenAccessor<UIElement> {
             children.remove(child);
 
         if(child.parent == this)
-            child.parent = null;
+            child.setParent(null);
     }
-
-    public final void update(float deltaTime) {
-        elementUpdate(deltaTime);
-        children.forEach(child -> child.update(deltaTime));
-    }
-
-    protected void elementUpdate(float deltaTime) {}
 
     public Vector2 getLocalPosition() { return localPosition.cpy(); }
     public float getLocalRotation() { return localRotation; }
@@ -154,6 +152,13 @@ public class UIElement implements TweenAccessor<UIElement> {
     }
 
     protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
+
+    public final void update(float deltaTime) {
+        elementUpdate(deltaTime);
+        children.forEach(child -> child.update(deltaTime));
+    }
+
+    protected void elementUpdate(float deltaTime) {}
 
     protected void invalidateLocalTransform() {
         localTransformDirty = true;
