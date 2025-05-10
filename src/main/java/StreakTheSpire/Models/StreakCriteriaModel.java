@@ -1,11 +1,18 @@
 package StreakTheSpire.Models;
 
-import StreakTheSpire.Utils.Property;
-import StreakTheSpire.Utils.PropertyList;
+import StreakTheSpire.Utils.Properties.Property;
+import StreakTheSpire.Utils.Properties.PropertyList;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
+import com.google.gson.reflect.TypeToken;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 
+import java.lang.reflect.Type;
+
+import static StreakTheSpire.StreakTheSpire.gson;
+
 public class StreakCriteriaModel implements IConfigDataModel {
+    public static final int HeartKillFloorReached = 57;
+
     public Property<Boolean> requireHeartKill = new Property<>(true);
     public Property<Integer> requiredAscensionLevel = new Property<>(20);
     public Property<Boolean> allowCustomSeeds = new Property<>(false);
@@ -37,7 +44,8 @@ public class StreakCriteriaModel implements IConfigDataModel {
         allowBeta.setValue(config.getBool(AllowBetaConfigName));
         allowDemo.setValue(config.getBool(AllowDemoConfigName));
         allowEndless.setValue(config.getBool(AllowEndlessConfigName));
-        trackedCharacterClasses.fromSerialisationString(config.getString(TrackedCharacterClassesConfigName));
+        Type trackedCharacterClassesType = new TypeToken<PropertyList<String>>(){}.getType();
+        trackedCharacterClasses = gson.fromJson(config.getString(TrackedCharacterClassesConfigName), trackedCharacterClassesType);
     }
 
     public void saveToConfig(SpireConfig config) {
@@ -47,7 +55,7 @@ public class StreakCriteriaModel implements IConfigDataModel {
         config.setBool(AllowDailiesConfigName, allowDailies.getValue());
         config.setBool(AllowBetaConfigName, allowBeta.getValue());
         config.setBool(AllowDemoConfigName, allowDemo.getValue());
-        config.setString(TrackedCharacterClassesConfigName, trackedCharacterClasses.toSerialisationString());
+        config.setString(TrackedCharacterClassesConfigName, gson.toJson(trackedCharacterClasses));
     }
     //endregion
 }

@@ -1,6 +1,6 @@
 package StreakTheSpire;
 
-import StreakTheSpire.Utils.Property;
+import StreakTheSpire.Utils.Properties.Property;
 
 public class TestModel {
     public Property<String> testString = new Property<>("TestString");

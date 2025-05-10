@@ -1,15 +1,11 @@
 package StreakTheSpire.Models;
 
-import StreakTheSpire.Utils.Property;
+import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.Texture;
-import com.megacrit.cardcrawl.characters.AbstractPlayer;
 
 public class CharacterDisplayModel {
-    public Property<AbstractPlayer.PlayerClass> playerClass;
-    public Property<Texture> iconTexture;
+    public Property<String> playerClass = new Property<>(null);
+    public Property<Texture> iconTexture = new Property<>(null);
 
-    public CharacterDisplayModel(AbstractPlayer.PlayerClass playerClass, Texture iconTexture) {
-        this.playerClass = new Property<>(playerClass);
-        this.iconTexture = new Property<>(iconTexture);
-    }
+    public CharacterDisplayModel() {}
 }

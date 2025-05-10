@@ -1,6 +1,6 @@
 package StreakTheSpire.Models;
 
-import StreakTheSpire.Utils.Property;
+import StreakTheSpire.Utils.Properties.Property;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 
 public class GameStateModel {

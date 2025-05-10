@@ -1,11 +1,13 @@
 package StreakTheSpire;
 
+import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Models.CharacterDisplayModel;
 import StreakTheSpire.Models.CharacterDisplaySetModel;
 import StreakTheSpire.Models.GameStateModel;
-import StreakTheSpire.Models.StreakModel;
+import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.UI.*;
-import StreakTheSpire.Utils.Property;
+import StreakTheSpire.Utils.Properties.Property;
+import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import basemod.BaseMod;
 import basemod.ModPanel;
@@ -17,6 +19,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
@@ -32,6 +36,7 @@ import java.io.IOException;
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, AddAudioSubscriber {
     public static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
+    public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(PropertyTypeAdapters.PropertyTypeAdapter.FACTORY).create();
 
     public static final String modId = "streak_the_spire";
     public static final String modName = "StreakTheSpire";
@@ -68,7 +73,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private UINineSliceElement nineSliceTest;
 
     private GameStateModel gameStateModel;
-    private StreakModel streakDataModel;
+    private PlayerStreakStoreModel streakDataModel;
     private CharacterDisplaySetModel characterDisplaySetModel;
 
     private TestModel testModel;
@@ -156,36 +161,31 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     protected void initialiseStreakDataModel() {
-        streakDataModel = new StreakModel();
-
-        //Test data
-        streakDataModel.setStreak(AbstractPlayer.PlayerClass.IRONCLAD, 4);
-        streakDataModel.setStreak(AbstractPlayer.PlayerClass.THE_SILENT, 2);
-        streakDataModel.setStreak(AbstractPlayer.PlayerClass.DEFECT, 0);
-        streakDataModel.setStreak(AbstractPlayer.PlayerClass.WATCHER, 69);
+        streakDataModel = new PlayerStreakStoreModel();
     }
 
     protected void initialiseCharacterDisplayModels() {
         characterDisplaySetModel = new CharacterDisplaySetModel();
+        CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel);
 
-        characterDisplaySetModel.addCharacterDisplayModel(new CharacterDisplayModel(
-                AbstractPlayer.PlayerClass.IRONCLAD,
+        controller.addCharacterDisplay(
+                AbstractPlayer.PlayerClass.IRONCLAD.toString(),
                 StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture()
-        ));
+        );
 
-        characterDisplaySetModel.addCharacterDisplayModel(new CharacterDisplayModel(
-                AbstractPlayer.PlayerClass.THE_SILENT,
+        controller.addCharacterDisplay(
+                AbstractPlayer.PlayerClass.THE_SILENT.toString(),
                 StreakTheSpireTextureDatabase.SILENT_ICON.getTexture()
-        ));
+        );
 
-        characterDisplaySetModel.addCharacterDisplayModel(new CharacterDisplayModel(
-                AbstractPlayer.PlayerClass.DEFECT,
+        controller.addCharacterDisplay(
+                AbstractPlayer.PlayerClass.DEFECT.toString(),
                 StreakTheSpireTextureDatabase.DEFECT_ICON.getTexture()
-        ));
+        );
 
-        characterDisplaySetModel.addCharacterDisplayModel(new CharacterDisplayModel(
-                AbstractPlayer.PlayerClass.WATCHER,
+        controller.addCharacterDisplay(
+                AbstractPlayer.PlayerClass.WATCHER.toString(),
                 StreakTheSpireTextureDatabase.WATCHER_ICON.getTexture()
-        ));
+        );
     }
 }

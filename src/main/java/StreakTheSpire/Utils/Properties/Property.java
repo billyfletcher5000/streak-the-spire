@@ -1,4 +1,4 @@
-package StreakTheSpire.Utils;
+package StreakTheSpire.Utils.Properties;
 
 import java.util.HashSet;
 
