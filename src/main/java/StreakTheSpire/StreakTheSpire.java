@@ -1,9 +1,9 @@
 package StreakTheSpire;
 
-import StreakTheSpire.Data.CharacterDisplayModel;
-import StreakTheSpire.Data.CharacterDisplaySetModel;
-import StreakTheSpire.Data.GameStateModel;
-import StreakTheSpire.Data.StreakDataModel;
+import StreakTheSpire.Models.CharacterDisplayModel;
+import StreakTheSpire.Models.CharacterDisplaySetModel;
+import StreakTheSpire.Models.GameStateModel;
+import StreakTheSpire.Models.StreakModel;
 import StreakTheSpire.UI.*;
 import StreakTheSpire.Utils.Property;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
@@ -68,7 +68,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private UINineSliceElement nineSliceTest;
 
     private GameStateModel gameStateModel;
-    private StreakDataModel streakDataModel;
+    private StreakModel streakDataModel;
     private CharacterDisplaySetModel characterDisplaySetModel;
 
     private TestModel testModel;
@@ -93,16 +93,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         testModel = new TestModel();
         testModel.testString.addOnChangedSubscriber(new Property.ValueChangedSubscriber() {
             @Override
-            public void onValueChanged(Property value) {
-                String s = (String)value.getValue();
-                logger.info("testString changed to: " + s);
+            public void onValueChanged() {
+                logger.info("testString changed to: " + testModel.testString);
             }
         });
 
         logger.info("testString value: " + testModel.testString.getValue());
         testModel.testString.setValue("Blamonge!");
 
-        testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.MOD_ICON.getTexture());
+        testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture());
         testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
 
         Timeline sequence = tweenEngine.createSequential();
@@ -157,7 +156,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     protected void initialiseStreakDataModel() {
-        streakDataModel = new StreakDataModel();
+        streakDataModel = new StreakModel();
 
         //Test data
         streakDataModel.setStreak(AbstractPlayer.PlayerClass.IRONCLAD, 4);

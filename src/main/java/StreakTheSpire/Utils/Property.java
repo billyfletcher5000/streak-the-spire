@@ -16,14 +16,14 @@ public class Property<T> {
             this.value = value;
             if (onChangedSubscribers != null) {
                 for (ValueChangedSubscriber subscriber : onChangedSubscribers) {
-                    subscriber.onValueChanged(this);
+                    subscriber.onValueChanged();
                 }
             }
         }
     }
 
     public static class ValueChangedSubscriber {
-        public void onValueChanged(Property value) {}
+        public void onValueChanged() {}
     }
 
     public void addOnChangedSubscriber(ValueChangedSubscriber subscriber) {

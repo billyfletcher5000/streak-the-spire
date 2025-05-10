@@ -1,4 +1,4 @@
-package StreakTheSpire.Data;
+package StreakTheSpire.Models;
 
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 

@@ -1,4 +1,4 @@
-package StreakTheSpire.Data;
+package StreakTheSpire.Models;
 
 import StreakTheSpire.Utils.Property;
 import com.badlogic.gdx.graphics.Texture;

@@ -1,4 +1,4 @@
-package StreakTheSpire.Data;
+package StreakTheSpire.Models;
 
 import StreakTheSpire.Utils.Property;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
