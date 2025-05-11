@@ -7,8 +7,6 @@ import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.google.gson.JsonSyntaxException;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 
@@ -31,7 +29,7 @@ public class PlayerStreakStoreController {
     }
 
     public Optional<PlayerStreakModel> getStreakModel(String playerClass) {
-        return model.playerToStreak.stream().filter(model -> model.playerClass.equals(playerClass)).findFirst();
+        return model.playerToStreak.stream().filter(model -> model.identifier.equals(playerClass)).findFirst();
     }
 
     public void CalculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
@@ -39,9 +37,17 @@ public class PlayerStreakStoreController {
 
         if(recalculateAll) {
             model.playerToStreak.clear();
+            model.rotatingPlayerStreakModel = new PlayerStreakModel();
+            model.rotatingPlayerStreakModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        }
+        else if (model.rotatingPlayerStreakModel == null) {
+            model.rotatingPlayerStreakModel = new PlayerStreakModel();
+            model.rotatingPlayerStreakModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
         }
 
         FileHandle[] subfolders = Gdx.files.local("runs" + File.separator).list();
+
+        ArrayList<RunDataSubset> allCharacterSubsets = new ArrayList<>();
 
         for (FileHandle subFolder : subfolders) {
             StreakTheSpire.logger.info("subfolder: " + subFolder.path());
@@ -76,7 +82,7 @@ public class PlayerStreakStoreController {
             }
             else {
                 streakModel = new PlayerStreakModel();
-                streakModel.playerClass.setValue(playerClass);
+                streakModel.identifier.setValue(playerClass);
                 model.playerToStreak.add(streakModel);
             }
 
@@ -128,60 +134,74 @@ public class PlayerStreakStoreController {
                     continue;
                 }
 
-                String currentStreakTimestamp = streakModel.highestStreakTimestamp.getValue();
-                if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
-                    StreakTheSpire.logger.error("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, playerClass, currentStreakTimestamp, data.timestamp);
-                    continue;
-                }
-
-                int streakCount = streakModel.currentStreak.getValue();
-
-                // TODO: Add rotating support, somehow
-
-                boolean disqualified = false;
-                for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
-                    DisqualifyingCondition condition = entry.getKey();
-                    String reason = entry.getValue();
-
-                    StreakTheSpire.logger.info("{} {}: Testing disqualifying condition: {}", data.filename, playerClass, reason);
-                    if(condition.test(data, criteria)) {
-                        disqualified = true;
-                        StreakTheSpire.logger.info("{} {}: Disqualified due to: {}", data.filename, playerClass, reason);
-                        break;
-                    }
-                }
-
-                if(!disqualified) {
-                    boolean failed = false;
-                    for (Map.Entry<LosingCondition, String> entry : losingConditions.entrySet()) {
-                        LosingCondition condition = entry.getKey();
-                        String reason = entry.getValue();
-
-                        StreakTheSpire.logger.info("{} {}: Testing losing condition: {}", data.filename, playerClass, reason);
-                        if (condition.test(data, criteria)) {
-                            failed = true;
-                            StreakTheSpire.logger.info("{} {}: Lost due to: {}", data.filename, playerClass, reason);
-                            break;
-                        }
-                    }
-
-                    if (failed)
-                        streakCount = 0;
-                    else
-                        streakCount++;
-
-                    streakModel.currentStreak.setValue(streakCount);
-                    streakModel.currentStreakTimestamp.setValue(data.timestamp);
-
-                    if (streakModel.highestStreak.getValue() < streakCount) {
-                        streakModel.highestStreak.setValue(streakCount);
-                        streakModel.highestStreakTimestamp.setValue(data.timestamp);
-                    }
-                }
-
-                streakModel.processedFilenames.add(data.filename);
+                if(processRunData(criteria, data, streakModel, playerClass))
+                    allCharacterSubsets.add(data);
             }
         }
+
+        // Now process rotating streaks
+        allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
+
+        for(RunDataSubset data : allCharacterSubsets) {
+            processRunData(criteria, data, model.rotatingPlayerStreakModel, PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        }
+    }
+
+    // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
+    private static boolean processRunData(StreakCriteriaModel criteria, RunDataSubset data, PlayerStreakModel streakModel, String identifier) {
+        String currentStreakTimestamp = streakModel.highestStreakTimestamp.getValue();
+        if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
+            StreakTheSpire.logger.error("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
+            return false;
+        }
+
+        int streakCount = streakModel.currentStreak.getValue();
+
+        // TODO: Add rotating support, somehow
+
+        boolean disqualified = false;
+        for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
+            DisqualifyingCondition condition = entry.getKey();
+            String reason = entry.getValue();
+
+            StreakTheSpire.logger.info("{} {}: Testing disqualifying condition: {}", data.filename, identifier, reason);
+            if(condition.test(data, criteria)) {
+                disqualified = true;
+                StreakTheSpire.logger.info("{} {}: Disqualified due to: {}", data.filename, identifier, reason);
+                break;
+            }
+        }
+
+        if(!disqualified) {
+            boolean failed = false;
+            for (Map.Entry<LosingCondition, String> entry : losingConditions.entrySet()) {
+                LosingCondition condition = entry.getKey();
+                String reason = entry.getValue();
+
+                StreakTheSpire.logger.info("{} {}: Testing losing condition: {}", data.filename, identifier, reason);
+                if (condition.test(data, criteria)) {
+                    failed = true;
+                    StreakTheSpire.logger.info("{} {}: Lost due to: {}", data.filename, identifier, reason);
+                    break;
+                }
+            }
+
+            if (failed)
+                streakCount = 0;
+            else
+                streakCount++;
+
+            streakModel.currentStreak.setValue(streakCount);
+            streakModel.currentStreakTimestamp.setValue(data.timestamp);
+
+            if (streakModel.highestStreak.getValue() < streakCount) {
+                streakModel.highestStreak.setValue(streakCount);
+                streakModel.highestStreakTimestamp.setValue(data.timestamp);
+            }
+        }
+
+        streakModel.processedFilenames.add(data.filename);
+        return !disqualified;
     }
 
     public String createStreakDebugReport() {
@@ -189,9 +209,12 @@ public class PlayerStreakStoreController {
 
         report.append("Streak Report:\n\n");
 
-        for(PlayerStreakModel playerStreakModel : model.playerToStreak)
+        ArrayList<PlayerStreakModel> playerStreakModels = new ArrayList<>(model.playerToStreak);
+        playerStreakModels.add(model.rotatingPlayerStreakModel);
+
+        for(PlayerStreakModel playerStreakModel : playerStreakModels)
         {
-            report.append("Character: " + playerStreakModel.playerClass.getValue() + "\n");
+            report.append("Character: " + playerStreakModel.identifier.getValue() + "\n");
             report.append("\tHighest Streak: " + playerStreakModel.highestStreak.getValue() + "\n");
             report.append("\tCurrent Streak: " + playerStreakModel.currentStreak.getValue() + "\n");
             report.append("\tHighest Streak Timestamp: " + playerStreakModel.highestStreakTimestamp.getValue() + "\n");

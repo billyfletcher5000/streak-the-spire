@@ -38,15 +38,31 @@ public class StreakCriteriaModel implements IConfigDataModel {
     private final String AllowEndlessConfigName = "allow_endless";
 
     public void loadFromConfig(SpireConfig config) {
-        requireHeartKill.setValue(config.getBool(RequireHeartKillConfigName));
-        requiredAscensionLevel.setValue(config.getInt(RequiredAscensionLevelConfigName));
-        allowCustomSeeds.setValue(config.getBool(AllowCustomSeedsConfigName));
-        allowDailies.setValue(config.getBool(AllowDailiesConfigName));
-        allowBeta.setValue(config.getBool(AllowBetaConfigName));
-        allowDemo.setValue(config.getBool(AllowDemoConfigName));
-        allowEndless.setValue(config.getBool(AllowEndlessConfigName));
-        Type trackedCharacterClassesType = new TypeToken<PropertyList<String>>(){}.getType();
-        trackedCharacterClasses = gson.fromJson(config.getString(TrackedCharacterClassesConfigName), trackedCharacterClassesType);
+        if(config.has(RequireHeartKillConfigName))
+            requireHeartKill.setValue(config.getBool(RequireHeartKillConfigName));
+
+        if(config.has(RequiredAscensionLevelConfigName))
+            requiredAscensionLevel.setValue(config.getInt(RequiredAscensionLevelConfigName));
+
+        if(config.has(TrackedCharacterClassesConfigName))
+            allowCustomSeeds.setValue(config.getBool(AllowCustomSeedsConfigName));
+
+        if(config.has(TrackedCharacterClassesConfigName))
+            allowDailies.setValue(config.getBool(AllowDailiesConfigName));
+
+        if(config.has(TrackedCharacterClassesConfigName))
+            allowBeta.setValue(config.getBool(AllowBetaConfigName));
+
+        if(config.has(TrackedCharacterClassesConfigName))
+            allowDemo.setValue(config.getBool(AllowDemoConfigName));
+
+        if(config.has(TrackedCharacterClassesConfigName))
+            allowEndless.setValue(config.getBool(AllowEndlessConfigName));
+
+        if(config.has(TrackedCharacterClassesConfigName)) {
+            Type trackedCharacterClassesType = new TypeToken<PropertyList<String>>(){}.getType();
+            trackedCharacterClasses = gson.fromJson(config.getString(TrackedCharacterClassesConfigName), trackedCharacterClassesType);
+        }
     }
 
     public void saveToConfig(SpireConfig config) {
