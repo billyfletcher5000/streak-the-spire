@@ -37,4 +37,9 @@ public class Property<T> {
         if(onChangedSubscribers != null)
             onChangedSubscribers.remove(subscriber);
     }
+
+    @Override
+    public String toString() {
+        return value != null ? value.toString() : "null";
+    }
 }

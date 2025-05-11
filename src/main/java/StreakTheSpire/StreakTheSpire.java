@@ -1,10 +1,8 @@
 package StreakTheSpire;
 
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
-import StreakTheSpire.Models.CharacterDisplayModel;
-import StreakTheSpire.Models.CharacterDisplaySetModel;
-import StreakTheSpire.Models.GameStateModel;
-import StreakTheSpire.Models.PlayerStreakStoreModel;
+import StreakTheSpire.Controllers.PlayerStreakStoreController;
+import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
@@ -74,10 +72,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private UINineSliceElement nineSliceTest;
 
     private GameStateModel gameStateModel;
+    private StreakCriteriaModel streakCriteriaModel;
     private PlayerStreakStoreModel streakDataModel;
     private CharacterDisplaySetModel characterDisplaySetModel;
 
     private TestModel testModel;
+
+    private String testStringStore = "Crab";
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
@@ -101,12 +102,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             @Override
             public void onValueChanged() {
                 logger.info("testString changed to: " + testModel.testString);
+                testStringStore = testModel.testString.getValue();
             }
         });
 
+
         logger.info("testString value: " + testModel.testString.getValue());
         testModel.testString.setValue("Blamonge!");
-
+        logger.info("testStringStore value: " + testModel.testString.getValue());
+/*
         testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture());
         testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
 
@@ -129,6 +133,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         alphaSequence.delay(10.0f);
         alphaSequence.repeat(10, 0f);
         alphaSequence.start();
+ */
     }
 
     private ModPanel createModPanel() {
@@ -139,8 +144,10 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receiveRender(SpriteBatch sb) {
+        /*
         testImage.render(sb);
         nineSliceTest.render(sb);
+         */
     }
 
 
@@ -165,6 +172,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     protected void initialiseStreakDataModel() {
         streakDataModel = new PlayerStreakStoreModel();
+        streakCriteriaModel = new StreakCriteriaModel();
+
+        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakDataModel);
+        controller.CalculateStreakData(streakCriteriaModel, true);
+
+        String report = controller.createStreakDebugReport();
+        logger.info(report);
     }
 
     protected void initialiseCharacterDisplayModels() {

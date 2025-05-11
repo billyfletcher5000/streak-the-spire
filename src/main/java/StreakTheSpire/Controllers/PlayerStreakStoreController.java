@@ -7,17 +7,24 @@ import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.OrderedMap;
 import com.google.gson.JsonSyntaxException;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 import static StreakTheSpire.StreakTheSpire.gson;
 
 public class PlayerStreakStoreController {
     private PlayerStreakStoreModel model;
+
+    private interface DisqualifyingCondition { boolean test(RunDataSubset data, StreakCriteriaModel criteria); }
+    private static LinkedHashMap<DisqualifyingCondition, String> disqualifyingConditions = createDisqualifyingConditions();
+
+    private interface LosingCondition { boolean test(RunDataSubset data, StreakCriteriaModel criteria); }
+    private static LinkedHashMap<LosingCondition, String> losingConditions = createLosingConditions();
 
     public PlayerStreakStoreController(PlayerStreakStoreModel model) {
         this.model = model;
@@ -27,7 +34,7 @@ public class PlayerStreakStoreController {
         return model.playerToStreak.stream().filter(model -> model.playerClass.equals(playerClass)).findFirst();
     }
 
-    void CalculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
+    public void CalculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
         // This is heavily based on RunHistoryScreen.refreshData to preserve some of the odd legacy bugfixes around files and whatnot
 
         if(recalculateAll) {
@@ -37,6 +44,8 @@ public class PlayerStreakStoreController {
         FileHandle[] subfolders = Gdx.files.local("runs" + File.separator).list();
 
         for (FileHandle subFolder : subfolders) {
+            StreakTheSpire.logger.info("subfolder: " + subFolder.path());
+
             String folderName = subFolder.name();
 
             switch (CardCrawlGame.saveSlot) {
@@ -75,6 +84,8 @@ public class PlayerStreakStoreController {
 
             for (FileHandle file : subFolder.list()) {
                 try {
+                    StreakTheSpire.logger.info("file: " + file.path());
+
                     String filename = file.nameWithoutExtension();
                     if(streakModel.processedFilenames.contains(filename))
                         continue;
@@ -107,8 +118,9 @@ public class PlayerStreakStoreController {
             }
 
             // Same, somewhat bizarre way of doing a string compare on what is saved as a long integer as RunData does,
-            // I'm presuming because of some shortcoming in deserialising long ints in java appropriately?
-            runDataToProcess.sort((runA, runB) -> runB.timestamp.compareTo(runA.timestamp));
+            // but reversed, as we want the order to be from the first run rather than from the most recent.
+            // I'm presuming done this way because of some shortcoming in deserialising long ints in java appropriately?
+            runDataToProcess.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
             for (RunDataSubset data : runDataToProcess) {
                 if(!data.character_chosen.equals(playerClass)) {
@@ -124,31 +136,93 @@ public class PlayerStreakStoreController {
 
                 int streakCount = streakModel.currentStreak.getValue();
 
-                if(!data.victory ||
-                   (!data.is_ascension_mode && criteria.requiredAscensionLevel.getValue() > 0) ||
-                   (data.ascension_level < criteria.requiredAscensionLevel.getValue()) ||
-                   (data.chose_seed && criteria.allowCustomSeeds.getValue() == false) ||
-                   (data.is_daily && criteria.allowDailies.getValue() == false) ||
-                   (data.is_trial && criteria.allowDemo.getValue() == false) ||
-                   (data.is_prod && criteria.allowBeta.getValue() == false) ||
-                   (data.is_endless && criteria.allowEndless.getValue() == false) ||
-                   (data.floor_reached < StreakCriteriaModel.HeartKillFloorReached && criteria.requireHeartKill.getValue() == true)) {
-                    streakCount = 0;
-                }
-                else {
-                    streakCount++;
+                // TODO: Add rotating support, somehow
+
+                boolean disqualified = false;
+                for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
+                    DisqualifyingCondition condition = entry.getKey();
+                    String reason = entry.getValue();
+
+                    StreakTheSpire.logger.info("{} {}: Testing disqualifying condition: {}", data.filename, playerClass, reason);
+                    if(condition.test(data, criteria)) {
+                        disqualified = true;
+                        StreakTheSpire.logger.info("{} {}: Disqualified due to: {}", data.filename, playerClass, reason);
+                        break;
+                    }
                 }
 
-                streakModel.currentStreak.setValue(streakCount);
-                streakModel.currentStreakTimestamp.setValue(data.timestamp);
+                if(!disqualified) {
+                    boolean failed = false;
+                    for (Map.Entry<LosingCondition, String> entry : losingConditions.entrySet()) {
+                        LosingCondition condition = entry.getKey();
+                        String reason = entry.getValue();
 
-                if(streakModel.highestStreak.getValue() < streakCount) {
-                    streakModel.highestStreak.setValue(streakCount);
-                    streakModel.highestStreakTimestamp.setValue(data.timestamp);
+                        StreakTheSpire.logger.info("{} {}: Testing losing condition: {}", data.filename, playerClass, reason);
+                        if (condition.test(data, criteria)) {
+                            failed = true;
+                            StreakTheSpire.logger.info("{} {}: Lost due to: {}", data.filename, playerClass, reason);
+                            break;
+                        }
+                    }
+
+                    if (failed)
+                        streakCount = 0;
+                    else
+                        streakCount++;
+
+                    streakModel.currentStreak.setValue(streakCount);
+                    streakModel.currentStreakTimestamp.setValue(data.timestamp);
+
+                    if (streakModel.highestStreak.getValue() < streakCount) {
+                        streakModel.highestStreak.setValue(streakCount);
+                        streakModel.highestStreakTimestamp.setValue(data.timestamp);
+                    }
                 }
 
                 streakModel.processedFilenames.add(data.filename);
             }
         }
+    }
+
+    public String createStreakDebugReport() {
+        StringBuilder report = new StringBuilder();
+
+        report.append("Streak Report:\n\n");
+
+        for(PlayerStreakModel playerStreakModel : model.playerToStreak)
+        {
+            report.append("Character: " + playerStreakModel.playerClass.getValue() + "\n");
+            report.append("\tHighest Streak: " + playerStreakModel.highestStreak.getValue() + "\n");
+            report.append("\tCurrent Streak: " + playerStreakModel.currentStreak.getValue() + "\n");
+            report.append("\tHighest Streak Timestamp: " + playerStreakModel.highestStreakTimestamp.getValue() + "\n");
+            report.append("\tCurrent Streak Timestamp: " + playerStreakModel.currentStreakTimestamp.getValue() + "\n");
+            report.append("\tProcessed Filenames: " + String.join(", ", playerStreakModel.processedFilenames) + "\n");
+        }
+
+        return report.toString();
+    }
+
+    private static LinkedHashMap<DisqualifyingCondition, String> createDisqualifyingConditions() {
+        LinkedHashMap<DisqualifyingCondition, String> disqualifyingConditions = new LinkedHashMap<>();
+
+        disqualifyingConditions.put(((data, criteria) -> (!data.is_ascension_mode && criteria.requiredAscensionLevel.getValue() > 0)), "not_ascension");
+        disqualifyingConditions.put(((data, criteria) -> (data.ascension_level < criteria.requiredAscensionLevel.getValue())), "ascension_level_too_low");
+        disqualifyingConditions.put(((data, criteria) -> (data.chose_seed && criteria.allowCustomSeeds.getValue() == false)), "chose_seed");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_daily && criteria.allowDailies.getValue() == false)), "is_daily");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_trial && criteria.allowDemo.getValue() == false)), "is_demo");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_prod && criteria.allowBeta.getValue() == false)), "is_beta");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_endless && criteria.allowEndless.getValue() == false)), "is_endless");
+
+        return disqualifyingConditions;
+    }
+
+    private static LinkedHashMap<LosingCondition, String> createLosingConditions() {
+        LinkedHashMap<LosingCondition, String> losingConditions = new LinkedHashMap<>();
+
+        losingConditions.put(((data, criteria) -> !data.victory), "victory_failed");
+        losingConditions.put(((data, criteria) ->
+                (data.floor_reached < StreakCriteriaModel.HeartKillFloorReached && criteria.requireHeartKill.getValue() == true)), "did_not_kill_heart");
+
+        return losingConditions;
     }
 }

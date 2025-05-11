@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import static StreakTheSpire.StreakTheSpire.gson;
 
 public class StreakCriteriaModel implements IConfigDataModel {
-    public static final int HeartKillFloorReached = 57;
+    public static final int HeartKillFloorReached = 56;
 
     public Property<Boolean> requireHeartKill = new Property<>(true);
     public Property<Integer> requiredAscensionLevel = new Property<>(20);
@@ -24,7 +24,8 @@ public class StreakCriteriaModel implements IConfigDataModel {
             AbstractPlayer.PlayerClass.IRONCLAD.toString(),
             AbstractPlayer.PlayerClass.THE_SILENT.toString(),
             AbstractPlayer.PlayerClass.DEFECT.toString(),
-            AbstractPlayer.PlayerClass.WATCHER.toString());
+            AbstractPlayer.PlayerClass.WATCHER.toString()
+    );
 
     //region Config
     private final String RequireHeartKillConfigName = "require_heart_kill";

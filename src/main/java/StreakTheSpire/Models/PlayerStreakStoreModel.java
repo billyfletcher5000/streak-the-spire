@@ -12,7 +12,7 @@ public class PlayerStreakStoreModel implements IConfigDataModel {
     public PropertyHashSet<PlayerStreakModel> playerToStreak = new PropertyHashSet<>();
 
     //region IConfigModel
-    private final String PlayerToStreakConfigName = "PlayerToStreak";
+    private final String PlayerToStreakConfigName = "player_to_streak";
 
     @Override
     public void loadFromConfig(SpireConfig config) {
