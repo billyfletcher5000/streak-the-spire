@@ -14,7 +14,7 @@ public class CharacterDisplaySetController {
     }
 
     public Optional<CharacterDisplayModel> getCharacterDisplay(String playerClass) {
-        return model.characterDisplayModels.stream().filter(model -> model.playerClass.equals(playerClass)).findFirst();
+        return model.characterDisplayModels.stream().filter(model -> model.identifier.getValue().equals(playerClass)).findFirst();
     }
 
     public CharacterDisplayModel addCharacterDisplay(String playerClass, Texture iconTexture) {
@@ -25,7 +25,7 @@ public class CharacterDisplaySetController {
         else
             displayModel = new CharacterDisplayModel();
 
-        displayModel.playerClass.setValue(playerClass);
+        displayModel.identifier.setValue(playerClass);
         displayModel.iconTexture.setValue(iconTexture);
 
         return displayModel;

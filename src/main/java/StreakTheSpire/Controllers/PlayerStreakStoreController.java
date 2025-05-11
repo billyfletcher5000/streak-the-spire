@@ -28,8 +28,8 @@ public class PlayerStreakStoreController {
         this.model = model;
     }
 
-    public Optional<PlayerStreakModel> getStreakModel(String playerClass) {
-        return model.playerToStreak.stream().filter(model -> model.identifier.equals(playerClass)).findFirst();
+    public PlayerStreakModel getStreakModel(String playerClass) {
+        return model.playerToStreak.stream().filter(model -> model.identifier.getValue().equals(playerClass)).findAny().orElse(null);
     }
 
     public void CalculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
@@ -50,7 +50,7 @@ public class PlayerStreakStoreController {
         ArrayList<RunDataSubset> allCharacterSubsets = new ArrayList<>();
 
         for (FileHandle subFolder : subfolders) {
-            StreakTheSpire.logger.info("subfolder: " + subFolder.path());
+            StreakTheSpire.logDebug("Evaluating Subfolder: " + subFolder.path());
 
             String folderName = subFolder.name();
 
@@ -75,26 +75,32 @@ public class PlayerStreakStoreController {
             if(playerClass == null)
                 continue;
 
-            PlayerStreakModel streakModel = null;
-            Optional<PlayerStreakModel> existingStreakModel = getStreakModel(playerClass);
-            if(existingStreakModel.isPresent()) {
-                streakModel = existingStreakModel.get();
+            for(PlayerStreakModel model : model.playerToStreak) {
+                StreakTheSpire.logDebug("Streak model in Player Streak Store: " + model.identifier);
             }
-            else {
+
+            PlayerStreakModel streakModel = getStreakModel(playerClass);
+            if(streakModel == null) {
+                StreakTheSpire.logDebug("Streak model NOT found: " + playerClass);
                 streakModel = new PlayerStreakModel();
                 streakModel.identifier.setValue(playerClass);
                 model.playerToStreak.add(streakModel);
+            }
+            else {
+                StreakTheSpire.logDebug("Streak model found: " + playerClass);
             }
 
             ArrayList<RunDataSubset> runDataToProcess = new ArrayList<>();
 
             for (FileHandle file : subFolder.list()) {
                 try {
-                    StreakTheSpire.logger.info("file: " + file.path());
+                    StreakTheSpire.logDebug("Evaluating file: " + file.path());
 
                     String filename = file.nameWithoutExtension();
-                    if(streakModel.processedFilenames.contains(filename))
+                    if(streakModel.processedFilenames.contains(filename)) {
+                        StreakTheSpire.logDebug("Skipping already processed filename: " + filename);
                         continue;
+                    }
 
                     RunDataSubset data = gson.fromJson(file.readString(), RunDataSubset.class);
                     if (data != null) {
@@ -110,7 +116,7 @@ public class PlayerStreakStoreController {
                                     long days = Long.parseLong(data.timestamp);
                                     data.timestamp = Long.toString(days * 86400L);
                                 } catch (NumberFormatException var18) {
-                                    StreakTheSpire.logger.info("Run file " + file.path() + " name is could not be parsed into a Timestamp.");
+                                    StreakTheSpire.logWarning("Run file " + file.path() + " name is could not be parsed into a Timestamp.");
                                     data = null;
                                 }
                             }
@@ -119,7 +125,7 @@ public class PlayerStreakStoreController {
 
                     runDataToProcess.add(data);
                 } catch (JsonSyntaxException var19) {
-                    StreakTheSpire.logger.info("Failed to load RunDataSubset from JSON file: " + file.path());
+                    StreakTheSpire.logError("Failed to load RunDataSubset from JSON file: " + file.path());
                 }
             }
 
@@ -130,7 +136,7 @@ public class PlayerStreakStoreController {
 
             for (RunDataSubset data : runDataToProcess) {
                 if(!data.character_chosen.equals(playerClass)) {
-                    StreakTheSpire.logger.error("{}: character_chosen \"{}\" differs from player class: {}", data.filename, data.character_chosen, playerClass);
+                    StreakTheSpire.logError("{}: character_chosen \"{}\" differs from player class: {}", data.filename, data.character_chosen, playerClass);
                     continue;
                 }
 
@@ -151,7 +157,7 @@ public class PlayerStreakStoreController {
     private static boolean processRunData(StreakCriteriaModel criteria, RunDataSubset data, PlayerStreakModel streakModel, String identifier) {
         String currentStreakTimestamp = streakModel.highestStreakTimestamp.getValue();
         if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
-            StreakTheSpire.logger.error("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
+            StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
             return false;
         }
 
@@ -164,10 +170,10 @@ public class PlayerStreakStoreController {
             DisqualifyingCondition condition = entry.getKey();
             String reason = entry.getValue();
 
-            StreakTheSpire.logger.info("{} {}: Testing disqualifying condition: {}", data.filename, identifier, reason);
+            StreakTheSpire.logDebug("{} {}: Testing disqualifying condition: {}", data.filename, identifier, reason);
             if(condition.test(data, criteria)) {
                 disqualified = true;
-                StreakTheSpire.logger.info("{} {}: Disqualified due to: {}", data.filename, identifier, reason);
+                StreakTheSpire.logDebug("{} {}: Disqualified due to: {}", data.filename, identifier, reason);
                 break;
             }
         }
@@ -178,10 +184,10 @@ public class PlayerStreakStoreController {
                 LosingCondition condition = entry.getKey();
                 String reason = entry.getValue();
 
-                StreakTheSpire.logger.info("{} {}: Testing losing condition: {}", data.filename, identifier, reason);
+                StreakTheSpire.logDebug("{} {}: Testing losing condition: {}", data.filename, identifier, reason);
                 if (condition.test(data, criteria)) {
                     failed = true;
-                    StreakTheSpire.logger.info("{} {}: Lost due to: {}", data.filename, identifier, reason);
+                    StreakTheSpire.logDebug("{} {}: Lost due to: {}", data.filename, identifier, reason);
                     break;
                 }
             }
@@ -210,7 +216,8 @@ public class PlayerStreakStoreController {
         report.append("Streak Report:\n\n");
 
         ArrayList<PlayerStreakModel> playerStreakModels = new ArrayList<>(model.playerToStreak);
-        playerStreakModels.add(model.rotatingPlayerStreakModel);
+        if(model.rotatingPlayerStreakModel != null)
+            playerStreakModels.add(model.rotatingPlayerStreakModel);
 
         for(PlayerStreakModel playerStreakModel : playerStreakModels)
         {

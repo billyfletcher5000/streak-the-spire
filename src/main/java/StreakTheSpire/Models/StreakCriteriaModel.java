@@ -27,6 +27,8 @@ public class StreakCriteriaModel implements IConfigDataModel {
             AbstractPlayer.PlayerClass.WATCHER.toString()
     );
 
+    public StreakCriteriaModel() {}
+
     //region Config
     private final String RequireHeartKillConfigName = "require_heart_kill";
     private final String RequiredAscensionLevelConfigName = "required_ascension_level";

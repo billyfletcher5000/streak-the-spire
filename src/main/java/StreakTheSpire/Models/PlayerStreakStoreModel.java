@@ -14,6 +14,8 @@ public class PlayerStreakStoreModel implements IConfigDataModel {
     public PropertyHashSet<PlayerStreakModel> playerToStreak = new PropertyHashSet<>();
     public PlayerStreakModel rotatingPlayerStreakModel = null;
 
+    public PlayerStreakStoreModel() {}
+
     //region IConfigModel
     private final String PlayerToStreakConfigName = "player_to_streak";
     private final String RotatingPlayerStreakConfigName = "rotating_player_streak";

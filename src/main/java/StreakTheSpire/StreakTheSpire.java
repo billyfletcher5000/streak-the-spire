@@ -4,6 +4,7 @@ import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
+import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
@@ -30,10 +31,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @SpireInitializer
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, AddAudioSubscriber {
-    public static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
+    private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
+    public static final LoggingLevel loggingLevel = LoggingLevel.INFO;
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(PropertyTypeAdapters.PropertyTypeAdapter.FACTORY).create();
 
@@ -50,15 +53,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private static final String configFileName = "Config";
     private static SpireConfig modSpireConfig = null;
 
-    public static void saveModSpireConfig() throws IOException { modSpireConfig.save(); }
+    public static void saveModSpireConfig() throws IOException { instance.saveConfig(); }
     // ~Config
 
     public static void initialize() {
         new StreakTheSpire();
 
-        logger.info("Initializing StreakTheSpire!");
+        logInfo("Initializing StreakTheSpire!");
         try {
-            logger.info("Creating SpireConfig!");
+            logInfo("Creating SpireConfig!");
             modSpireConfig = new SpireConfig(modName, configFileName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,6 +73,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private ModPanel settingsPanel;
     private UIImageElement testImage;
     private UINineSliceElement nineSliceTest;
+
+    private ArrayList<IConfigDataModel> configDataModels = new ArrayList<>();
 
     private GameStateModel gameStateModel;
     private StreakCriteriaModel streakCriteriaModel;
@@ -94,6 +99,21 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseCharacterDisplayModels();
         initialiseStreakDataModel();
 
+        loadConfig();
+
+        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakDataModel);
+
+        String report = controller.createStreakDebugReport();
+        logDebug(report);
+
+        controller.CalculateStreakData(streakCriteriaModel, false);
+
+        report = controller.createStreakDebugReport();
+        logDebug(report);
+
+        logDebug("saveConfig");
+        saveConfig();
+
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
 
@@ -101,15 +121,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         testModel.testString.addOnChangedSubscriber(new Property.ValueChangedSubscriber() {
             @Override
             public void onValueChanged() {
-                logger.info("testString changed to: " + testModel.testString);
+                logDebug("testString changed to: " + testModel.testString);
                 testStringStore = testModel.testString.getValue();
             }
         });
 
 
-        logger.info("testString value: " + testModel.testString.getValue());
+        logDebug("testString value: " + testModel.testString.getValue());
         testModel.testString.setValue("Blamonge!");
-        logger.info("testStringStore value: " + testModel.testString.getValue());
+        logDebug("testStringStore value: " + testModel.testString.getValue());
 /*
         testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture());
         testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
@@ -134,6 +154,27 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         alphaSequence.repeat(10, 0f);
         alphaSequence.start();
  */
+    }
+
+    private void saveConfig() {
+        for(IConfigDataModel dataModel : configDataModels) {
+            dataModel.saveToConfig(modSpireConfig);
+        }
+
+        try {
+            modSpireConfig.save();
+        }
+        catch (IOException e) {
+            logError("Failed to save config file: " + e);
+        }
+    }
+
+    private void loadConfig() {
+
+        logInfo("Loading config!");
+        for(IConfigDataModel dataModel : configDataModels) {
+            dataModel.loadFromConfig(modSpireConfig);
+        }
     }
 
     private ModPanel createModPanel() {
@@ -174,11 +215,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         streakDataModel = new PlayerStreakStoreModel();
         streakCriteriaModel = new StreakCriteriaModel();
 
-        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakDataModel);
-        controller.CalculateStreakData(streakCriteriaModel, true);
-
-        String report = controller.createStreakDebugReport();
-        logger.info(report);
+        configDataModels.add(streakDataModel);
+        configDataModels.add(streakCriteriaModel);
     }
 
     protected void initialiseCharacterDisplayModels() {
@@ -204,5 +242,65 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
                 AbstractPlayer.PlayerClass.WATCHER.toString(),
                 StreakTheSpireTextureDatabase.WATCHER_ICON.getTexture()
         );
+    }
+
+    public static void logError(String message) {
+        if(loggingLevel.ordinal() >= LoggingLevel.ERROR.ordinal()) {
+            logger.error(message);
+        }
+    }
+
+    public static void logError(String message, Object... params) {
+        if(loggingLevel.ordinal() >= LoggingLevel.ERROR.ordinal()) {
+            logger.error(message, params);
+        }
+    }
+
+    public static void logWarning(String message) {
+        if(loggingLevel.ordinal() >= LoggingLevel.WARN.ordinal()) {
+            logger.warn(message);
+        }
+    }
+
+    public static void logWarning(String message, Object... params) {
+        if(loggingLevel.ordinal() >= LoggingLevel.WARN.ordinal()) {
+            logger.warn(message, params);
+        }
+    }
+
+    public static void logInfo(String message) {
+        if(loggingLevel.ordinal() >= LoggingLevel.INFO.ordinal()) {
+            logger.info(message);
+        }
+    }
+
+    public static void logInfo(String message, Object... params) {
+        if(loggingLevel.ordinal() >= LoggingLevel.INFO.ordinal()) {
+            logger.info(message, params);
+        }
+    }
+
+    public static void logDebug(String message) {
+        if(loggingLevel.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+            logger.debug(message);
+        }
+    }
+
+    public static void logDebug(String message, Object... params) {
+        if(loggingLevel.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
+            logger.debug(message, params);
+        }
+    }
+
+    public static void logTrace(String message) {
+        if(loggingLevel.ordinal() >= LoggingLevel.TRACE.ordinal()) {
+            logger.trace(message);
+        }
+    }
+
+    public static void logTrace(String message, Object... params) {
+        if(loggingLevel.ordinal() >= LoggingLevel.TRACE.ordinal()) {
+            logger.trace(message, params);
+        }
     }
 }

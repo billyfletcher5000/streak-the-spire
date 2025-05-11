@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public class CharacterDisplaySetModel {
     public PropertyHashSet<CharacterDisplayModel> characterDisplayModels = new PropertyHashSet<>();
+
+    public CharacterDisplaySetModel() {}
 }
