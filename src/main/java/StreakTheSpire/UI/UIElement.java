@@ -1,8 +1,7 @@
 package StreakTheSpire.UI;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import dorkbox.tweenEngine.TweenAccessor;
 
@@ -17,6 +16,7 @@ public class UIElement implements TweenAccessor<UIElement> {
         public static final int SCALE_XY = 4;
         public static final int SCALE_X = 5;
         public static final int SCALE_Y = 6;
+        public static final int ALPHA = 7;
     }
 
     public static final Vector2 VectorOne = new Vector2(1f, 1f);
@@ -25,12 +25,13 @@ public class UIElement implements TweenAccessor<UIElement> {
     private float localRotation = 0f; //degrees
     private Vector2 localScale = VectorOne.cpy();
     private Vector2 dimensions = Vector2.Zero.cpy();
+    private float localAlpha = 1.0f; // Elements have their own alpha to allow hierarchical alpha without affecting individual element color alpha choice
     private int layer = 0;
     private UIElement parent = null;
     private ArrayList<UIElement> children = new ArrayList<UIElement>();
 
-    protected Matrix3 localTransform;
-    protected Matrix3 localToWorldTransform;
+    protected Affine2 localTransform = new Affine2();
+    protected Affine2 localToWorldTransform = new Affine2();
     protected boolean localTransformDirty = true;
     protected boolean worldTransformDirty = true;
 
@@ -69,6 +70,7 @@ public class UIElement implements TweenAccessor<UIElement> {
     public float getLocalRotation() { return localRotation; }
     public Vector2 getLocalScale() { return localScale.cpy(); }
     public Vector2 getDimensions() { return dimensions.cpy(); }
+    public float getAlpha() { return localAlpha; }
 
     public void setLocalPosition(Vector2 localPosition) {
         if(!this.localPosition.epsilonEquals(localPosition, Epsilon)) {
@@ -95,37 +97,31 @@ public class UIElement implements TweenAccessor<UIElement> {
     }
 
     public void setDimensions(Vector2 dimensions) { this.dimensions.set(dimensions); }
+    public void setAlpha(float alpha) { this.localAlpha = alpha; }
     public int getLayer() { return layer; }
     public void setLayer(int layer) { this.layer = layer; }
 
-    public Matrix3 getLocalTransform() {
+    public Affine2 getLocalTransform() {
         if(localTransformDirty) {
-            localTransform = new Matrix3();
-            localTransform.setToTranslation(localPosition);
-            Matrix3 rotation = new Matrix3();
-            rotation.setToRotation(-localRotation); // Matrix3.setToRotation appears to be the wrong way around and goes counter-clockwise
-            Matrix3 scale = new Matrix3();
-            scale.setToScaling(localScale);
-            localTransform.mul(rotation).mul(scale);
-
+            localTransform.setToTrnRotScl(localPosition, localRotation, localScale);
             localTransformDirty = false;
         }
 
         return localTransform;
     }
 
-    public Matrix3 getLocalToWorldTransform() {
+    public Affine2 getLocalToWorldTransform() {
         if(worldTransformDirty) {
-            ArrayList<Matrix3> transforms = new ArrayList<>();
+            ArrayList<Affine2> transforms = new ArrayList<>();
             UIElement element = this;
             while (element != null) {
                 transforms.add(element.getLocalTransform());
                 element = element.parent;
             }
 
-            localToWorldTransform = new Matrix3().idt();
+            localToWorldTransform = new Affine2();
             for (int i = transforms.size() - 1; i >= 0; i--) {
-                Matrix3 matrix = transforms.get(i);
+                Affine2 matrix = transforms.get(i);
                 localToWorldTransform.mul(matrix);
             }
         }
@@ -133,30 +129,32 @@ public class UIElement implements TweenAccessor<UIElement> {
         return localToWorldTransform;
     }
 
-    public Matrix3 getWorldToLocalTransform() {
-        Matrix3 localToWorld = getLocalToWorldTransform();
+    public Affine2 getWorldToLocalTransform() {
+        Affine2 localToWorld = getLocalToWorldTransform();
         return localToWorld.inv();
     }
 
     public final void render(SpriteBatch spriteBatch) {
-        Matrix3 identity = new Matrix3();
+        Affine2 identity = new Affine2();
         identity.idt();
-        render(identity, spriteBatch);
+        render(identity, spriteBatch, localAlpha);
     }
 
-    public final void render(Matrix3 transformationStack, SpriteBatch spriteBatch) {
-        Matrix3 newTransformationStack = new Matrix3(transformationStack);
+    public final void render(Affine2 transformationStack, SpriteBatch spriteBatch, float transformedAlpha) {
+        Affine2 newTransformationStack = new Affine2(transformationStack);
         newTransformationStack.mul(getLocalTransform());
-        elementPreRender(newTransformationStack, spriteBatch);
-        elementRender(newTransformationStack, spriteBatch);
-        elementPostRender(newTransformationStack, spriteBatch);
+        transformedAlpha *= getAlpha();
+        elementPreRender(newTransformationStack, spriteBatch, transformedAlpha);
+        elementRender(newTransformationStack, spriteBatch, transformedAlpha);
+        elementPostRender(newTransformationStack, spriteBatch, transformedAlpha);
         children.sort((elementA, elementB) -> elementA.layer < elementB.layer ? -1 : 1);
-        children.forEach(child -> child.render(newTransformationStack, spriteBatch));
+        float finalAlpha = transformedAlpha;
+        children.forEach(child -> child.render(newTransformationStack, spriteBatch, finalAlpha));
     }
 
-    protected void elementPreRender(Matrix3 transformationStack, SpriteBatch spriteBatch) {}
-    protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
-    protected void elementPostRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {}
+    protected void elementPreRender(Affine2 transformationStack, SpriteBatch spriteBatch, float transformedAlpha) {}
+    protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {}
+    protected void elementPostRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {}
 
     public final void update(float deltaTime) {
         elementUpdate(deltaTime);
@@ -207,6 +205,10 @@ public class UIElement implements TweenAccessor<UIElement> {
             case TweenTypes.SCALE_Y:
                 returnValues[0] = target.localScale.y;
                 return 1;
+
+            case TweenTypes.ALPHA:
+                returnValues[0] = target.localAlpha;
+                return 1;
         }
 
         return 0;
@@ -242,6 +244,10 @@ public class UIElement implements TweenAccessor<UIElement> {
 
             case TweenTypes.SCALE_Y:
                 target.setLocalScale(new Vector2(target.localScale.x, newValues[0]));
+                break;
+
+            case TweenTypes.ALPHA:
+                target.setAlpha(newValues[0]);
                 break;
         }
     }

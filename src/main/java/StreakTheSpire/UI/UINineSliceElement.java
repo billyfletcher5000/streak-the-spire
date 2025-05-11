@@ -2,7 +2,7 @@ package StreakTheSpire.UI;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 
 public class UINineSliceElement extends UIVisualElement {
@@ -50,8 +50,8 @@ public class UINineSliceElement extends UIVisualElement {
     }
 
     @Override
-    protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {
-        super.elementRender(transformationMatrix, spriteBatch);
+    protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
+        super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
 
         // So this is a (very, very verbose) CPU way of doing things, which will preserve batching because if we did it
         // via changing shader it would mean another draw call/invalidating the batch. In the bizarre event you're in a
@@ -77,6 +77,8 @@ public class UINineSliceElement extends UIVisualElement {
         float normalisedMiddleSizeX = (textureWidth - nineSliceTexture.leftMargin - nineSliceTexture.rightMargin) / textureWidth;
         float normalisedMiddleSizeY = (textureHeight - nineSliceTexture.topMargin - nineSliceTexture.bottomMargin) / textureHeight;
 
+        float colorBits = getTransformedColor(transformedAlpha).toFloatBits();
+
         // TODO: Add tiling support via repeat drawing section quads
 
         // bottom left
@@ -84,73 +86,72 @@ public class UINineSliceElement extends UIVisualElement {
         Vector2 sectionTopRight = new Vector2(outerBottomLeft.x + nineSliceTexture.leftMargin, outerBottomLeft.y + nineSliceTexture.topMargin);
         Vector2 uv1 = new Vector2(0, 0);
         Vector2 uv2 = new Vector2(normalisedLeftSize, normalisedTopSize);
-        drawSection(vertexComponents, 0, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, 0, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // bottom middle
         sectionBottomLeft.x += nineSliceTexture.leftMargin;
         sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // bottom right
         sectionBottomLeft.x += middleMarginX;
         sectionTopRight.x = outerTopRight.x;
         uv1.x += normalisedMiddleSizeX;
         uv2.x = 1;
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 2, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 2, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // middle left
         sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.topMargin);
         sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.leftMargin, outerBottomLeft.y + nineSliceTexture.topMargin + middleMarginY);
         uv1.set(0, normalisedTopSize);
         uv2.set(normalisedLeftSize, normalisedTopSize + normalisedMiddleSizeY);
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 3, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 3, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // middle middle
         sectionBottomLeft.x += nineSliceTexture.leftMargin;
         sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 4, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 4, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // middle right
         sectionBottomLeft.x += middleMarginX;
         sectionTopRight.x = outerTopRight.x;
         uv1.x += normalisedMiddleSizeX;
         uv2.x = 1;
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 5, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 5, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // top left
         sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.topMargin + middleMarginY);
         sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.leftMargin, outerTopRight.y);
         uv1.set(0, normalisedTopSize + normalisedMiddleSizeY);
         uv2.set(normalisedLeftSize, 1);
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 6, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 6, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // top middle
         sectionBottomLeft.x += nineSliceTexture.leftMargin;
         sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 7, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 7, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // top right
         sectionBottomLeft.x += middleMarginX;
         sectionTopRight.x = outerTopRight.x;
         uv1.x += normalisedMiddleSizeX;
         uv2.x = 1;
-        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 8, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2);
+        drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 8, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // Finally, draw everything!
         spriteBatch.draw(nineSliceTexture.texture, vertexComponents, 0, vertexCount);
     }
 
-    protected void drawSection(float[] vertices, int offset, Matrix3 transformMatrix, Vector2 topLeft, Vector2 bottomRight, Vector2 uv1, Vector2 uv2) {
-        Vector2 topLeftTransformed = topLeft.cpy().mul(transformMatrix);
-        Vector2 bottomRightTransformed = bottomRight.cpy().mul(transformMatrix);
+    protected void drawSection(float[] vertices, int offset, Affine2 transformMatrix, Vector2 topLeft, Vector2 bottomRight, Vector2 uv1, Vector2 uv2, float colorBits) {
+        Vector2 topLeftTransformed = topLeft.cpy(); transformMatrix.applyTo(topLeftTransformed);
+        Vector2 bottomRightTransformed = bottomRight.cpy(); transformMatrix.applyTo(bottomRightTransformed);
 
-        float colorBits = color.toFloatBits();
 
         int vertexIndex = offset;
         vertices[vertexIndex + VertexComponent.X] = topLeftTransformed.x;

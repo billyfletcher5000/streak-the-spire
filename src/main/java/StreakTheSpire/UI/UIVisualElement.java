@@ -3,6 +3,7 @@ package StreakTheSpire.UI;
 import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix3;
 
 public class UIVisualElement extends UIElement {
@@ -18,6 +19,10 @@ public class UIVisualElement extends UIElement {
 
     public Color getColor() { return color; }
     public void setColor(Color color) { this.color = color; }
+
+    protected Color getTransformedColor(float transformedAlpha) {
+        return new Color(color.r, color.g, color.b, color.a * transformedAlpha);
+    }
 
     @Override
     public int getValues(UIElement target, int tweenType, float[] returnValues) {

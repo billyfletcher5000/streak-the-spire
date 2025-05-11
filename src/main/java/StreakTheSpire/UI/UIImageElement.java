@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix3;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 
 public class UIImageElement extends UIVisualElement {
@@ -66,18 +66,18 @@ public class UIImageElement extends UIVisualElement {
     }
 
     @Override
-    protected void elementRender(Matrix3 transformationMatrix, SpriteBatch spriteBatch) {
-        super.elementRender(transformationMatrix, spriteBatch);
+    protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
+        super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
 
         float[] vertices = new float[VertexWindingID.NUM * VertexComponent.NUM];
 
         Vector2 extents = getDimensions().cpy().scl(0.5f);
-        Vector2 topLeft = extents.cpy().scl(-1f, 1f).mul(transformationMatrix);
-        Vector2 topRight = extents.cpy().scl(1f, 1f).mul(transformationMatrix);
-        Vector2 bottomRight = extents.cpy().scl(1f, -1f).mul(transformationMatrix);
-        Vector2 bottomLeft = extents.cpy().scl(-1f, -1f).mul(transformationMatrix);
-        
-        float colorBits = color.toFloatBits();
+        Vector2 topLeft = extents.cpy().scl(-1f, 1f); transformationMatrix.applyTo(topLeft);
+        Vector2 topRight = extents.cpy().scl(1f, 1f); transformationMatrix.applyTo(topRight);
+        Vector2 bottomRight = extents.cpy().scl(1f, -1f); transformationMatrix.applyTo(bottomRight);
+        Vector2 bottomLeft = extents.cpy().scl(-1f, -1f); transformationMatrix.applyTo(bottomLeft);
+
+        float colorBits = getTransformedColor(transformedAlpha).toFloatBits();
 
         int vertexIndex = VertexWindingID.TL * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = topLeft.x;
