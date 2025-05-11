@@ -170,7 +170,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     private void loadConfig() {
-
         logInfo("Loading config!");
         for(IConfigDataModel dataModel : configDataModels) {
             dataModel.loadFromConfig(modSpireConfig);
