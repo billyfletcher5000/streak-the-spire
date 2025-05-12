@@ -16,6 +16,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     private boolean resizeEnabled = false;
     private float hitboxWidth = 16.0f;
     private HashMap<UIElementHitbox, Integer> hitboxToDragDirection = new HashMap<>();
+    private UIElementHitbox moveHitbox;
     private UIElementHitbox currentHitbox = null;
     private int currentDragDirection = DragDirectionFlags.NONE;
     private Vector2 currentOffset = new Vector2();
@@ -26,6 +27,8 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     @Override
     public void setLocalRotation(float localRotation) { }
 
+    public boolean isResizeEnabled() { return resizeEnabled; }
+    public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled = resizeEnabled; if(!resizeEnabled) clearCurrentSelection(); }
 
     // TODO: Add on resize event
     // TODO: Add ability to move panel and also on move event
@@ -78,6 +81,8 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         float cardinalWidth = dimensions.x - (hitboxWidth * 2.0f);
         float cardinalHeight = dimensions.y - (hitboxWidth * 2.0f);
 
+        moveHitbox = new UIElementHitbox(0f, 0f, cardinalWidth, cardinalHeight, this);
+
         // Cardinals
         hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, 0f, hitboxWidth, cardinalHeight, this), DragDirectionFlags.LEFT);
         hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, 0f, hitboxWidth, cardinalHeight, this), DragDirectionFlags.RIGHT);
@@ -121,13 +126,18 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     @Override
     public void startClicking(Hitbox hitbox) {
         UIElementHitbox uiElementHitbox = (UIElementHitbox) hitbox;
-        if(uiElementHitbox == null || !hitboxToDragDirection.containsKey(uiElementHitbox)) {
+        if(uiElementHitbox == moveHitbox) {
+            currentDragDirection = DragDirectionFlags.NONE;
+        }
+        else if(hitboxToDragDirection.containsKey(uiElementHitbox)) {
+            currentDragDirection = hitboxToDragDirection.get(uiElementHitbox);
+        }
+        else {
             StreakTheSpire.logError("UIElementHitbox does not exist or is invalid!");
             return;
         }
 
         currentHitbox = uiElementHitbox;
-        currentDragDirection = hitboxToDragDirection.get(uiElementHitbox);
         Affine2 worldToLocal = getWorldToLocalTransform();
         Vector2 mousePosition = new Vector2(InputHelper.mX, InputHelper.mY);
         worldToLocal.applyTo(mousePosition);
@@ -151,47 +161,49 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         super.elementUpdate(deltaTime);
 
         Affine2 worldTransform = getLocalToWorldTransform();
-        updateHitboxes(worldTransform);
+        //updateHitboxes(worldTransform);
 
-        if(currentHitbox != null && currentDragDirection != DragDirectionFlags.NONE) {
+        if(currentHitbox != null) {
             Vector2 dimensions = getDimensions();
 
             Affine2 worldToLocal = getWorldToLocalTransform();
             Vector2 mousePosition = new Vector2(InputHelper.mX, InputHelper.mY);
             worldToLocal.applyTo(mousePosition);
 
-
             Vector2 difference = mousePosition.cpy().sub(currentHitbox.getLocalPosition().cpy().add(currentOffset));
-
             Vector2 halfDifference = difference.cpy().scl(0.5f);
 
-            StreakTheSpire.logInfo("Drag: mousePosition: " + mousePosition + ", difference: " + difference + ", halfDifference: " + halfDifference);
+            StreakTheSpire.logDebug("Drag: mousePosition: " + mousePosition + ", difference: " + difference + ", halfDifference: " + halfDifference);
 
-            if((currentDragDirection & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT) {
-                setDimensions(new Vector2(dimensions.x - difference.x, dimensions.y));
-                setLocalPosition(getLocalPosition().add(halfDifference.x, 0));
-            }
-            else if((currentDragDirection & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT) {
-                setDimensions(new Vector2(dimensions.x + difference.x, dimensions.y));
-                setLocalPosition(getLocalPosition().add(halfDifference.x, 0));
-            }
+            if (currentHitbox == moveHitbox) {
+                setLocalPosition(getLocalPosition().add(difference));
+            } else if (currentDragDirection != DragDirectionFlags.NONE) {
+                if ((currentDragDirection & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT) {
+                    setDimensions(new Vector2(dimensions.x - difference.x, dimensions.y));
+                    setLocalPosition(getLocalPosition().add(halfDifference.x, 0));
+                } else if ((currentDragDirection & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT) {
+                    setDimensions(new Vector2(dimensions.x + difference.x, dimensions.y));
+                    setLocalPosition(getLocalPosition().add(halfDifference.x, 0));
+                }
 
-            dimensions = getDimensions();
+                dimensions = getDimensions();
 
-            if((currentDragDirection & DragDirectionFlags.UP) == DragDirectionFlags.UP) {
-                setDimensions(new Vector2(dimensions.x, dimensions.y + difference.y));
-                setLocalPosition(getLocalPosition().add(0, halfDifference.y));
+                if ((currentDragDirection & DragDirectionFlags.UP) == DragDirectionFlags.UP) {
+                    setDimensions(new Vector2(dimensions.x, dimensions.y + difference.y));
+                    setLocalPosition(getLocalPosition().add(0, halfDifference.y));
+                } else if ((currentDragDirection & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN) {
+                    setDimensions(new Vector2(dimensions.x, dimensions.y - difference.y));
+                    setLocalPosition(getLocalPosition().add(0, halfDifference.y));
+                }
             }
-            else if((currentDragDirection & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN) {
-                setDimensions(new Vector2(dimensions.x, dimensions.y - difference.y));
-                setLocalPosition(getLocalPosition().add(0, halfDifference.y));
-            }
-
-            updateHitboxes(getLocalToWorldTransform());
         }
+
+        updateHitboxes(getLocalToWorldTransform());
     }
 
     private void updateHitboxes(Affine2 worldTransform) {
+        moveHitbox.update(worldTransform);
+        
         Vector2 halfDimensions = getDimensions().scl(0.5f);
         for(Map.Entry<UIElementHitbox, Integer> entry : hitboxToDragDirection.entrySet()) {
             UIElementHitbox uiElementHitbox = entry.getKey();
