@@ -154,6 +154,11 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         alphaSequence.repeat(10, 0f);
         alphaSequence.start();
  */
+
+        NineSliceTexture nineSliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.TIP_BOX_NINESLICE.getTexture(), 48, 48, 35, 35);
+        nineSliceTest = new UIResizablePanel(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
+        logger.info("tipBodyFont:" + (FontHelper.tipBodyFont != null ? FontHelper.tipBodyFont : "null"));
+        nineSliceTest.addChild(new UITextElement(new Vector2(0f, 0f), FontHelper.tipBodyFont, "Lorem ipsum hullabaloo plonk plonk flabblecrunk.", new Vector2(350, 200)));
     }
 
     private void saveConfig() {
@@ -186,16 +191,17 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public void receiveRender(SpriteBatch sb) {
         /*
         testImage.render(sb);
-        nineSliceTest.render(sb);
          */
+        nineSliceTest.render(sb);
     }
 
 
     @Override
     public void receivePostUpdate() {
         gameStateModel.gameMode.setValue(CardCrawlGame.mode);
+        nineSliceTest.update(getDeltaTime());
 
-        tweenEngine.update(Gdx.graphics.getDeltaTime());
+        tweenEngine.update(getDeltaTime());
     }
 
     @Override
