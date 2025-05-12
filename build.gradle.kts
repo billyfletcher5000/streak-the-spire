@@ -55,3 +55,11 @@ tasks.register<Copy>("buildAndCopyJAR") {
     from("build/libs/$modName.jar")
     into("$stsInstallLocation\\mods")
 }
+
+tasks.register<Exec>("runMTS") {
+    group = "Slay the Spire"
+    description = "Runs MTS"
+
+    workingDir("$stsInstallLocation")
+    commandLine("$stsInstallLocation/jre/bin/javaw.exe", "-jar", "$stsInstallLocation/mts-launcher.jar", "--skip-intro")
+}
