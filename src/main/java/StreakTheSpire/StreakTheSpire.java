@@ -23,10 +23,9 @@ import com.google.gson.GsonBuilder;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
+import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
-import dorkbox.tweenEngine.Timeline;
 import dorkbox.tweenEngine.TweenEngine;
-import dorkbox.tweenEngine.TweenEquations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -71,6 +70,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private TweenEngine tweenEngine;
 
     private ModPanel settingsPanel;
+
+    private UIElement rootUIElement;
     private UIImageElement testImage;
     private UINineSliceElement nineSliceTest;
 
@@ -113,6 +114,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         logDebug("saveConfig");
         saveConfig();
+
+        initialiseUIRoot();
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
@@ -159,6 +162,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         nineSliceTest = new UIResizablePanel(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
         logger.info("tipBodyFont:" + (FontHelper.tipBodyFont != null ? FontHelper.tipBodyFont : "null"));
         nineSliceTest.addChild(new UITextElement(new Vector2(0f, 0f), FontHelper.tipBodyFont, "Lorem ipsum hullabaloo plonk plonk flabblecrunk.", new Vector2(350, 200)));
+
+        rootUIElement.addChild(nineSliceTest);
+    }
+
+    private void initialiseUIRoot() {
+        rootUIElement = new UIElement();
+        rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
     }
 
     private void saveConfig() {
@@ -189,17 +199,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receiveRender(SpriteBatch sb) {
-        /*
-        testImage.render(sb);
-         */
-        nineSliceTest.render(sb);
+        rootUIElement.render(sb);
     }
 
 
     @Override
     public void receivePostUpdate() {
         gameStateModel.gameMode.setValue(CardCrawlGame.mode);
-        nineSliceTest.update(getDeltaTime());
+        rootUIElement.update(getDeltaTime());
 
         tweenEngine.update(getDeltaTime());
     }
