@@ -37,12 +37,14 @@ public class PlayerStreakStoreController {
 
         if(recalculateAll) {
             model.playerToStreak.clear();
-            model.rotatingPlayerStreakModel = new PlayerStreakModel();
-            model.rotatingPlayerStreakModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            PlayerStreakModel rotatingModel = new PlayerStreakModel();
+            rotatingModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            model.rotatingPlayerStreakModel.setValue(rotatingModel);
         }
         else if (model.rotatingPlayerStreakModel == null) {
-            model.rotatingPlayerStreakModel = new PlayerStreakModel();
-            model.rotatingPlayerStreakModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            PlayerStreakModel rotatingModel = new PlayerStreakModel();
+            rotatingModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            model.rotatingPlayerStreakModel.setValue(rotatingModel);
         }
 
         FileHandle[] subfolders = Gdx.files.local("runs" + File.separator).list();
@@ -149,7 +151,7 @@ public class PlayerStreakStoreController {
         allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
         for(RunDataSubset data : allCharacterSubsets) {
-            processRunData(criteria, data, model.rotatingPlayerStreakModel, PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            processRunData(criteria, data, model.rotatingPlayerStreakModel.getValue(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
         }
     }
 
@@ -192,10 +194,14 @@ public class PlayerStreakStoreController {
                 }
             }
 
-            if (failed)
+            if (failed) {
                 streakCount = 0;
-            else
+                streakModel.totalValidLosses.setValue(streakModel.totalValidLosses.getValue() + 1);
+            }
+            else {
                 streakCount++;
+                streakModel.totalValidWins.setValue(streakModel.totalValidWins.getValue() + 1);
+            }
 
             streakModel.currentStreak.setValue(streakCount);
             streakModel.currentStreakTimestamp.setValue(data.timestamp);
@@ -217,7 +223,7 @@ public class PlayerStreakStoreController {
 
         ArrayList<PlayerStreakModel> playerStreakModels = new ArrayList<>(model.playerToStreak);
         if(model.rotatingPlayerStreakModel != null)
-            playerStreakModels.add(model.rotatingPlayerStreakModel);
+            playerStreakModels.add(model.rotatingPlayerStreakModel.getValue());
 
         for(PlayerStreakModel playerStreakModel : playerStreakModels)
         {
@@ -226,6 +232,9 @@ public class PlayerStreakStoreController {
             report.append("\tCurrent Streak: " + playerStreakModel.currentStreak.getValue() + "\n");
             report.append("\tHighest Streak Timestamp: " + playerStreakModel.highestStreakTimestamp.getValue() + "\n");
             report.append("\tCurrent Streak Timestamp: " + playerStreakModel.currentStreakTimestamp.getValue() + "\n");
+            report.append("\tTotal Wins: " + playerStreakModel.totalValidWins.getValue() + "\n");
+            report.append("\tTotal Losses: " + playerStreakModel.totalValidLosses.getValue() + "\n");
+            report.append("\tWin Rate: " + (float)playerStreakModel.totalValidWins.getValue() / (float)playerStreakModel.totalValidLosses.getValue() + "\n");
             report.append("\tProcessed Filenames: " + String.join(", ", playerStreakModel.processedFilenames) + "\n");
         }
 

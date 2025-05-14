@@ -1,6 +1,7 @@
 package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
@@ -10,17 +11,23 @@ import com.megacrit.cardcrawl.helpers.HitboxListener;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class UIResizablePanel extends UINineSliceElement implements HitboxListener {
+
     private boolean resizeEnabled = false;
     private float hitboxWidth = 16.0f;
+    private Vector2 minimumSize;
+
     private HashMap<UIElementHitbox, Integer> hitboxToDragDirection = new HashMap<>();
     private UIElementHitbox moveHitbox;
     private UIElementHitbox currentHitbox = null;
     private int currentDragDirection = DragDirectionFlags.NONE;
     private Vector2 currentOffset = new Vector2();
-    private Vector2 minimumSize;
+
+    private HashSet<PanelResizedSubscriber> panelResizedSubscribers = new HashSet<>();
+    private HashSet<PanelMovedSubscriber> panelMovedSubscribers = new HashSet<>();
 
     // Intently disabled rotation for these, see UIElementHitbox comments
     // Note: This will not prevent setting rotation higher, but any rotation higher will cause issues with
@@ -31,36 +38,21 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     public boolean isResizeEnabled() { return resizeEnabled; }
     public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled = resizeEnabled; if(!resizeEnabled) clearCurrentSelection(); }
 
-    // TODO: Add on resize event
-    // TODO: Add ability to move panel and also on move event
-
-    private static class DragDirectionFlags {
-        public static final int NONE = 0;
-        public static final int UP = 1;
-        public static final int DOWN = 2;
-        public static final int LEFT = 4;
-        public static final int RIGHT = 8;
-
-        public static boolean isCardinal(int direction) {
-            return direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT;
-        }
-
-        public static boolean isVertical(int direction) {
-            return direction == UP || direction == DOWN;
-        }
-
-        public static boolean isBottomToTopDiagonal(int direction) {
-            return ((direction & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT && (direction & DragDirectionFlags.UP) == DragDirectionFlags.UP) ||
-                    ((direction & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT && (direction & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN);
-        }
-    }
-
     public float getHitboxWidth() { return hitboxWidth; }
     public void setHitboxWidth(float hitboxWidth) { this.hitboxWidth = hitboxWidth; }
+
+    public Vector2 getMinimumSize() { return minimumSize.cpy(); }
+    public void setMinimumSize(Vector2 minimumSize) { this.minimumSize.set(minimumSize); }
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size) {
         super(position, texture, size);
         minimumSize = new Vector2(hitboxWidth * 6.0f, hitboxWidth * 6.0f);
+        createHitboxes();
+    }
+
+    public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size, Vector2 minimumSize) {
+        super(position, texture, size);
+        this.minimumSize = minimumSize.cpy();
         createHitboxes();
     }
 
@@ -70,10 +62,54 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         createHitboxes();
     }
 
+    public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size, Vector2 minimumSize, Color color) {
+        super(position, texture, size, color);
+        this.minimumSize = minimumSize.cpy();
+        createHitboxes();
+    }
+
     public UIResizablePanel(Vector2 position, Vector2 scale, NineSliceTexture texture, Vector2 size, Color color) {
         super(position, scale, texture, size, color);
         minimumSize = new Vector2(hitboxWidth * 6.0f, hitboxWidth * 6.0f);
         createHitboxes();
+    }
+
+    public UIResizablePanel(Vector2 position, Vector2 scale, NineSliceTexture texture, Vector2 size, Vector2 minimumSize, Color color) {
+        super(position, scale, texture, size, color);
+        this.minimumSize = minimumSize.cpy();
+        createHitboxes();
+    }
+
+    public static class PanelResizedSubscriber {
+        public void onPanelResized() {}
+    }
+
+    public static class PanelMovedSubscriber {
+        public void onPanelMoved() {}
+    }
+
+    public void addOnPanelResizedSubscriber(PanelResizedSubscriber subscriber) {
+        if (panelResizedSubscribers == null)
+            panelResizedSubscribers = new HashSet<>();
+
+        panelResizedSubscribers.add(subscriber);
+    }
+
+    public void removeOnPanelResizedSubscriber(PanelResizedSubscriber subscriber) {
+        if(panelResizedSubscribers != null)
+            panelResizedSubscribers.remove(subscriber);
+    }
+
+    public void addOnPanelMovedSubscriber(PanelMovedSubscriber subscriber) {
+        if (panelMovedSubscribers == null)
+            panelMovedSubscribers = new HashSet<>();
+
+        panelMovedSubscribers.add(subscriber);
+    }
+
+    public void removeOnPanelMovedSubscriber(PanelMovedSubscriber subscriber) {
+        if(panelMovedSubscribers != null)
+            panelMovedSubscribers.remove(subscriber);
     }
 
     private void createHitboxes() {
@@ -150,8 +186,16 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     @Override
     public void clicked(Hitbox hitbox) {
-        // Maybe play a sound or commit to prefs?
-        clearCurrentSelection();
+        if(currentHitbox == hitbox) {
+            if(currentHitbox == moveHitbox) {
+                panelMovedSubscribers.forEach(subscriber -> subscriber.onPanelMoved());
+            }
+            else if (hitboxToDragDirection.containsKey(hitbox)) {
+                panelResizedSubscribers.forEach(subscriber -> subscriber.onPanelResized());
+            }
+
+            clearCurrentSelection();
+        }
     }
 
     private void clearCurrentSelection() {
@@ -251,5 +295,26 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
         moveHitbox.render(spriteBatch);
         hitboxToDragDirection.forEach((uiElementHitbox, integer) -> uiElementHitbox.render(spriteBatch));
+    }
+
+    private static class DragDirectionFlags {
+        public static final int NONE = 0;
+        public static final int UP = 1;
+        public static final int DOWN = 2;
+        public static final int LEFT = 4;
+        public static final int RIGHT = 8;
+
+        public static boolean isCardinal(int direction) {
+            return direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT;
+        }
+
+        public static boolean isVertical(int direction) {
+            return direction == UP || direction == DOWN;
+        }
+
+        public static boolean isBottomToTopDiagonal(int direction) {
+            return ((direction & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT && (direction & DragDirectionFlags.UP) == DragDirectionFlags.UP) ||
+                    ((direction & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT && (direction & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN);
+        }
     }
 }

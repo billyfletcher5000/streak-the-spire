@@ -10,6 +10,8 @@ public class PlayerStreakModel {
     public Property<Integer> currentStreak = new Property<>(0);
     public Property<String> currentStreakTimestamp = new Property<>(null);
     public PropertyHashSet<String> processedFilenames = new PropertyHashSet<>();
+    public Property<Integer> totalValidWins = new Property<>(0);
+    public Property<Integer> totalValidLosses = new Property<>(0);
 
     public PlayerStreakModel() {}
 }

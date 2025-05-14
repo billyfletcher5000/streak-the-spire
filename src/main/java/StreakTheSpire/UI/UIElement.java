@@ -1,5 +1,6 @@
 package StreakTheSpire.UI;
 
+import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
@@ -46,6 +47,10 @@ public class UIElement implements TweenAccessor<UIElement> {
     public UIElement[] getChildren() { return children.toArray(new UIElement[children.size()]); }
 
     public void addChild(UIElement child) {
+        if(child == null) {
+            StreakTheSpire.logInfo("Attempted to add null child");
+            return;
+        }
         if(!children.contains(child))
             children.add(child);
 

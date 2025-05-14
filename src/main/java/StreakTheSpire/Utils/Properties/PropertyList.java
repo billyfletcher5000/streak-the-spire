@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class PropertyList<T extends Serializable> extends ArrayList<T> {
+public class PropertyList<T> extends ArrayList<T> {
     public PropertyList() {
         super();
     }

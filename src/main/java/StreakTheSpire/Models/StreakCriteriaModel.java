@@ -1,5 +1,6 @@
 package StreakTheSpire.Models;
 
+import StreakTheSpire.Utils.ConfigHelper;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
@@ -28,7 +29,7 @@ public class StreakCriteriaModel implements IConfigDataModel {
     );
 
     public StreakCriteriaModel() {}
-
+/*
     //region Config
     private final String RequireHeartKillConfigName = "require_heart_kill";
     private final String RequiredAscensionLevelConfigName = "required_ascension_level";
@@ -39,7 +40,7 @@ public class StreakCriteriaModel implements IConfigDataModel {
     private final String AllowDemoConfigName = "allow_demo";
     private final String AllowEndlessConfigName = "allow_endless";
 
-    public void loadFromConfig(SpireConfig config) {
+    public void afterLoadFromConfig(SpireConfig config) {
         if(config.has(RequireHeartKillConfigName))
             requireHeartKill.setValue(config.getBool(RequireHeartKillConfigName));
 
@@ -67,7 +68,7 @@ public class StreakCriteriaModel implements IConfigDataModel {
         }
     }
 
-    public void saveToConfig(SpireConfig config) {
+    public void beforeSaveToConfig(SpireConfig config) {
         config.setBool(RequireHeartKillConfigName, requireHeartKill.getValue());
         config.setInt(RequiredAscensionLevelConfigName, requiredAscensionLevel.getValue());
         config.setBool(AllowCustomSeedsConfigName, allowCustomSeeds.getValue());
@@ -77,4 +78,6 @@ public class StreakCriteriaModel implements IConfigDataModel {
         config.setString(TrackedCharacterClassesConfigName, gson.toJson(trackedCharacterClasses));
     }
     //endregion
+    
+ */
 }

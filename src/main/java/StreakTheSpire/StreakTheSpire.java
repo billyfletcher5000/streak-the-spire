@@ -8,6 +8,9 @@ import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
+import StreakTheSpire.Views.IView;
+import StreakTheSpire.Views.PlayerStreakStoreView;
+import StreakTheSpire.Views.ViewFactoryManager;
 import basemod.BaseMod;
 import basemod.ModPanel;
 import basemod.interfaces.AddAudioSubscriber;
@@ -24,7 +27,6 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.helpers.FontHelper;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +54,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private static final String configFileName = "Config";
     private static SpireConfig modSpireConfig = null;
 
-    public static void saveModSpireConfig() throws IOException { instance.saveConfig(); }
+    public static SpireConfig getConfig() { return modSpireConfig; }
+    public static void saveModSpireConfig() {
+        try {
+            instance.saveConfig();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     // ~Config
 
     public static void initialize() {
@@ -92,6 +101,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receivePostInitialize() {
+        registerViewFactories();
+
         tweenEngine = TweenEngine.build();
 
         StreakTheSpireTextureDatabase.loadAll();
@@ -99,6 +110,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
         initialiseStreakDataModel();
+
 
         loadConfig();
 
@@ -116,6 +128,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         saveConfig();
 
         initialiseUIRoot();
+        createViews();
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
@@ -157,15 +170,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         alphaSequence.repeat(10, 0f);
         alphaSequence.start();
  */
-
+/*
         NineSliceTexture nineSliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.TIP_BOX_NINESLICE.getTexture(), 48, 48, 35, 35);
         nineSliceTest = new UIResizablePanel(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
         logger.info("tipBodyFont:" + (FontHelper.tipBodyFont != null ? FontHelper.tipBodyFont : "null"));
         nineSliceTest.addChild(new UITextElement(new Vector2(0f, 0f), FontHelper.tipBodyFont, "Lorem ipsum hullabaloo plonk plonk flabblecrunk.", new Vector2(350, 200)));
-
-        rootUIElement.addChild(nineSliceTest);
+*/
+        //rootUIElement.addChild(nineSliceTest);
     }
-
     private void initialiseUIRoot() {
         rootUIElement = new UIElement();
         rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
@@ -173,7 +185,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private void saveConfig() {
         for(IConfigDataModel dataModel : configDataModels) {
-            dataModel.saveToConfig(modSpireConfig);
+            dataModel.beforeSaveToConfig(modSpireConfig);
         }
 
         try {
@@ -187,7 +199,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private void loadConfig() {
         logInfo("Loading config!");
         for(IConfigDataModel dataModel : configDataModels) {
-            dataModel.loadFromConfig(modSpireConfig);
+            dataModel.afterLoadFromConfig(modSpireConfig);
         }
     }
 
@@ -216,6 +228,10 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         //BaseMod.addAudio("AUDIO_ID", "StreakTheSpire/AUDIO_WAV.wav");
     }
 
+    private void registerViewFactories() {
+        ViewFactoryManager.get().registerViewFactory(PlayerStreakStoreModel.class, PlayerStreakStoreView.FACTORY);
+    }
+
 
     protected void initialiseGameStateModel() {
         gameStateModel = new GameStateModel();
@@ -235,25 +251,40 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         characterDisplaySetModel = new CharacterDisplaySetModel();
         CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel);
 
-        controller.addCharacterDisplay(
+        controller.addCharacterIconDisplay(
                 AbstractPlayer.PlayerClass.IRONCLAD.toString(),
                 StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture()
         );
 
-        controller.addCharacterDisplay(
+        controller.addCharacterIconDisplay(
                 AbstractPlayer.PlayerClass.THE_SILENT.toString(),
                 StreakTheSpireTextureDatabase.SILENT_ICON.getTexture()
         );
 
-        controller.addCharacterDisplay(
+        controller.addCharacterIconDisplay(
                 AbstractPlayer.PlayerClass.DEFECT.toString(),
                 StreakTheSpireTextureDatabase.DEFECT_ICON.getTexture()
         );
 
-        controller.addCharacterDisplay(
+        controller.addCharacterIconDisplay(
                 AbstractPlayer.PlayerClass.WATCHER.toString(),
                 StreakTheSpireTextureDatabase.WATCHER_ICON.getTexture()
         );
+    }
+
+    private void createViews() {
+        createView(streakDataModel);
+    }
+
+    private <T extends IModel> IView createView(T model) {
+        IView view = ViewFactoryManager.get().CreateView(model);
+
+        logInfo("View created: " + (view == null ? "null" : view.getClass().getSimpleName()) + " viewIsUIElement: " + (view instanceof UIElement ? "yes" : "no"));
+        if(view instanceof UIElement) {
+            rootUIElement.addChild((UIElement) view);
+        }
+
+        return view;
     }
 
     public static void logError(String message) {
