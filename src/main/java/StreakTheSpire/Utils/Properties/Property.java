@@ -33,7 +33,7 @@ public class Property<T> {
     // Do not use this unless you have a very specific, generics related reason to do so,
     // it will set the value to null if it cannot be casted to the type T
     public void setObject(Object value) {
-        StreakTheSpire.logInfo("Setting object to " + value.getClass().getName());
+        StreakTheSpire.logDebug("Setting object to " + value.getClass().getName());
         set((T) value);
     }
 

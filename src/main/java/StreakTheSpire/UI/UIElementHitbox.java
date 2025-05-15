@@ -42,8 +42,6 @@ public class UIElementHitbox extends Hitbox {
         localPosition.set(x, y);
         localSize.set(width, height);
         hitboxListener = listener;
-
-        StreakTheSpire.logInfo("Creating UIElementHitbox: x: {} y: {} width: {} height: {}", x, y, width, height);
     }
 
     public void update(Affine2 transformationMatrix) {
@@ -61,20 +59,5 @@ public class UIElementHitbox extends Hitbox {
             encapsulatedUpdate(hitboxListener);
         else
             update();
-    }
-
-    @Override
-    public void render(SpriteBatch sb) {
-        {
-            //StreakTheSpire.logInfo("UIElementHitbox: x:{} y:{} width:{} height:{} localPosition:{} localSize:{}", x, y, width, height, localPosition, localSize);
-            if (this.clickStarted) {
-                sb.setColor(Color.CHARTREUSE);
-            } else {
-                sb.setColor(Color.RED);
-            }
-
-            sb.draw(ImageMaster.DEBUG_HITBOX_IMG, this.x, this.y, this.width, this.height);
-        }
-
     }
 }

@@ -18,24 +18,4 @@ public class SavedPanelModel extends IModel {
         ret += "Scale: " + scale.get() + "\n";
         return ret;
     }
-/*
-    private static final String PositionConfigName = "position";
-    private static final String DimensionsConfigName = "dimensions";
-    private static final String ScaleConfigName = "scale";
-
-    @Override
-    public void afterLoadFromConfig(SpireConfig config) {
-        position.setValue(gson.fromJson(config.getString(PositionConfigName), Vector2.class));
-        dimensions.setValue(gson.fromJson(config.getString(DimensionsConfigName), Vector2.class));
-        scale.setValue(gson.fromJson(config.getString(ScaleConfigName), Vector2.class));
-    }
-
-    @Override
-    public void beforeSaveToConfig(SpireConfig config) {
-        config.setString(PositionConfigName, gson.toJson(position.getValue()));
-        config.setString(DimensionsConfigName, gson.toJson(dimensions.getValue()));
-        config.setString(ScaleConfigName, gson.toJson(scale.getValue()));
-    }
-
- */
 }

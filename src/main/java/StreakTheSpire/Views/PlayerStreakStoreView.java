@@ -63,11 +63,11 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         public <TView extends IView, TModel extends IModel> TView createView(TModel model) {
             PlayerStreakStoreModel playerStreakStoreModel = (PlayerStreakStoreModel) model;
             if(playerStreakStoreModel != null) {
-                StreakTheSpire.logInfo("PlayStreakStoreView created!");
+                StreakTheSpire.logDebug("PlayStreakStoreView created!");
                 return (TView) new PlayerStreakStoreView(playerStreakStoreModel);
             }
 
-            StreakTheSpire.logInfo("PlayStreakStoreViewFactory failed to create view!");
+            StreakTheSpire.logWarning("PlayStreakStoreViewFactory failed to create view!");
             return null;
         }
     };

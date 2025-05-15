@@ -48,7 +48,7 @@ public class UIElement implements TweenAccessor<UIElement> {
 
     public void addChild(UIElement child) {
         if(child == null) {
-            StreakTheSpire.logInfo("Attempted to add null child");
+            StreakTheSpire.logWarning("Attempted to add null child");
             return;
         }
         if(!children.contains(child))

@@ -37,6 +37,7 @@ import java.util.Map;
 
 @SpireInitializer
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, AddAudioSubscriber {
+
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
     public static final LoggingLevel loggingLevel = LoggingLevel.DEBUG;
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
@@ -56,13 +57,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private static SpireConfig modSpireConfig = null;
 
     public static SpireConfig getConfig() { return modSpireConfig; }
-    public static void saveModSpireConfig() {
-        try {
-            instance.saveConfig();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     // ~Config
 
     public static void initialize() {
@@ -73,28 +67,20 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             logInfo("Creating SpireConfig!");
             modSpireConfig = new SpireConfig(modName, configFileName);
         } catch (Exception e) {
-            e.printStackTrace();
+            logError("Initialize exception:" + e.getMessage());
         }
     }
 
     private TweenEngine tweenEngine;
-
+    private UIElement rootUIElement;
     private ModPanel settingsPanel;
 
-    private UIElement rootUIElement;
-    private UIImageElement testImage;
-    private UINineSliceElement nineSliceTest;
-
-    private HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
+    private final HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
 
     private Property<GameStateModel> gameStateModel;
     private Property<StreakCriteriaModel> streakCriteriaModel;
     private Property<PlayerStreakStoreModel> streakDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
-
-    private TestModel testModel;
-
-    private String testStringStore = "Crab";
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
@@ -112,7 +98,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
         initialiseStreakDataModel();
-
 
         loadConfig();
 
@@ -134,52 +119,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
-
-        testModel = new TestModel();
-        testModel.testString.addOnChangedSubscriber(new Property.ValueChangedSubscriber() {
-            @Override
-            public void onValueChanged() {
-                logDebug("testString changed to: " + testModel.testString);
-                testStringStore = testModel.testString.get();
-            }
-        });
-
-
-        logDebug("testString value: " + testModel.testString.get());
-        testModel.testString.set("Blamonge!");
-        logDebug("testStringStore value: " + testModel.testString.get());
-/*
-        testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture());
-        testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
-
-        Timeline sequence = tweenEngine.createSequential();
-        sequence.push(tweenEngine.to(testImage, UIElement.TweenTypes.POSITION_XY, 5.0f).target(200, 400).ease(TweenEquations.Linear));
-        sequence.push(tweenEngine.to(testImage, UIElement.TweenTypes.POSITION_XY, 5.0f).target(1000, 400).ease(TweenEquations.Linear));
-        sequence.repeatAutoReverse(10, 1f);
-        sequence.start();
-
-
-
-        NineSliceTexture nineSliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.TIP_BOX_NINESLICE.getTexture(), 48, 48, 35, 35);
-        nineSliceTest = new UINineSliceElement(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
-        logger.info("tipBodyFont:" + (FontHelper.tipBodyFont != null ? FontHelper.tipBodyFont : "null"));
-        nineSliceTest.addChild(new UITextElement(new Vector2(0f, 0f), FontHelper.tipBodyFont, "Lorem ipsum hullabaloo plonk plonk flabblecrunk.", new Vector2(350, 200)));
-
-        Timeline alphaSequence = tweenEngine.createSequential();
-        alphaSequence.push(tweenEngine.to(nineSliceTest, UIElement.TweenTypes.ALPHA, 5.0f).target(0f));
-        alphaSequence.push(tweenEngine.to(nineSliceTest, UIElement.TweenTypes.ALPHA, 5.0f).target(1f));
-        alphaSequence.delay(10.0f);
-        alphaSequence.repeat(10, 0f);
-        alphaSequence.start();
- */
-/*
-        NineSliceTexture nineSliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.TIP_BOX_NINESLICE.getTexture(), 48, 48, 35, 35);
-        nineSliceTest = new UIResizablePanel(new Vector2(1920 * 0.5f, 1080 * 0.5f), nineSliceTexture, new Vector2(450, 240));
-        logger.info("tipBodyFont:" + (FontHelper.tipBodyFont != null ? FontHelper.tipBodyFont : "null"));
-        nineSliceTest.addChild(new UITextElement(new Vector2(0f, 0f), FontHelper.tipBodyFont, "Lorem ipsum hullabaloo plonk plonk flabblecrunk.", new Vector2(350, 200)));
-*/
-        //rootUIElement.addChild(nineSliceTest);
     }
+
     private void initialiseUIRoot() {
         rootUIElement = new UIElement();
         rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
@@ -191,7 +132,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             IModel iModel = (IModel) dataModel;
             entry.getKey().get().beforeSaveToConfig(modSpireConfig);
             modSpireConfig.setString(entry.getValue(), gson.toJson(entry.getKey().get()));
-            logInfo("Saved config: configID: " + entry.getValue() + " class: " + entry.getKey().get().getClass().getName() + " modelProp.uuid: " + entry.getKey().getUUID() + " iModel.uuid: " + iModel.getUUID() + "\njson: " + modSpireConfig.getString(entry.getValue()));
+            logDebug("Saved config: configID: " + entry.getValue() + " class: " + entry.getKey().get().getClass().getName() + " modelProp.uuid: " + entry.getKey().getUUID() + " iModel.uuid: " + iModel.getUUID() + "\njson: " + modSpireConfig.getString(entry.getValue()));
         }
 
         try {
@@ -225,10 +166,10 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
                 configModelProp.setObject(loadedConfigModel);
                 IModel newConfigIModel = (IModel) loadedConfigModel;
 
-                logInfo("Loading config ID: " + configID + " configPropUUID: " + configModelProp.getUUID() + " oldConfigModel.uuid: " + oldConfigIModel.getUUID() + " newConfigModel.uuid: " + newConfigIModel.getUUID() + " configString: " + configString);
+                logDebug("Loading config ID: " + configID + " configPropUUID: " + configModelProp.getUUID() + " oldConfigModel.uuid: " + oldConfigIModel.getUUID() + " newConfigModel.uuid: " + newConfigIModel.getUUID() + " configString: " + configString);
             }
             else {
-                logInfo("Did not load config ID: " + configID);
+                logDebug("Did not load config ID: " + configID);
             }
         }
     }
@@ -273,7 +214,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         configDataModelToConfigID.put(dataModel, configID);
     }
-
 
     protected void initialiseGameStateModel() {
         gameStateModel = new Property<>(new GameStateModel());
@@ -321,7 +261,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private <T extends IModel> IView createView(T model) {
         IView view = ViewFactoryManager.get().CreateView(model);
 
-        logInfo("View created: " + (view == null ? "null" : view.getClass().getSimpleName()) + " viewIsUIElement: " + (view instanceof UIElement ? "yes" : "no"));
+        logDebug("View created: " + (view == null ? "null" : view.getClass().getSimpleName()) + " viewIsUIElement: " + (view instanceof UIElement ? "yes" : "no"));
         if(view instanceof UIElement) {
             rootUIElement.addChild((UIElement) view);
         }
