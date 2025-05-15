@@ -29,7 +29,7 @@ public class PlayerStreakStoreController {
     }
 
     public PlayerStreakModel getStreakModel(String playerClass) {
-        return model.playerToStreak.stream().filter(model -> model.identifier.getValue().equals(playerClass)).findAny().orElse(null);
+        return model.playerToStreak.stream().filter(model -> model.identifier.get().equals(playerClass)).findAny().orElse(null);
     }
 
     public void CalculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
@@ -38,13 +38,13 @@ public class PlayerStreakStoreController {
         if(recalculateAll) {
             model.playerToStreak.clear();
             PlayerStreakModel rotatingModel = new PlayerStreakModel();
-            rotatingModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-            model.rotatingPlayerStreakModel.setValue(rotatingModel);
+            rotatingModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            model.rotatingPlayerStreakModel.set(rotatingModel);
         }
-        else if (model.rotatingPlayerStreakModel == null) {
+        else if (model.rotatingPlayerStreakModel.get() == null) {
             PlayerStreakModel rotatingModel = new PlayerStreakModel();
-            rotatingModel.identifier.setValue(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-            model.rotatingPlayerStreakModel.setValue(rotatingModel);
+            rotatingModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            model.rotatingPlayerStreakModel.set(rotatingModel);
         }
 
         FileHandle[] subfolders = Gdx.files.local("runs" + File.separator).list();
@@ -85,7 +85,7 @@ public class PlayerStreakStoreController {
             if(streakModel == null) {
                 StreakTheSpire.logDebug("Streak model NOT found: " + playerClass);
                 streakModel = new PlayerStreakModel();
-                streakModel.identifier.setValue(playerClass);
+                streakModel.identifier.set(playerClass);
                 model.playerToStreak.add(streakModel);
             }
             else {
@@ -151,19 +151,19 @@ public class PlayerStreakStoreController {
         allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
         for(RunDataSubset data : allCharacterSubsets) {
-            processRunData(criteria, data, model.rotatingPlayerStreakModel.getValue(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            processRunData(criteria, data, model.rotatingPlayerStreakModel.get(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
         }
     }
 
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
     private static boolean processRunData(StreakCriteriaModel criteria, RunDataSubset data, PlayerStreakModel streakModel, String identifier) {
-        String currentStreakTimestamp = streakModel.highestStreakTimestamp.getValue();
+        String currentStreakTimestamp = streakModel.highestStreakTimestamp.get();
         if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
             StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
             return false;
         }
 
-        int streakCount = streakModel.currentStreak.getValue();
+        int streakCount = streakModel.currentStreak.get();
 
         // TODO: Add rotating support, somehow
 
@@ -196,19 +196,19 @@ public class PlayerStreakStoreController {
 
             if (failed) {
                 streakCount = 0;
-                streakModel.totalValidLosses.setValue(streakModel.totalValidLosses.getValue() + 1);
+                streakModel.totalValidLosses.set(streakModel.totalValidLosses.get() + 1);
             }
             else {
                 streakCount++;
-                streakModel.totalValidWins.setValue(streakModel.totalValidWins.getValue() + 1);
+                streakModel.totalValidWins.set(streakModel.totalValidWins.get() + 1);
             }
 
-            streakModel.currentStreak.setValue(streakCount);
-            streakModel.currentStreakTimestamp.setValue(data.timestamp);
+            streakModel.currentStreak.set(streakCount);
+            streakModel.currentStreakTimestamp.set(data.timestamp);
 
-            if (streakModel.highestStreak.getValue() < streakCount) {
-                streakModel.highestStreak.setValue(streakCount);
-                streakModel.highestStreakTimestamp.setValue(data.timestamp);
+            if (streakModel.highestStreak.get() < streakCount) {
+                streakModel.highestStreak.set(streakCount);
+                streakModel.highestStreakTimestamp.set(data.timestamp);
             }
         }
 
@@ -222,19 +222,19 @@ public class PlayerStreakStoreController {
         report.append("Streak Report:\n\n");
 
         ArrayList<PlayerStreakModel> playerStreakModels = new ArrayList<>(model.playerToStreak);
-        if(model.rotatingPlayerStreakModel != null)
-            playerStreakModels.add(model.rotatingPlayerStreakModel.getValue());
+        if(model.rotatingPlayerStreakModel.get() != null)
+            playerStreakModels.add(model.rotatingPlayerStreakModel.get());
 
         for(PlayerStreakModel playerStreakModel : playerStreakModels)
         {
-            report.append("Character: " + playerStreakModel.identifier.getValue() + "\n");
-            report.append("\tHighest Streak: " + playerStreakModel.highestStreak.getValue() + "\n");
-            report.append("\tCurrent Streak: " + playerStreakModel.currentStreak.getValue() + "\n");
-            report.append("\tHighest Streak Timestamp: " + playerStreakModel.highestStreakTimestamp.getValue() + "\n");
-            report.append("\tCurrent Streak Timestamp: " + playerStreakModel.currentStreakTimestamp.getValue() + "\n");
-            report.append("\tTotal Wins: " + playerStreakModel.totalValidWins.getValue() + "\n");
-            report.append("\tTotal Losses: " + playerStreakModel.totalValidLosses.getValue() + "\n");
-            report.append("\tWin Rate: " + (float)playerStreakModel.totalValidWins.getValue() / (float)playerStreakModel.totalValidLosses.getValue() + "\n");
+            report.append("Character: " + playerStreakModel.identifier.get() + "\n");
+            report.append("\tHighest Streak: " + playerStreakModel.highestStreak.get() + "\n");
+            report.append("\tCurrent Streak: " + playerStreakModel.currentStreak.get() + "\n");
+            report.append("\tHighest Streak Timestamp: " + playerStreakModel.highestStreakTimestamp.get() + "\n");
+            report.append("\tCurrent Streak Timestamp: " + playerStreakModel.currentStreakTimestamp.get() + "\n");
+            report.append("\tTotal Wins: " + playerStreakModel.totalValidWins.get() + "\n");
+            report.append("\tTotal Losses: " + playerStreakModel.totalValidLosses.get() + "\n");
+            report.append("\tWin Rate: " + (float)playerStreakModel.totalValidWins.get() / (float)playerStreakModel.totalValidLosses.get() + "\n");
             report.append("\tProcessed Filenames: " + String.join(", ", playerStreakModel.processedFilenames) + "\n");
         }
 
@@ -244,13 +244,13 @@ public class PlayerStreakStoreController {
     private static LinkedHashMap<DisqualifyingCondition, String> createDisqualifyingConditions() {
         LinkedHashMap<DisqualifyingCondition, String> disqualifyingConditions = new LinkedHashMap<>();
 
-        disqualifyingConditions.put(((data, criteria) -> (!data.is_ascension_mode && criteria.requiredAscensionLevel.getValue() > 0)), "not_ascension");
-        disqualifyingConditions.put(((data, criteria) -> (data.ascension_level < criteria.requiredAscensionLevel.getValue())), "ascension_level_too_low");
-        disqualifyingConditions.put(((data, criteria) -> (data.chose_seed && criteria.allowCustomSeeds.getValue() == false)), "chose_seed");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_daily && criteria.allowDailies.getValue() == false)), "is_daily");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_trial && criteria.allowDemo.getValue() == false)), "is_demo");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_prod && criteria.allowBeta.getValue() == false)), "is_beta");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_endless && criteria.allowEndless.getValue() == false)), "is_endless");
+        disqualifyingConditions.put(((data, criteria) -> (!data.is_ascension_mode && criteria.requiredAscensionLevel.get() > 0)), "not_ascension");
+        disqualifyingConditions.put(((data, criteria) -> (data.ascension_level < criteria.requiredAscensionLevel.get())), "ascension_level_too_low");
+        disqualifyingConditions.put(((data, criteria) -> (data.chose_seed && criteria.allowCustomSeeds.get() == false)), "chose_seed");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_daily && criteria.allowDailies.get() == false)), "is_daily");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_trial && criteria.allowDemo.get() == false)), "is_demo");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_prod && criteria.allowBeta.get() == false)), "is_beta");
+        disqualifyingConditions.put(((data, criteria) -> (data.is_endless && criteria.allowEndless.get() == false)), "is_endless");
 
         return disqualifyingConditions;
     }
@@ -260,7 +260,7 @@ public class PlayerStreakStoreController {
 
         losingConditions.put(((data, criteria) -> !data.victory), "victory_failed");
         losingConditions.put(((data, criteria) ->
-                (data.floor_reached < StreakCriteriaModel.HeartKillFloorReached && criteria.requireHeartKill.getValue() == true)), "did_not_kill_heart");
+                (data.floor_reached < StreakCriteriaModel.HeartKillFloorReached && criteria.requireHeartKill.get() == true)), "did_not_kill_heart");
 
         return losingConditions;
     }

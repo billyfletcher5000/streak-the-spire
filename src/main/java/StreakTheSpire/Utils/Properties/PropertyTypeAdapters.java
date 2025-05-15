@@ -11,7 +11,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashSet;
 
 public abstract class PropertyTypeAdapters {
     public static class PropertyTypeAdapter<E> extends TypeAdapter<Property<E>> {
@@ -48,8 +47,8 @@ public abstract class PropertyTypeAdapters {
 
         @Override
         public void write(JsonWriter out, Property<E> value) throws IOException {
-            if(value.getValue() != null){
-                adapter.write(out, value.getValue());
+            if(value.get() != null){
+                adapter.write(out, value.get());
             } else {
                 out.nullValue();
             }

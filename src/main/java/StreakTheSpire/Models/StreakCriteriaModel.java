@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 
 import static StreakTheSpire.StreakTheSpire.gson;
 
-public class StreakCriteriaModel implements IConfigDataModel {
+public class StreakCriteriaModel extends IModel implements IConfigDataModel {
     public static final int HeartKillFloorReached = 56;
 
     public Property<Boolean> requireHeartKill = new Property<>(true);
@@ -29,6 +29,21 @@ public class StreakCriteriaModel implements IConfigDataModel {
     );
 
     public StreakCriteriaModel() {}
+    public StreakCriteriaModel(String configID) { this.configID = configID; }
+
+    //region IConfigModel
+    private String configID = "StreakCriteriaModel";
+
+    @Override
+    public String getConfigID() {
+        return configID;
+    }
+
+    @Override
+    public void setConfigID(String ID) {
+        configID = ID;
+    }
+    //endregion
 /*
     //region Config
     private final String RequireHeartKillConfigName = "require_heart_kill";
@@ -78,6 +93,6 @@ public class StreakCriteriaModel implements IConfigDataModel {
         config.setString(TrackedCharacterClassesConfigName, gson.toJson(trackedCharacterClasses));
     }
     //endregion
-    
+
  */
 }

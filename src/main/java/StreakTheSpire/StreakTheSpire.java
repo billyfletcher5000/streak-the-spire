@@ -32,12 +32,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpireInitializer
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, AddAudioSubscriber {
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
-    public static final LoggingLevel loggingLevel = LoggingLevel.INFO;
+    public static final LoggingLevel loggingLevel = LoggingLevel.DEBUG;
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(PropertyTypeAdapters.PropertyTypeAdapter.FACTORY).create();
 
@@ -84,12 +85,12 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private UIImageElement testImage;
     private UINineSliceElement nineSliceTest;
 
-    private ArrayList<IConfigDataModel> configDataModels = new ArrayList<>();
+    private HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
 
-    private GameStateModel gameStateModel;
-    private StreakCriteriaModel streakCriteriaModel;
-    private PlayerStreakStoreModel streakDataModel;
-    private CharacterDisplaySetModel characterDisplaySetModel;
+    private Property<GameStateModel> gameStateModel;
+    private Property<StreakCriteriaModel> streakCriteriaModel;
+    private Property<PlayerStreakStoreModel> streakDataModel;
+    private Property<CharacterDisplaySetModel> characterDisplaySetModel;
 
     private TestModel testModel;
 
@@ -97,6 +98,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
+        instance = this;
     }
 
     @Override
@@ -114,12 +116,12 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         loadConfig();
 
-        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakDataModel);
+        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakDataModel.get());
 
         String report = controller.createStreakDebugReport();
         logDebug(report);
 
-        controller.CalculateStreakData(streakCriteriaModel, false);
+        controller.CalculateStreakData(streakCriteriaModel.get(), false);
 
         report = controller.createStreakDebugReport();
         logDebug(report);
@@ -138,14 +140,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             @Override
             public void onValueChanged() {
                 logDebug("testString changed to: " + testModel.testString);
-                testStringStore = testModel.testString.getValue();
+                testStringStore = testModel.testString.get();
             }
         });
 
 
-        logDebug("testString value: " + testModel.testString.getValue());
-        testModel.testString.setValue("Blamonge!");
-        logDebug("testStringStore value: " + testModel.testString.getValue());
+        logDebug("testString value: " + testModel.testString.get());
+        testModel.testString.set("Blamonge!");
+        logDebug("testStringStore value: " + testModel.testString.get());
 /*
         testImage = new UIImageElement(new Vector2(1000, 800), StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture());
         testImage.addChild(new UIImageElement(new Vector2(50f, 0f), new Vector2(0.25f, 0.5f), StreakTheSpireTextureDatabase.MOD_ICON.getTexture()));
@@ -183,9 +185,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
     }
 
-    private void saveConfig() {
-        for(IConfigDataModel dataModel : configDataModels) {
-            dataModel.beforeSaveToConfig(modSpireConfig);
+    public void saveConfig() {
+        for(Map.Entry<Property<? extends IConfigDataModel>, String> entry : configDataModelToConfigID.entrySet()) {
+            IConfigDataModel dataModel = entry.getKey().get();
+            IModel iModel = (IModel) dataModel;
+            entry.getKey().get().beforeSaveToConfig(modSpireConfig);
+            modSpireConfig.setString(entry.getValue(), gson.toJson(entry.getKey().get()));
+            logInfo("Saved config: configID: " + entry.getValue() + " class: " + entry.getKey().get().getClass().getName() + " modelProp.uuid: " + entry.getKey().getUUID() + " iModel.uuid: " + iModel.getUUID() + "\njson: " + modSpireConfig.getString(entry.getValue()));
         }
 
         try {
@@ -198,8 +204,32 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private void loadConfig() {
         logInfo("Loading config!");
-        for(IConfigDataModel dataModel : configDataModels) {
-            dataModel.afterLoadFromConfig(modSpireConfig);
+        try {
+            modSpireConfig.load();
+        }
+        catch (IOException e) {
+            logError("Failed to load config file: " + e);
+            return;
+        }
+
+        for(Map.Entry<Property<? extends IConfigDataModel>, String> entry : configDataModelToConfigID.entrySet()) {
+            String configID = entry.getValue();
+            if(modSpireConfig.has(configID)) {
+
+                String configString = modSpireConfig.getString(configID);
+                Property<? extends IConfigDataModel> configModelProp = entry.getKey();
+                IConfigDataModel configModel = configModelProp.get();
+                IModel oldConfigIModel = (IModel) configModel;
+
+                IConfigDataModel loadedConfigModel = gson.fromJson(configString, configModel.getClass());
+                configModelProp.setObject(loadedConfigModel);
+                IModel newConfigIModel = (IModel) loadedConfigModel;
+
+                logInfo("Loading config ID: " + configID + " configPropUUID: " + configModelProp.getUUID() + " oldConfigModel.uuid: " + oldConfigIModel.getUUID() + " newConfigModel.uuid: " + newConfigIModel.getUUID() + " configString: " + configString);
+            }
+            else {
+                logInfo("Did not load config ID: " + configID);
+            }
         }
     }
 
@@ -217,7 +247,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receivePostUpdate() {
-        gameStateModel.gameMode.setValue(CardCrawlGame.mode);
+        gameStateModel.get().gameMode.set(CardCrawlGame.mode);
         rootUIElement.update(getDeltaTime());
 
         tweenEngine.update(getDeltaTime());
@@ -232,24 +262,36 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         ViewFactoryManager.get().registerViewFactory(PlayerStreakStoreModel.class, PlayerStreakStoreView.FACTORY);
     }
 
+    protected <T extends IConfigDataModel> void registerConfigModel(Property<T> dataModel) {
+        if(dataModel == null || dataModel.get() == null)
+            return;
+
+        IConfigDataModel configModel = dataModel.get();
+        String configID = configModel.getConfigID();
+        if(configDataModelToConfigID.values().contains(configID))
+            throw new IllegalArgumentException("ConfigID \"" + configID + "\" is already registered!");
+
+        configDataModelToConfigID.put(dataModel, configID);
+    }
+
 
     protected void initialiseGameStateModel() {
-        gameStateModel = new GameStateModel();
+        gameStateModel = new Property<>(new GameStateModel());
 
-        gameStateModel.gameMode.setValue(CardCrawlGame.mode);
+        gameStateModel.get().gameMode.set(CardCrawlGame.mode);
     }
 
     protected void initialiseStreakDataModel() {
-        streakDataModel = new PlayerStreakStoreModel();
-        streakCriteriaModel = new StreakCriteriaModel();
+        streakDataModel = new Property<>(new PlayerStreakStoreModel());
+        streakCriteriaModel = new Property<>(new StreakCriteriaModel());
 
-        configDataModels.add(streakDataModel);
-        configDataModels.add(streakCriteriaModel);
+        registerConfigModel(streakDataModel);
+        registerConfigModel(streakCriteriaModel);
     }
 
     protected void initialiseCharacterDisplayModels() {
-        characterDisplaySetModel = new CharacterDisplaySetModel();
-        CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel);
+        characterDisplaySetModel = new Property<>(new CharacterDisplaySetModel());
+        CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel.get());
 
         controller.addCharacterIconDisplay(
                 AbstractPlayer.PlayerClass.IRONCLAD.toString(),
@@ -273,7 +315,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     private void createViews() {
-        createView(streakDataModel);
+        createView(streakDataModel.get());
     }
 
     private <T extends IModel> IView createView(T model) {

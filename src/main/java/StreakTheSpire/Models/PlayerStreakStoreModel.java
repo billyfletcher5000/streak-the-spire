@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 
 import static StreakTheSpire.StreakTheSpire.gson;
 
-public class PlayerStreakStoreModel implements IModel, IConfigDataModel {
+public class PlayerStreakStoreModel extends IModel implements IConfigDataModel {
     public static String RotatingPlayerIdentifier = "ROTATING";
 
     public PropertyHashSet<PlayerStreakModel> playerToStreak = new PropertyHashSet<>();
@@ -19,6 +19,21 @@ public class PlayerStreakStoreModel implements IModel, IConfigDataModel {
     public Property<SavedPanelModel> panelModel = new Property<>(new SavedPanelModel());
 
     public PlayerStreakStoreModel() {}
+    public PlayerStreakStoreModel(String configID) { this.configID = configID; }
+
+    //region IConfigModel
+    private String configID = "PlayerStreakStoreModel";
+
+    @Override
+    public String getConfigID() {
+        return configID;
+    }
+
+    @Override
+    public void setConfigID(String ID) {
+        configID = ID;
+    }
+    //endregion
 /*
 
     //region IConfigModel

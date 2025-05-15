@@ -6,10 +6,18 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 
 import static StreakTheSpire.StreakTheSpire.gson;
 
-public class SavedPanelModel implements IModel, IConfigDataModel {
+public class SavedPanelModel extends IModel {
     public Property<Vector2> position = new Property<>(new Vector2(0, 0));
     public Property<Vector2> dimensions = new Property<>(new Vector2(200, 200));
     public Property<Vector2> scale = new Property<>(new Vector2(1, 1));
+
+    public String toString() {
+        String ret = "SavedPanelModel:\n";
+        ret += "Position: " + position.get() + "\n";
+        ret += "Dimensions: " + dimensions.get() + "\n";
+        ret += "Scale: " + scale.get() + "\n";
+        return ret;
+    }
 /*
     private static final String PositionConfigName = "position";
     private static final String DimensionsConfigName = "dimensions";
