@@ -1,6 +1,5 @@
 package StreakTheSpire.Utils;
 
-
 public enum RoomType {
 
     MONSTER, ELITE, EVENT, BOSS, SHOP, TREASURE, REST, UNKNOWN_TYPE;

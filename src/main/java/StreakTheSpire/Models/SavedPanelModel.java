@@ -2,9 +2,6 @@ package StreakTheSpire.Models;
 
 import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.math.Vector2;
-import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
-
-import static StreakTheSpire.StreakTheSpire.gson;
 
 public class SavedPanelModel extends IModel {
     public Property<Vector2> position = new Property<>(new Vector2(0, 0));

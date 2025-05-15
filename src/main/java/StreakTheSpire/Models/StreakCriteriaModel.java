@@ -1,15 +1,8 @@
 package StreakTheSpire.Models;
 
-import StreakTheSpire.Utils.ConfigHelper;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
-import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
-import com.google.gson.reflect.TypeToken;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
-
-import java.lang.reflect.Type;
-
-import static StreakTheSpire.StreakTheSpire.gson;
 
 public class StreakCriteriaModel extends IModel implements IConfigDataModel {
     public static final int HeartKillFloorReached = 56;

@@ -21,8 +21,6 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
                 model.panelModel.get().dimensions.get(),
                 Color.WHITE.cpy());
 
-        StreakTheSpire.logInfo("PlayerStreakStoreView.model.panelModel = " + model.panelModel);
-
         this.streakModel = model;
 
         PanelResizedSubscriber resizeSubscriber = new PanelResizedSubscriber() {
@@ -46,16 +44,7 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         streakModel.panelModel.get().position.set(getLocalPosition());
         streakModel.panelModel.get().dimensions.set(getDimensions());
         streakModel.panelModel.get().scale.set(getLocalScale());
-        StreakTheSpire.logInfo("streakModel.UUID: " + streakModel.getUUID() + " panelModel.UUID: " + streakModel.panelModel.get().getUUID());
-        StreakTheSpire.logInfo("position: " + streakModel.panelModel.get().position.get() + " dimensions: " + streakModel.panelModel.get().dimensions.get() + " scale: " + streakModel.panelModel.get().scale.get());
-        StreakTheSpire.logInfo("getLocalPosition: " + getLocalPosition() + " dimensions: " + getDimensions() + " scale: " + getLocalScale());
         StreakTheSpire.getInstance().saveConfig();
-
-        /*
-        //streakModel.saveToConfig(StreakTheSpire.getConfig());
-        //StreakTheSpire.saveModSpireConfig();
-        String json = gson.toJson(streakModel);
-        StreakTheSpire.logInfo(json);*/
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

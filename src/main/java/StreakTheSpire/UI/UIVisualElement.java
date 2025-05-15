@@ -1,10 +1,6 @@
 package StreakTheSpire.UI;
 
-import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Affine2;
-import com.badlogic.gdx.math.Matrix3;
 
 public class UIVisualElement extends UIElement {
     public static class TweenTypes {

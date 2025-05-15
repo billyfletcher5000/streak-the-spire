@@ -1,6 +1,5 @@
 package StreakTheSpire.Utils.Properties;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

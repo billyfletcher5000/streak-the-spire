@@ -1,7 +1,6 @@
 package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
-import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;

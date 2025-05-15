@@ -1,14 +1,9 @@
 package StreakTheSpire.UI;
 
-import StreakTheSpire.StreakTheSpire;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
-import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.HitboxListener;
-import com.megacrit.cardcrawl.helpers.ImageMaster;
 
 // This class is meant to act as a bridge between the transform hierarchy based UIElements and the
 // Hitbox class used in StS and more specifically for Slay the Relics

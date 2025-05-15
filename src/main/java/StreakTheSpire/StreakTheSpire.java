@@ -156,7 +156,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         for(Map.Entry<Property<? extends IConfigDataModel>, String> entry : configDataModelToConfigID.entrySet()) {
             String configID = entry.getValue();
             if(modSpireConfig.has(configID)) {
-
                 String configString = modSpireConfig.getString(configID);
                 Property<? extends IConfigDataModel> configModelProp = entry.getKey();
                 IConfigDataModel configModel = configModelProp.get();
@@ -165,6 +164,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
                 IConfigDataModel loadedConfigModel = gson.fromJson(configString, configModel.getClass());
                 configModelProp.setObject(loadedConfigModel);
                 IModel newConfigIModel = (IModel) loadedConfigModel;
+
+                loadedConfigModel.afterLoadFromConfig(modSpireConfig);
 
                 logDebug("Loading config ID: " + configID + " configPropUUID: " + configModelProp.getUUID() + " oldConfigModel.uuid: " + oldConfigIModel.getUUID() + " newConfigModel.uuid: " + newConfigIModel.getUUID() + " configString: " + configString);
             }
