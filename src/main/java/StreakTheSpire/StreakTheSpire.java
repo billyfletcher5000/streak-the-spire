@@ -117,6 +117,16 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseUIRoot();
         createViews();
 
+        SkeletonModifier modifier = new SkeletonModifier();
+        modifier.bonesToKeep.add("Neck_");
+        modifier.bonesToRemove.add("Chest");
+        modifier.bonesToRemove.add("root");
+        modifier.bonesToRemove.add("Hips");
+
+        UISpineAnimationElement spineAnimationElement = new UISpineAnimationElement(new Vector2(500, 500), "images/characters/defect/idle/skeleton.atlas", "images/characters/defect/idle/skeleton.json", modifier);
+        spineAnimationElement.getAnimationState().setAnimation(0, "Idle", true);
+        rootUIElement.addChild(spineAnimationElement);
+
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
@@ -259,7 +269,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         createView(streakDataModel.get());
     }
 
-    private <T extends IModel> IView createView(T model) {
+    public <TView extends IView, TModel extends IModel> TView createView(TModel model) {
         IView view = ViewFactoryManager.get().CreateView(model);
 
         logDebug("View created: " + (view == null ? "null" : view.getClass().getSimpleName()) + " viewIsUIElement: " + (view instanceof UIElement ? "yes" : "no"));
@@ -267,19 +277,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             rootUIElement.addChild((UIElement) view);
         }
 
-        return view;
+        return (TView) view;
     }
 
     public static void logError(String message) {
-        if(loggingLevel.ordinal() >= LoggingLevel.ERROR.ordinal()) {
-            logger.error(message);
-        }
+        logger.error(message);
     }
 
     public static void logError(String message, Object... params) {
-        if(loggingLevel.ordinal() >= LoggingLevel.ERROR.ordinal()) {
-            logger.error(message, params);
-        }
+        logger.error(message, params);
     }
 
     public static void logWarning(String message) {
