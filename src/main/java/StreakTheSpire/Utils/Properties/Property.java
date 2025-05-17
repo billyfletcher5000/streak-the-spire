@@ -2,6 +2,7 @@ package StreakTheSpire.Utils.Properties;
 
 import StreakTheSpire.StreakTheSpire;
 
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public class Property<T> {
     }
 
     private T value;
-    private HashSet<ValueChangedSubscriber> onChangedSubscribers;
+    private HashSet<WeakReference<ValueChangedSubscriber>> onChangedSubscribers;
 
     public Property(T value) { this.value = value; }
 
@@ -23,8 +24,9 @@ public class Property<T> {
         {
             this.value = value;
             if (onChangedSubscribers != null) {
-                for (ValueChangedSubscriber subscriber : onChangedSubscribers) {
-                    subscriber.onValueChanged();
+                for (WeakReference<ValueChangedSubscriber> subscriber : onChangedSubscribers) {
+                    if(subscriber.get() != null)
+                        subscriber.get().onValueChanged();
                 }
             }
         }
@@ -45,12 +47,12 @@ public class Property<T> {
         if (onChangedSubscribers == null)
             onChangedSubscribers = new HashSet<>();
 
-        onChangedSubscribers.add(subscriber);
+        onChangedSubscribers.add(new WeakReference<>(subscriber));
     }
 
     public void removeOnChangedSubscriber(ValueChangedSubscriber subscriber) {
         if(onChangedSubscribers != null)
-            onChangedSubscribers.remove(subscriber);
+            onChangedSubscribers.removeIf(element -> element.get() == null || element.get() == subscriber);
     }
 
     @Override
