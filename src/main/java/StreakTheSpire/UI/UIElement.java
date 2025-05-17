@@ -1,6 +1,7 @@
 package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
@@ -25,7 +26,7 @@ public class UIElement implements TweenAccessor<UIElement> {
     private Vector2 localPosition = Vector2.Zero.cpy();
     private float localRotation = 0f; //degrees
     private Vector2 localScale = VectorOne.cpy();
-    private Vector2 dimensions = Vector2.Zero.cpy();
+    private Property<Vector2> dimensions = new Property<>(Vector2.Zero.cpy());
     private float localAlpha = 1.0f; // Elements have their own alpha to allow hierarchical alpha without affecting individual element color alpha choice
     private int layer = 0;
     private UIElement parent = null;
@@ -74,7 +75,8 @@ public class UIElement implements TweenAccessor<UIElement> {
     public Vector2 getLocalPosition() { return localPosition.cpy(); }
     public float getLocalRotation() { return localRotation; }
     public Vector2 getLocalScale() { return localScale.cpy(); }
-    public Vector2 getDimensions() { return dimensions.cpy(); }
+    public Vector2 getDimensions() { return dimensions.get().cpy(); }
+    public Property<Vector2> getDimensionsProperty() { return dimensions; }
     public float getAlpha() { return localAlpha; }
 
     public void setLocalPosition(Vector2 localPosition) {
