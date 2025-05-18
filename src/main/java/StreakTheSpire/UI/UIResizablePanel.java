@@ -1,6 +1,7 @@
 package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
@@ -15,11 +16,11 @@ import java.util.Map;
 
 public class UIResizablePanel extends UINineSliceElement implements HitboxListener {
 
-    private boolean resizeEnabled = false;
-    private float hitboxWidth = 16.0f;
-    private Vector2 minimumSize;
+    private final Property<Boolean> resizeEnabled = new Property<>(false);
+    private final Property<Float> hitboxWidth = new Property<>(16.0f);
+    private final Property<Vector2> minimumSize = new Property<>(Vector2.Zero.cpy());
 
-    private HashMap<UIElementHitbox, Integer> hitboxToDragDirection = new HashMap<>();
+    private final HashMap<UIElementHitbox, Integer> hitboxToDragDirection = new HashMap<>();
     private UIElementHitbox moveHitbox;
     private UIElementHitbox currentHitbox = null;
     private int currentDragDirection = DragDirectionFlags.NONE;
@@ -34,48 +35,51 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     @Override
     public void setLocalRotation(float localRotation) { }
 
-    public boolean isResizeEnabled() { return resizeEnabled; }
-    public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled = resizeEnabled; if(!resizeEnabled) clearCurrentSelection(); }
+    public boolean isResizeEnabled() { return resizeEnabled.get(); }
+    public Property<Boolean> getResizeEnabledProperty() { return resizeEnabled; }
+    public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled.set(resizeEnabled); if(!resizeEnabled) clearCurrentSelection(); }
 
-    public float getHitboxWidth() { return hitboxWidth; }
-    public void setHitboxWidth(float hitboxWidth) { this.hitboxWidth = hitboxWidth; }
+    public float getHitboxWidth() { return hitboxWidth.get(); }
+    public Property<Float> getHitboxWidthProperty() { return hitboxWidth; }
+    public void setHitboxWidth(float hitboxWidth) { this.hitboxWidth.set(hitboxWidth); }
 
-    public Vector2 getMinimumSize() { return minimumSize.cpy(); }
-    public void setMinimumSize(Vector2 minimumSize) { this.minimumSize.set(minimumSize); }
+    public Vector2 getMinimumSize() { return minimumSize.get().cpy(); }
+    public Property<Vector2> getMinimumSizeProperty() { return minimumSize; }
+    public void setMinimumSize(Vector2 minimumSize) { this.minimumSize.set(minimumSize.cpy()); }
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size) {
         super(position, texture, size);
-        minimumSize = new Vector2(hitboxWidth * 6.0f, hitboxWidth * 6.0f);
+        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
         createHitboxes();
     }
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size, Vector2 minimumSize) {
         super(position, texture, size);
-        this.minimumSize = minimumSize.cpy();
+        setMinimumSize(minimumSize.cpy());
         createHitboxes();
     }
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size, Color color) {
         super(position, texture, size, color);
-        minimumSize = new Vector2(hitboxWidth * 6.0f, hitboxWidth * 6.0f);
+        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
         createHitboxes();
     }
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size, Vector2 minimumSize, Color color) {
         super(position, texture, size, color);
-        this.minimumSize = minimumSize.cpy();
+        setMinimumSize(minimumSize.cpy());
         createHitboxes();
     }
 
     public UIResizablePanel(Vector2 position, Vector2 scale, NineSliceTexture texture, Vector2 size, Color color) {
         super(position, scale, texture, size, color);
-        minimumSize = new Vector2(hitboxWidth * 6.0f, hitboxWidth * 6.0f);
+        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
         createHitboxes();
     }
 
     public UIResizablePanel(Vector2 position, Vector2 scale, NineSliceTexture texture, Vector2 size, Vector2 minimumSize, Color color) {
         super(position, scale, texture, size, color);
-        this.minimumSize = minimumSize.cpy();
+        setMinimumSize(minimumSize.cpy());
         createHitboxes();
     }
 
@@ -117,6 +121,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         Vector2 dimensions = getDimensions();
         Vector2 halfDimensions = getDimensions().scl(0.5f);
 
+        float hitboxWidth = getHitboxWidth();
         float cardinalWidth = dimensions.x - (hitboxWidth * 2.0f);
         float cardinalHeight = dimensions.y - (hitboxWidth * 2.0f);
 
@@ -214,6 +219,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
             Vector2 mousePosition = new Vector2(InputHelper.mX, InputHelper.mY);
             worldToLocal.applyTo(mousePosition);
 
+            Vector2 minimumSize = getMinimumSize();
             Vector2 difference = mousePosition.cpy().sub(currentHitbox.getLocalPosition().cpy().add(currentOffset));
 
             if (currentHitbox == moveHitbox) {
@@ -252,6 +258,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     private void updateHitboxes(Affine2 worldTransform) {
         Vector2 baseSize = new Vector2(getDimensions());
+        float hitboxWidth = getHitboxWidth();
         baseSize.sub(new Vector2(hitboxWidth * 2, hitboxWidth * 2));
 
         moveHitbox.setLocalSize(baseSize);

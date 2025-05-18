@@ -1,5 +1,6 @@
 package StreakTheSpire.UI;
 
+import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,10 +9,11 @@ import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 
 public class UIImageElement extends UIVisualElement {
-    protected TextureRegion textureRegion;
+    private final Property<TextureRegion> textureRegion = new Property<TextureRegion>(null);
 
-    public Texture getTexture() { return textureRegion.getTexture(); }
-    public void setTexture(Texture texture) { textureRegion.setTexture(texture); }
+    public TextureRegion getTextureRegion() { return textureRegion.get(); }
+    public Property<TextureRegion> getTextureRegionProperty() { return textureRegion; }
+    public void setTextureRegion(TextureRegion textureRegion) { this.textureRegion.set(textureRegion); }
 
     public UIImageElement(Vector2 position, Texture texture) {
         this(position, VectorOne.cpy(), texture);
@@ -60,9 +62,9 @@ public class UIImageElement extends UIVisualElement {
     public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Vector2 size, Color color) {
         this.setLocalPosition(position);
         this.setLocalScale(scale);
-        this.textureRegion = textureRegion;
+        this.setTextureRegion(textureRegion);
         this.setDimensions(size);
-        this.color = color;
+        this.setColor(color);
     }
 
     @Override
@@ -78,6 +80,8 @@ public class UIImageElement extends UIVisualElement {
         Vector2 bottomLeft = extents.cpy().scl(-1f, -1f); transformationMatrix.applyTo(bottomLeft);
 
         float colorBits = getTransformedColor(transformedAlpha).toFloatBits();
+
+        TextureRegion textureRegion = getTextureRegion();
 
         int vertexIndex = VertexWindingID.TL * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = topLeft.x;

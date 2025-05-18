@@ -2,6 +2,7 @@ package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.Properties.Property;
+import StreakTheSpire.Utils.Properties.PropertyList;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
@@ -23,29 +24,32 @@ public class UIElement implements TweenAccessor<UIElement> {
 
     public static final Vector2 VectorOne = new Vector2(1f, 1f);
     public static final float Epsilon = 0.000000000001f;
-    private Vector2 localPosition = Vector2.Zero.cpy();
-    private float localRotation = 0f; //degrees
-    private Vector2 localScale = VectorOne.cpy();
-    private Property<Vector2> dimensions = new Property<>(Vector2.Zero.cpy());
-    private float localAlpha = 1.0f; // Elements have their own alpha to allow hierarchical alpha without affecting individual element color alpha choice
-    private int layer = 0;
-    private UIElement parent = null;
-    private ArrayList<UIElement> children = new ArrayList<UIElement>();
+
+    private final Property<Vector2> localPosition = new Property<>(Vector2.Zero.cpy());
+    private final Property<Float> localRotation = new Property<>(0f); //degrees
+    private final Property<Vector2> localScale = new Property<>(VectorOne.cpy());
+    private final Property<Vector2> dimensions = new Property<>(Vector2.Zero.cpy());
+    private final Property<Float> localAlpha = new Property<>(1.0f); // Elements have their own alpha to allow hierarchical alpha without affecting individual element color alpha choice
+    private final Property<Integer> layer = new Property<>(0);
+    private final Property<UIElement> parent = new Property<>(null);
+    private final PropertyList<UIElement> children = new PropertyList<UIElement>();
 
     protected Affine2 localTransform = new Affine2();
     protected Affine2 localToWorldTransform = new Affine2();
     protected boolean localTransformDirty = true;
     protected boolean worldTransformDirty = true;
 
-    public UIElement getParent() { return parent; }
+    public UIElement getParent() { return parent.get(); }
+    public Property<UIElement> getParentProperty() { return parent; }
     public void setParent(UIElement parent) {
-        if(this.parent != parent) {
-            this.parent = parent;
+        if(this.parent.get() != parent) {
+            this.parent.set(parent);
             invalidateWorldTransform();
         }
     }
 
     public UIElement[] getChildren() { return children.toArray(new UIElement[children.size()]); }
+    public PropertyList<UIElement> getChildrenPropertyList() { return children; }
 
     public void addChild(UIElement child) {
         if(child == null) {
@@ -55,11 +59,11 @@ public class UIElement implements TweenAccessor<UIElement> {
         if(!children.contains(child))
             children.add(child);
 
-        if(child.parent == this)
+        if(child.parent.get() == this)
             return;
 
-        if(child.parent != null)
-            child.parent.removeChild(child);
+        if(child.parent.get() != null)
+            child.parent.get().removeChild(child);
 
         child.setParent(this);
     }
@@ -68,49 +72,56 @@ public class UIElement implements TweenAccessor<UIElement> {
         if(children.contains(child))
             children.remove(child);
 
-        if(child.parent == this)
+        if(child.parent.get() == this)
             child.setParent(null);
     }
 
-    public Vector2 getLocalPosition() { return localPosition.cpy(); }
-    public float getLocalRotation() { return localRotation; }
-    public Vector2 getLocalScale() { return localScale.cpy(); }
+
+    public Vector2 getLocalPosition() { return localPosition.get().cpy(); }
+    public Property<Vector2> getLocalPositionProperty() { return localPosition; }
+    public void setLocalPosition(Vector2 localPosition) {
+        if(!this.localPosition.get().epsilonEquals(localPosition, Epsilon)) {
+            this.localPosition.set(localPosition.cpy());
+            invalidateLocalTransform();
+            invalidateWorldTransform();
+        }
+    }
+
+    public float getLocalRotation() { return localRotation.get(); }
+    public Property<Float> getLocalRotationProperty() { return localRotation; }
+    public void setLocalRotation(float localRotation) {
+        if(Math.abs(this.localRotation.get() - localRotation) > Epsilon) {
+            this.localRotation.set(localRotation);
+            invalidateLocalTransform();
+            invalidateWorldTransform();
+        }
+    }
+
+    public Vector2 getLocalScale() { return localScale.get().cpy(); }
+    public Property<Vector2> getLocalScaleProperty() { return localScale; }
+    public void setLocalScale(Vector2 localScale) {
+        if(!this.localScale.get().epsilonEquals(localScale, Epsilon)) {
+            this.localScale.set(localScale.cpy());
+            invalidateLocalTransform();
+            invalidateWorldTransform();
+        }
+    }
+
     public Vector2 getDimensions() { return dimensions.get().cpy(); }
     public Property<Vector2> getDimensionsProperty() { return dimensions; }
-    public float getAlpha() { return localAlpha; }
+    public void setDimensions(Vector2 dimensions) { this.dimensions.set(dimensions.cpy()); }
 
-    public void setLocalPosition(Vector2 localPosition) {
-        if(!this.localPosition.epsilonEquals(localPosition, Epsilon)) {
-            this.localPosition.set(localPosition);
-            invalidateLocalTransform();
-            invalidateWorldTransform();
-        }
-    }
+    public float getAlpha() { return localAlpha.get(); }
+    public Property<Float> getAlphaProperty() { return localAlpha; }
+    public void setAlpha(float alpha) { this.localAlpha.set(alpha); }
 
-    public void setLocalRotation(float localRotation) {
-        if(Math.abs(this.localRotation - localRotation) > Epsilon) {
-            this.localRotation = localRotation;
-            invalidateLocalTransform();
-            invalidateWorldTransform();
-        }
-    }
-
-    public void setLocalScale(Vector2 localScale) {
-        if(!this.localScale.epsilonEquals(localScale, Epsilon)) {
-            this.localScale.set(localScale);
-            invalidateLocalTransform();
-            invalidateWorldTransform();
-        }
-    }
-
-    public void setDimensions(Vector2 dimensions) { this.dimensions.set(dimensions); }
-    public void setAlpha(float alpha) { this.localAlpha = alpha; }
-    public int getLayer() { return layer; }
-    public void setLayer(int layer) { this.layer = layer; }
+    public int getLayer() { return layer.get(); }
+    public Property<Integer> getLayerProperty() { return layer; }
+    public void setLayer(int layer) { this.layer.set(layer); }
 
     public Affine2 getLocalTransform() {
         if(localTransformDirty) {
-            localTransform.setToTrnRotScl(localPosition, localRotation, localScale);
+            localTransform.setToTrnRotScl(localPosition.get(), localRotation.get(), localScale.get());
             localTransformDirty = false;
         }
 
@@ -123,7 +134,7 @@ public class UIElement implements TweenAccessor<UIElement> {
             UIElement element = this;
             while (element != null) {
                 transforms.add(element.getLocalTransform());
-                element = element.parent;
+                element = element.getParent();
             }
 
             localToWorldTransform = new Affine2();
@@ -144,7 +155,7 @@ public class UIElement implements TweenAccessor<UIElement> {
     public final void render(SpriteBatch spriteBatch) {
         Affine2 identity = new Affine2();
         identity.idt();
-        render(identity, spriteBatch, localAlpha);
+        render(identity, spriteBatch, localAlpha.get());
     }
 
     public final void render(Affine2 transformationStack, SpriteBatch spriteBatch, float transformedAlpha) {
@@ -154,7 +165,7 @@ public class UIElement implements TweenAccessor<UIElement> {
         elementPreRender(newTransformationStack, spriteBatch, transformedAlpha);
         elementRender(newTransformationStack, spriteBatch, transformedAlpha);
         elementPostRender(newTransformationStack, spriteBatch, transformedAlpha);
-        children.sort((elementA, elementB) -> elementA.layer < elementB.layer ? -1 : 1);
+        children.sort((elementA, elementB) -> elementA.layer.get() < elementB.layer.get() ? -1 : 1);
         float finalAlpha = transformedAlpha;
         children.forEach(child -> child.render(newTransformationStack, spriteBatch, finalAlpha));
     }
@@ -184,37 +195,37 @@ public class UIElement implements TweenAccessor<UIElement> {
     public int getValues(UIElement target, int tweenType, float[] returnValues) {
         switch (tweenType) {
             case TweenTypes.POSITION_XY:
-                returnValues[0] = target.localPosition.x;
-                returnValues[1] = target.localPosition.y;
+                returnValues[0] = target.localPosition.get().x;
+                returnValues[1] = target.localPosition.get().y;
                 return 2;
 
             case TweenTypes.POSITION_X:
-                returnValues[0] = target.localPosition.x;
+                returnValues[0] = target.localPosition.get().x;
                 return 1;
 
             case TweenTypes.POSITION_Y:
-                returnValues[0] = target.localPosition.y;
+                returnValues[0] = target.localPosition.get().y;
                 return 1;
 
             case TweenTypes.ROTATION:
-                returnValues[0] = target.localRotation;
+                returnValues[0] = target.localRotation.get();
                 return 1;
 
             case TweenTypes.SCALE_XY:
-                returnValues[0] = target.localScale.x;
-                returnValues[1] = target.localScale.y;
+                returnValues[0] = target.localScale.get().x;
+                returnValues[1] = target.localScale.get().y;
                 return 2;
 
             case TweenTypes.SCALE_X:
-                returnValues[0] = target.localScale.x;
+                returnValues[0] = target.localScale.get().x;
                 return 1;
 
             case TweenTypes.SCALE_Y:
-                returnValues[0] = target.localScale.y;
+                returnValues[0] = target.localScale.get().y;
                 return 1;
 
             case TweenTypes.ALPHA:
-                returnValues[0] = target.localAlpha;
+                returnValues[0] = target.localAlpha.get();
                 return 1;
         }
 
@@ -230,11 +241,11 @@ public class UIElement implements TweenAccessor<UIElement> {
                 break;
 
             case TweenTypes.POSITION_X:
-                target.setLocalPosition(new Vector2(newValues[0], target.localPosition.y));
+                target.setLocalPosition(new Vector2(newValues[0], target.localPosition.get().y));
                 break;
 
             case TweenTypes.POSITION_Y:
-                target.setLocalPosition(new Vector2(target.localPosition.x, newValues[0]));
+                target.setLocalPosition(new Vector2(target.localPosition.get().x, newValues[0]));
                 break;
 
             case TweenTypes.ROTATION:
@@ -246,11 +257,11 @@ public class UIElement implements TweenAccessor<UIElement> {
                 break;
 
             case TweenTypes.SCALE_X:
-                target.setLocalScale(new Vector2(newValues[0], target.localScale.y));
+                target.setLocalScale(new Vector2(newValues[0], target.localScale.get().y));
                 break;
 
             case TweenTypes.SCALE_Y:
-                target.setLocalScale(new Vector2(target.localScale.x, newValues[0]));
+                target.setLocalScale(new Vector2(target.localScale.get().x, newValues[0]));
                 break;
 
             case TweenTypes.ALPHA:

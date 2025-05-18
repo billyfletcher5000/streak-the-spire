@@ -18,6 +18,7 @@ import basemod.interfaces.PostInitializeSubscriber;
 import basemod.interfaces.PostUpdateSubscriber;
 import basemod.interfaces.RenderSubscriber;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -27,6 +28,8 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
+import dorkbox.tweenEngine.BaseTween;
+import dorkbox.tweenEngine.TweenCallback;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,6 +90,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         instance = this;
     }
 
+    UISpineAnimationElement spineAnimationElement;
+
     @Override
     public void receivePostInitialize() {
         registerViewFactories();
@@ -118,14 +123,30 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         createViews();
 
         SkeletonModifier modifier = new SkeletonModifier();
-        modifier.bonesToKeep.add("Neck_");
+        modifier.bonesToKeep.add("Neck_3");
+        modifier.bonesToRemove.add("Neck_2");
         modifier.bonesToRemove.add("Chest");
         modifier.bonesToRemove.add("root");
         modifier.bonesToRemove.add("Hips");
 
-        UISpineAnimationElement spineAnimationElement = new UISpineAnimationElement(new Vector2(500, 500), "images/characters/defect/idle/skeleton.atlas", "images/characters/defect/idle/skeleton.json", modifier);
-        spineAnimationElement.getAnimationState().setAnimation(0, "Idle", true);
+        spineAnimationElement = new UISpineAnimationElement(new Vector2(500, 500), "images/characters/defect/idle/skeleton.atlas", "images/characters/defect/idle/skeleton.json", modifier);
+        spineAnimationElement.getAnimationState().setAnimation(0, "Idle", false);
+        spineAnimationElement.getAnimationStateData().setMix("Hit", "Idle", 0.1F);
+        spineAnimationElement.setLocalRotation(60.0f);
+        spineAnimationElement.setMaskColor(new Color(1.0f, 0.0f, 0.25f, 1.0f));
+        tweenEngine.to(spineAnimationElement, UIVisualElement.TweenTypes.MASK_A, 1.0f).target(0.1f).repeatAutoReverse(100, 0.05f).start();
         rootUIElement.addChild(spineAnimationElement);
+
+        tweenEngine.call(new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                spineAnimationElement.getAnimationState().setAnimation(0, "Hit", false);
+                spineAnimationElement.getAnimationState().addAnimation(0, "Hit", false, 0.0f);
+                spineAnimationElement.getAnimationState().addAnimation(0, "Hit", false, 0.0f);
+                spineAnimationElement.getAnimationState().addAnimation(0, "Hit", false, 0.0f);
+                spineAnimationElement.getAnimationState().addAnimation(0, "Idle", false, 0.0F);
+            }
+        }).repeat(1000, 8).start();
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);

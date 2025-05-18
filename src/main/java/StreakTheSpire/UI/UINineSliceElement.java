@@ -21,7 +21,7 @@ public class UINineSliceElement extends UIVisualElement {
         setLocalScale(scale);
         this.nineSliceTexture = texture;
         setDimensions(size);
-        this.color = color;
+        setColor(color);
     }
 
     public NineSliceTexture getNineSliceTexture() { return nineSliceTexture; }

@@ -49,7 +49,7 @@ public class UITextElement extends UIVisualElement {
         this.font = font;
         this.text = text;
         setDimensions(size);
-        this.color = color;
+        setColor(color);
         this.hAlign = hAlign;
         this.wrap = wrap;
     }

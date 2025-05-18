@@ -1,10 +1,14 @@
 package StreakTheSpire.UI;
 
+import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -19,20 +23,33 @@ public class UISpineAnimationElement extends UIVisualElement {
     private static Matrix4 previousTransformMatrix = new Matrix4();
     protected SkeletonMeshRenderer skeletonMeshRenderer = new SkeletonMeshRenderer();
 
-    private boolean flipX = false;
-    private boolean flipY = false;
+    private final Property<Boolean> flipX = new Property<>(false);
+    private final Property<Boolean> flipY = new Property<>(false);
 
     protected TextureAtlas atlas;
     protected Skeleton skeleton;
     protected AnimationState animationState;
     protected AnimationStateData animationStateData;
 
+    public boolean getFlipX() { return flipX.get(); }
+    public Property<Boolean> getFlipXProperty() { return flipX; }
+    public void setFlipX(boolean flipX) { this.flipX.set(flipX); }
+
+    public boolean getFlipY() { return flipY.get(); }
+    public Property<Boolean> getFlipYProperty() { return flipY; }
+    public void setFlipY(boolean flipY) { this.flipY.set(flipY); }
+
     public AnimationState getAnimationState() { return animationState; }
+    public AnimationStateData getAnimationStateData() { return animationStateData; }
 
     public UISpineAnimationElement() {}
 
     public UISpineAnimationElement(String atlasUrl, String skeletonUrl) {
         this(Vector2.Zero, atlasUrl, skeletonUrl);
+    }
+
+    public UISpineAnimationElement(String atlasUrl, String skeletonUrl, SkeletonModifier modifier) {
+        this(Vector2.Zero, atlasUrl, skeletonUrl, modifier);
     }
 
     public UISpineAnimationElement(Vector2 position, String atlasUrl, String skeletonUrl) {
@@ -91,8 +108,8 @@ public class UISpineAnimationElement extends UIVisualElement {
     protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
         super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
         skeleton.updateWorldTransform();
-        skeleton.setColor(color);
-        skeleton.setFlip(flipX, flipY);
+        skeleton.setColor(color.get());
+        skeleton.setFlip(flipX.get(), flipY.get());
 
         try {
             skeletonMeshRenderer.draw(CardCrawlGame.psb, skeleton);
@@ -108,6 +125,25 @@ public class UISpineAnimationElement extends UIVisualElement {
         CardCrawlGame.psb.end();
         CardCrawlGame.psb.setTransformMatrix(previousTransformMatrix);
         spriteBatch.begin();
+    }
+
+    @Override
+    protected void applyMaskColorPreRender(Batch spriteBatch) {
+        super.applyMaskColorPreRender(CardCrawlGame.psb);
+        /*(Color maskColor = getMaskColor();
+        if(maskColor.a > Epsilon) {
+            ShaderProgram maskShader = UIShaderRepository.getMaskShader();
+            CardCrawlGame.psb.setShader(maskShader);
+            maskShader.setUniformf("u_mask_color", maskColor.r, maskColor.g, maskColor.b, maskColor.a);
+            StreakTheSpire.logInfo(this.getClass().getSimpleName() + ": Applying mask color: " + maskColor);
+        }*/
+    }
+
+    @Override
+    protected void revertMaskColorPostRender(Batch spriteBatch) {
+
+        super.revertMaskColorPostRender(CardCrawlGame.psb);
+        //CardCrawlGame.psb.setShader(null);
     }
 
     @Override
