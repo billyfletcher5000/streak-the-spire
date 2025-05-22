@@ -2,11 +2,16 @@ package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.Properties.Property;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Affine2;
+import com.badlogic.gdx.utils.BufferUtils;
+
+import java.nio.IntBuffer;
 
 public class UIVisualElement extends UIElement {
     public static class TweenTypes {
@@ -55,9 +60,7 @@ public class UIVisualElement extends UIElement {
         if(maskColor.a > Epsilon) {
             ShaderProgram maskShader = UIShaderRepository.getMaskShader();
             spriteBatch.setShader(maskShader);
-            maskShader.begin();
             maskShader.setUniformf("u_mask_color", maskColor.r, maskColor.g, maskColor.b, maskColor.a);
-            StreakTheSpire.logInfo(this.getClass().getSimpleName() + ": Applying mask color: " + maskColor);
         }
     }
 

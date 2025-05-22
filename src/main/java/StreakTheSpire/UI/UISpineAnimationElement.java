@@ -95,13 +95,13 @@ public class UISpineAnimationElement extends UIVisualElement {
 
     @Override
     protected void elementPreRender(Affine2 transformationStack, SpriteBatch spriteBatch, float transformedAlpha) {
-        super.elementPreRender(transformationStack, spriteBatch, transformedAlpha);
         Matrix4 matrix = new Matrix4();
         matrix.set(transformationStack);
         spriteBatch.end();
         previousTransformMatrix = CardCrawlGame.psb.getTransformMatrix();
         CardCrawlGame.psb.setTransformMatrix(matrix);
         CardCrawlGame.psb.begin();
+        super.elementPreRender(transformationStack, spriteBatch, transformedAlpha);
     }
 
     @Override
@@ -130,20 +130,11 @@ public class UISpineAnimationElement extends UIVisualElement {
     @Override
     protected void applyMaskColorPreRender(Batch spriteBatch) {
         super.applyMaskColorPreRender(CardCrawlGame.psb);
-        /*(Color maskColor = getMaskColor();
-        if(maskColor.a > Epsilon) {
-            ShaderProgram maskShader = UIShaderRepository.getMaskShader();
-            CardCrawlGame.psb.setShader(maskShader);
-            maskShader.setUniformf("u_mask_color", maskColor.r, maskColor.g, maskColor.b, maskColor.a);
-            StreakTheSpire.logInfo(this.getClass().getSimpleName() + ": Applying mask color: " + maskColor);
-        }*/
     }
 
     @Override
     protected void revertMaskColorPostRender(Batch spriteBatch) {
-
         super.revertMaskColorPostRender(CardCrawlGame.psb);
-        //CardCrawlGame.psb.setShader(null);
     }
 
     @Override

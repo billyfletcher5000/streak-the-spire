@@ -11,6 +11,6 @@ uniform sampler2D u_texture;
 void main()
 {
   vec4 tex_color = texture2D(u_texture, v_texCoords);
-  gl_FragColor.rgb = mix(v_color * tex_color, u_mask_color, u_mask_color.a);
-  gl_FlagColor.a = v_color.a * tex_color.a;
+  gl_FragColor.rgb = mix(v_color.rgb * tex_color.rgb, u_mask_color.rgb, u_mask_color.a);
+  gl_FragColor.a = v_color.a * tex_color.a;
 }
