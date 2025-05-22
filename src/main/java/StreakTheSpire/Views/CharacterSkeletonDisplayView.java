@@ -2,7 +2,6 @@ package StreakTheSpire.Views;
 
 import StreakTheSpire.Models.CharacterSkeletonDisplayModel;
 import StreakTheSpire.Models.IModel;
-import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.SkeletonModifier;
 import StreakTheSpire.UI.UIScaleBoxElement;
@@ -17,14 +16,21 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
     public UISpineAnimationElement getSkeletonAnimation() { return skeletonAnimation; }
 
     public CharacterSkeletonDisplayView(CharacterSkeletonDisplayModel model) {
-        super(model.dimensions.get());
+        super(model.baseDimensions.get());
         this.model = model;
 
         skeletonAnimation = new UISpineAnimationElement(model.skeletonOffset.get(), model.skeletonAtlasUrl.get(), model.skeletonJsonUrl.get(), new SkeletonModifier(model.skeletonBonesToRemove, model.skeletonBonesToKeep));
         skeletonAnimation.setLocalRotation(model.skeletonRotationAdjustment.get());
-        skeletonAnimation.getAnimationState().setAnimation(0, model.skeletonIdleAnimationName.get(), false);
-        skeletonAnimation.getAnimationStateData().setMix(model.skeletonHitAnimationName.get(), model.skeletonIdleAnimationName.get(), 0.1F);
+        skeletonAnimation.getAnimationStateData().setMix(model.skeletonHitAnimationName.get(), model.skeletonIdleAnimationName.get(), model.skeletonAnimationMixDuration.get());
         addChild(skeletonAnimation);
+    }
+
+    public void EnqueueIdleAnimation() {
+        skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonIdleAnimationName.get(), false, 0f);
+    }
+
+    public void EnqueueHitAnimation() {
+        skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonHitAnimationName.get(), false, 0.0f);
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

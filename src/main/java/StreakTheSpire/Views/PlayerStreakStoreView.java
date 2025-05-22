@@ -2,14 +2,11 @@ package StreakTheSpire.Views;
 
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.Models.PlayerStreakStoreModel;
-import StreakTheSpire.Models.SavedPanelModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.NineSliceTexture;
 import StreakTheSpire.UI.UIResizablePanel;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import com.badlogic.gdx.graphics.Color;
-
-import static StreakTheSpire.StreakTheSpire.gson;
 
 public class PlayerStreakStoreView extends UIResizablePanel implements IView {
     private PlayerStreakStoreModel streakModel;
