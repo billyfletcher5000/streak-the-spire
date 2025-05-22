@@ -3,6 +3,8 @@ package StreakTheSpire.UI;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
+import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
@@ -38,6 +40,8 @@ public class UIElement implements TweenAccessor<UIElement> {
     protected Affine2 localToWorldTransform = new Affine2();
     protected boolean localTransformDirty = true;
     protected boolean worldTransformDirty = true;
+
+    private UINineSliceElement debugDimensionsElement = null;
 
     public UIElement getParent() { return parent.get(); }
     public Property<UIElement> getParentProperty() { return parent; }
@@ -179,7 +183,11 @@ public class UIElement implements TweenAccessor<UIElement> {
         children.forEach(child -> child.update(deltaTime));
     }
 
-    protected void elementUpdate(float deltaTime) {}
+    protected void elementUpdate(float deltaTime) {
+        if(debugDimensionsElement != null) {
+            debugDimensionsElement.setDimensions(getDimensions());
+        }
+    }
 
     protected void invalidateLocalTransform() {
         localTransformDirty = true;
@@ -189,6 +197,40 @@ public class UIElement implements TweenAccessor<UIElement> {
         worldTransformDirty = true;
         for(UIElement child : children)
             child.invalidateWorldTransform();
+    }
+
+    protected static NineSliceTexture debugBoxNinesliceTexture = null;
+
+    public void showDebugDimensionsDisplay(boolean recursive) {
+        if(debugDimensionsElement == null) {
+            if(debugBoxNinesliceTexture == null) {
+                debugBoxNinesliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.DEBUG_BOX_NINESLICE.getTexture(), 8, 8, 8, 8);
+            }
+
+            debugDimensionsElement = new UINineSliceElement(Vector2.Zero, debugBoxNinesliceTexture, getDimensions(), Color.GREEN);
+            addChild(debugDimensionsElement);
+        }
+
+        if(recursive) {
+            for (UIElement child : children) {
+                if(child != debugDimensionsElement)
+                    child.showDebugDimensionsDisplay(true);
+            }
+        }
+    }
+
+    public void hideDebugDimensionsDisplay(boolean recursive) {
+        if(debugDimensionsElement != null) {
+            removeChild(debugDimensionsElement);
+            debugDimensionsElement = null;
+        }
+
+        if(recursive) {
+            for (UIElement child : children) {
+                if(child != debugDimensionsElement)
+                    child.hideDebugDimensionsDisplay(true);
+            }
+        }
     }
 
     @Override

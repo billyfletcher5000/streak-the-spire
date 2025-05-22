@@ -148,6 +148,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             }
         }).repeat(1000, 8).start();
 
+        rootUIElement.showDebugDimensionsDisplay(true);
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
