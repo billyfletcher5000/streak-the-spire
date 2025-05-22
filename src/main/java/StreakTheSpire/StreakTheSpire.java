@@ -122,6 +122,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         CharacterSkeletonDisplayModel defectSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
 
+        defectSkeletonDisplayModel.characterName.set("DEFECT");
         defectSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
         defectSkeletonDisplayModel.skeletonOffset.set(new Vector2(-21, -17));
         defectSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/defect/idle/skeleton.atlas");
@@ -136,6 +137,65 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CharacterSkeletonDisplayView defectView = createView(defectSkeletonDisplayModel);
         defectView.setLocalPosition(new Vector2(500, 500));
         defectView.showDebugDimensionsDisplay(false);
+
+        CharacterSkeletonDisplayModel ironcladSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+
+        ironcladSkeletonDisplayModel.characterName.set("IRONCLAD");
+        ironcladSkeletonDisplayModel.baseDimensions.set(new Vector2(60, 60));
+        ironcladSkeletonDisplayModel.skeletonOffset.set(new Vector2(-2, -20));
+        ironcladSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/ironclad/idle/skeleton.atlas");
+        ironcladSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/ironclad/idle/skeleton.json");
+        ironcladSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
+        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Neck_2");
+        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
+        ironcladSkeletonDisplayModel.skeletonRotationAdjustment.set(100.0f);
+
+        CharacterSkeletonDisplayView ironcladView = createView(ironcladSkeletonDisplayModel);
+        ironcladView.setLocalPosition(new Vector2(600, 500));
+        ironcladView.enqueueIdleAnimation(true);
+        ironcladView.showDebugDimensionsDisplay(false);
+
+        CharacterSkeletonDisplayModel silentSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+
+        silentSkeletonDisplayModel.characterName.set("THE_SILENT");
+        silentSkeletonDisplayModel.baseDimensions.set(new Vector2(112, 112));
+        silentSkeletonDisplayModel.skeletonOffset.set(new Vector2(-22, -60));
+        silentSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/theSilent/idle/skeleton.atlas");
+        silentSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/theSilent/idle/skeleton.json");
+        silentSkeletonDisplayModel.skeletonBonesToKeep.add("Spine_3");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Spine_2");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Tail_1");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Shadow");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Robe_down");
+        silentSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
+
+        CharacterSkeletonDisplayView silentView = createView(silentSkeletonDisplayModel);
+        silentView.setLocalPosition(new Vector2(700, 500));
+        silentView.enqueueIdleAnimation(true);
+        silentView.showDebugDimensionsDisplay(false);
+
+        CharacterSkeletonDisplayModel watcherSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+
+        watcherSkeletonDisplayModel.characterName.set("THE_SILENT");
+        watcherSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
+        watcherSkeletonDisplayModel.skeletonOffset.set(new Vector2(-6, -18));
+        watcherSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/watcher/idle/skeleton.atlas");
+        watcherSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/watcher/idle/skeleton.json");
+        watcherSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("IK_leg_L_goal");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("HIPS");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Arm_R_");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Neck");
+        watcherSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
+
+        CharacterSkeletonDisplayView watcherView = createView(watcherSkeletonDisplayModel);
+        watcherView.setLocalPosition(new Vector2(820, 500));
+        watcherView.enqueueIdleAnimation(true);
+        watcherView.showDebugDimensionsDisplay(false);
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);

@@ -25,11 +25,11 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
         addChild(skeletonAnimation);
     }
 
-    public void EnqueueIdleAnimation() {
-        skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonIdleAnimationName.get(), false, 0f);
+    public void enqueueIdleAnimation(boolean loop) {
+        skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonIdleAnimationName.get(), loop, 0f);
     }
 
-    public void EnqueueHitAnimation() {
+    public void enqueueHitAnimation() {
         skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonHitAnimationName.get(), false, 0.0f);
     }
 
