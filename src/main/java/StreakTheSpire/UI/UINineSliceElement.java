@@ -3,6 +3,7 @@ package StreakTheSpire.UI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 public class UINineSliceElement extends UIVisualElement {
@@ -52,6 +53,12 @@ public class UINineSliceElement extends UIVisualElement {
     @Override
     protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
         super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
+
+        Matrix4 previousTransformationMatrix = spriteBatch.getTransformMatrix().cpy();
+
+        spriteBatch.flush();
+        Matrix4 matrix = new Matrix4().set(transformationMatrix);
+        spriteBatch.setTransformMatrix(matrix);
 
         // So this is a (very, very verbose) CPU way of doing things, which will preserve batching because if we did it
         // via changing shader it would mean another draw call/invalidating the batch. In the bizarre event you're in a
@@ -146,39 +153,78 @@ public class UINineSliceElement extends UIVisualElement {
 
         // Finally, draw everything!
         spriteBatch.draw(nineSliceTexture.texture, vertexComponents, 0, vertexCount);
+        spriteBatch.setTransformMatrix(previousTransformationMatrix);
     }
 
     protected void drawSection(float[] vertices, int offset, Affine2 transformMatrix, Vector2 topLeft, Vector2 bottomRight, Vector2 uv1, Vector2 uv2, float colorBits) {
-        Vector2 topLeftTransformed = topLeft.cpy(); transformMatrix.applyTo(topLeftTransformed);
-        Vector2 bottomRightTransformed = bottomRight.cpy(); transformMatrix.applyTo(bottomRightTransformed);
+        Vector2 topLeftTransformed = topLeft.cpy();// transformMatrix.applyTo(topLeftTransformed);
+        Vector2 bottomRightTransformed = bottomRight.cpy();// transformMatrix.applyTo(bottomRightTransformed);
+
+        Vector2 sectionTopLeft = topLeftTransformed.cpy();//new Vector2();
+        Vector2 sectionBottomRight = bottomRightTransformed.cpy();//new Vector2();
+        Vector2 sectionUv1 = uv1.cpy();//new Vector2();
+        Vector2 sectionUv2 = uv2.cpy();//new Vector2();
+/*
+        if(topLeftTransformed.x < bottomRightTransformed.x) {
+            sectionTopLeft.x = topLeftTransformed.x;
+            sectionBottomRight.x = bottomRightTransformed.x;
+        } else {
+            sectionTopLeft.x = bottomRightTransformed.x;
+            sectionBottomRight.x = topLeftTransformed.x;
+        }
+
+        if(topLeftTransformed.y < bottomRightTransformed.y) {
+            sectionTopLeft.y = topLeftTransformed.y;
+            sectionBottomRight.y = bottomRightTransformed.y;
+        } else {
+            sectionTopLeft.y = bottomRightTransformed.y;
+            sectionBottomRight.y = topLeftTransformed.y;
+        }
+
+        if(uv1.x < uv2.x) {
+            sectionUv1.x = uv1.x;
+            sectionUv2.x = uv2.x;
+        } else {
+            sectionUv1.x = uv2.x;
+            sectionUv2.x = uv1.x;
+        }
+
+        if(uv1.y < uv2.y) {
+            sectionUv1.y = uv1.y;
+            sectionUv2.y = uv2.y;
+        } else {
+            sectionUv1.y = uv2.y;
+            sectionUv2.y = uv1.y;
+        }
+ */
 
 
         int vertexIndex = offset;
-        vertices[vertexIndex + VertexComponent.X] = topLeftTransformed.x;
-        vertices[vertexIndex + VertexComponent.Y] = topLeftTransformed.y;
+        vertices[vertexIndex + VertexComponent.X] = sectionTopLeft.x;
+        vertices[vertexIndex + VertexComponent.Y] = sectionTopLeft.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = uv1.x;
-        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv1.y; // Invert y as UV space has Y=0 at the top and Y=1 at the bottom
+        vertices[vertexIndex + VertexComponent.U] = sectionUv1.x;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - sectionUv1.y; // Invert y as UV space has Y=0 at the top and Y=1 at the bottom
 
         vertexIndex = offset + (VertexWindingID.TR * VertexComponent.NUM);
-        vertices[vertexIndex + VertexComponent.X] = bottomRightTransformed.x;
-        vertices[vertexIndex + VertexComponent.Y] = topLeftTransformed.y;
+        vertices[vertexIndex + VertexComponent.X] = sectionBottomRight.x;
+        vertices[vertexIndex + VertexComponent.Y] = sectionTopLeft.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = uv2.x;
-        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv1.y;
+        vertices[vertexIndex + VertexComponent.U] = sectionUv2.x;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - sectionUv1.y;
 
         vertexIndex = offset + (VertexWindingID.BR * VertexComponent.NUM);
-        vertices[vertexIndex + VertexComponent.X] = bottomRightTransformed.x;
-        vertices[vertexIndex + VertexComponent.Y] = bottomRightTransformed.y;
+        vertices[vertexIndex + VertexComponent.X] = sectionBottomRight.x;
+        vertices[vertexIndex + VertexComponent.Y] = sectionBottomRight.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = uv2.x;
-        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
+        vertices[vertexIndex + VertexComponent.U] = sectionUv2.x;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - sectionUv2.y;
 
         vertexIndex = offset + (VertexWindingID.BL * VertexComponent.NUM);
-        vertices[vertexIndex + VertexComponent.X] = topLeftTransformed.x;
-        vertices[vertexIndex + VertexComponent.Y] = bottomRightTransformed.y;
+        vertices[vertexIndex + VertexComponent.X] = sectionTopLeft.x;
+        vertices[vertexIndex + VertexComponent.Y] = sectionBottomRight.y;
         vertices[vertexIndex + VertexComponent.COLOR] = colorBits;
-        vertices[vertexIndex + VertexComponent.U] = uv1.x;
-        vertices[vertexIndex + VertexComponent.V] = 1.0f - uv2.y;
+        vertices[vertexIndex + VertexComponent.U] = sectionUv1.x;
+        vertices[vertexIndex + VertexComponent.V] = 1.0f - sectionUv2.y;
     }
 }

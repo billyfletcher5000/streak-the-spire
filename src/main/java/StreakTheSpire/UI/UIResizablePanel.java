@@ -32,8 +32,8 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     // Intently disabled rotation for these, see UIElementHitbox comments
     // Note: This will not prevent setting rotation higher, but any rotation higher will cause issues with
     //       this element.
-    @Override
-    public void setLocalRotation(float localRotation) { }
+    //@Override
+    //public void setLocalRotation(float localRotation) { }
 
     public boolean isResizeEnabled() { return resizeEnabled.get(); }
     public Property<Boolean> getResizeEnabledProperty() { return resizeEnabled; }

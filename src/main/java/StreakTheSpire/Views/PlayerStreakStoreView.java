@@ -40,6 +40,7 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         this.addOnPanelMovedSubscriber(movedSubscriber);
 
         setMaskColor(new Color(0.0f, 1.0f, 0.25f, 0.33f));
+        setLocalRotation(10.0f);
     }
 
     private void saveModel() {

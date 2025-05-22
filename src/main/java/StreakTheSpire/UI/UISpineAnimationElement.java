@@ -88,6 +88,7 @@ public class UISpineAnimationElement extends UIVisualElement {
             this.skeleton.setPosition(0,0);
             this.animationStateData = new AnimationStateData(skeletonData);
             this.animationState = new AnimationState(this.animationStateData);
+            setDimensions(new Vector2(skeletonData.getWidth(), skeletonData.getHeight()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

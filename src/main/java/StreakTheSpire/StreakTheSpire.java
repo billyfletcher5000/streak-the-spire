@@ -8,6 +8,7 @@ import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
+import StreakTheSpire.Views.CharacterSkeletonDisplayView;
 import StreakTheSpire.Views.IView;
 import StreakTheSpire.Views.PlayerStreakStoreView;
 import StreakTheSpire.Views.ViewFactoryManager;
@@ -122,12 +123,24 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseUIRoot();
         createViews();
 
-        SkeletonModifier modifier = new SkeletonModifier();
-        modifier.bonesToKeep.add("Neck_3");
-        modifier.bonesToRemove.add("Neck_2");
-        modifier.bonesToRemove.add("Chest");
-        modifier.bonesToRemove.add("root");
-        modifier.bonesToRemove.add("Hips");
+        CharacterSkeletonDisplayModel defectSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+
+        defectSkeletonDisplayModel.dimensions.set(new Vector2(60, 60));
+        defectSkeletonDisplayModel.skeletonOffset.set(new Vector2(-20, -15));
+        defectSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/defect/idle/skeleton.atlas");
+        defectSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/defect/idle/skeleton.json");
+        defectSkeletonDisplayModel.skeletonBonesToKeep.add("Neck_3");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Neck_2");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Chest");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
+        defectSkeletonDisplayModel.skeletonRotationAdjustment.set(60.0f);
+
+        CharacterSkeletonDisplayView defectView = createView(defectSkeletonDisplayModel);
+        defectView.setLocalPosition(new Vector2(500, 500));
+        defectView.showDebugDimensionsDisplay(false);
+
+        /*
 
         spineAnimationElement = new UISpineAnimationElement(new Vector2(500, 500), "images/characters/defect/idle/skeleton.atlas", "images/characters/defect/idle/skeleton.json", modifier);
         spineAnimationElement.getAnimationState().setAnimation(0, "Idle", false);
@@ -147,8 +160,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
                 spineAnimationElement.getAnimationState().addAnimation(0, "Idle", false, 0.0F);
             }
         }).repeat(1000, 8).start();
+*/
+        //rootUIElement.showDebugDimensionsDisplay(true);
 
-        rootUIElement.showDebugDimensionsDisplay(true);
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
@@ -234,6 +248,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private void registerViewFactories() {
         ViewFactoryManager.get().registerViewFactory(PlayerStreakStoreModel.class, PlayerStreakStoreView.FACTORY);
+        ViewFactoryManager.get().registerViewFactory(CharacterSkeletonDisplayModel.class, CharacterSkeletonDisplayView.FACTORY);
     }
 
     protected <T extends IConfigDataModel> void registerConfigModel(Property<T> dataModel) {
