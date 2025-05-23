@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
@@ -90,7 +89,7 @@ public class UISpineAnimationElement extends UIVisualElement {
             this.animationState = new AnimationState(this.animationStateData);
             setDimensions(new Vector2(skeletonData.getWidth(), skeletonData.getHeight()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            StreakTheSpire.logError(e.getMessage());
         }
     }
 
@@ -99,7 +98,7 @@ public class UISpineAnimationElement extends UIVisualElement {
         Matrix4 matrix = new Matrix4();
         matrix.set(transformationStack);
         spriteBatch.end();
-        previousTransformMatrix = CardCrawlGame.psb.getTransformMatrix();
+        previousTransformMatrix = CardCrawlGame.psb.getTransformMatrix().cpy();
         CardCrawlGame.psb.setTransformMatrix(matrix);
         CardCrawlGame.psb.begin();
         super.elementPreRender(transformationStack, spriteBatch, transformedAlpha);
@@ -116,7 +115,7 @@ public class UISpineAnimationElement extends UIVisualElement {
             skeletonMeshRenderer.draw(CardCrawlGame.psb, skeleton);
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
+            StreakTheSpire.logError(e.getMessage());
         }
     }
 
