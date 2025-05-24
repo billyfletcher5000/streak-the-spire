@@ -126,23 +126,24 @@ public class PropertyList<T> extends ArrayList<T> {
     private HashSet<PropertyList.ItemRemovedSubscriber> onItemRemovedSubscribers;
     private HashSet<PropertyList.ListClearedSubscriber> onClearedSubscribers;
 
-    public static class ItemAddedSubscriber {
-        public void onPropertyListItemAdded(Object item) {}
+    public interface ItemAddedSubscriber {
+        void onPropertyListItemAdded(Object item);
     }
 
-    public static class ItemRemovedSubscriber {
-        public void onPropertyListItemRemoved(Object item) {}
+    public interface ItemRemovedSubscriber {
+        void onPropertyListItemRemoved(Object item);
     }
 
-    public static class ListClearedSubscriber {
-        public void onPropertyListCleared() {}
+    public interface ListClearedSubscriber {
+        void onPropertyListCleared();
     }
 
-    public void addOnItemAddedSubscriber(PropertyList.ItemAddedSubscriber subscriber) {
+    public PropertyList.ItemAddedSubscriber addOnItemAddedSubscriber(PropertyList.ItemAddedSubscriber subscriber) {
         if (onItemAddedSubscribers == null)
             onItemAddedSubscribers = new HashSet<>();
 
         onItemAddedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnItemAddedSubscriber(PropertyList.ItemAddedSubscriber subscriber) {
@@ -150,11 +151,12 @@ public class PropertyList<T> extends ArrayList<T> {
             onItemAddedSubscribers.remove(subscriber);
     }
 
-    public void addOnItemRemovedSubscriber(PropertyList.ItemRemovedSubscriber subscriber) {
+    public PropertyList.ItemRemovedSubscriber addOnItemRemovedSubscriber(PropertyList.ItemRemovedSubscriber subscriber) {
         if (onItemRemovedSubscribers == null)
             onItemRemovedSubscribers = new HashSet<>();
 
         onItemRemovedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnItemRemovedSubscriber(PropertyList.ItemRemovedSubscriber subscriber) {
@@ -162,11 +164,12 @@ public class PropertyList<T> extends ArrayList<T> {
             onItemRemovedSubscribers.remove(subscriber);
     }
 
-    public void addOnListClearedSubscriber(PropertyList.ListClearedSubscriber subscriber) {
+    public PropertyList.ListClearedSubscriber addOnListClearedSubscriber(PropertyList.ListClearedSubscriber subscriber) {
         if (onClearedSubscribers == null)
             onClearedSubscribers = new HashSet<>();
 
         onClearedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnListClearedSubscriber(PropertyList.ListClearedSubscriber subscriber) {

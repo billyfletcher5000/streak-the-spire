@@ -39,15 +39,16 @@ public class Property<T> {
         set((T) value);
     }
 
-    public static class ValueChangedSubscriber {
-        public void onValueChanged() {}
+    public static interface ValueChangedSubscriber {
+        void onValueChanged();
     }
 
-    public void addOnChangedSubscriber(ValueChangedSubscriber subscriber) {
+    public ValueChangedSubscriber addOnChangedSubscriber(ValueChangedSubscriber subscriber) {
         if (onChangedSubscribers == null)
             onChangedSubscribers = new HashSet<>();
 
         onChangedSubscribers.add(new WeakReference<>(subscriber));
+        return subscriber;
     }
 
     public void removeOnChangedSubscriber(ValueChangedSubscriber subscriber) {

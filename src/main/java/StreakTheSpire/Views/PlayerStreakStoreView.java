@@ -1,15 +1,31 @@
 package StreakTheSpire.Views;
 
 import StreakTheSpire.Models.IModel;
+import StreakTheSpire.Models.PlayerStreakModel;
 import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.UI.Layout.UIGridLayoutGroup;
 import StreakTheSpire.UI.NineSliceTexture;
+import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.UI.UIResizablePanel;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Vector2;
 
 public class PlayerStreakStoreView extends UIResizablePanel implements IView {
-    private PlayerStreakStoreModel streakModel;
+    private PlayerStreakStoreModel streakStoreModel;
+
+    private UIGridLayoutGroup gridLayoutGroup = null;
+
+    private UIResizablePanel.PanelResizedSubscriber panelResizedSubscriber;
+    private UIResizablePanel.PanelMovedSubscriber panelMovedSubscriber;
+
+    @Override
+    public void setDimensions(Vector2 dimensions) {
+        super.setDimensions(dimensions);
+        // TODO: With a proper layouting system this would be handled by the child's anchoring
+        gridLayoutGroup.setDimensions(dimensions);
+    }
 
     public PlayerStreakStoreView(PlayerStreakStoreModel model) {
         super(model.panelModel.get().position.get(),
@@ -18,32 +34,40 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
                 model.panelModel.get().dimensions.get(),
                 Color.WHITE.cpy());
 
-        this.streakModel = model;
+        this.streakStoreModel = model;
 
-        PanelResizedSubscriber resizeSubscriber = new PanelResizedSubscriber() {
-            @Override
-            public void onPanelResized() {
-                saveModel();
-            }
-        };
-        this.addOnPanelResizedSubscriber(resizeSubscriber);
+        panelResizedSubscriber = addOnPanelResizedSubscriber(() -> saveModel());
+        panelMovedSubscriber = addOnPanelMovedSubscriber(() -> saveModel());
 
-        PanelMovedSubscriber movedSubscriber = new PanelMovedSubscriber() {
-            @Override
-            public void onPanelMoved() {
-                saveModel();
-            }
-        };
-        this.addOnPanelMovedSubscriber(movedSubscriber);
+        gridLayoutGroup = new UIGridLayoutGroup();
+        addChild(gridLayoutGroup);
 
-        setMaskColor(new Color(0.0f, 1.0f, 0.25f, 0.33f));
-        setLocalRotation(10.0f);
+        for(PlayerStreakModel streakModel : streakStoreModel.playerToStreak) {
+            UIElement element = createStreakModelDisplay(streakModel);
+            addChild(element);
+        }
+
+        if(streakStoreModel.rotatingPlayerStreakModel.get() != null) {
+            UIElement element = createStreakModelDisplay(streakStoreModel.rotatingPlayerStreakModel.get());
+            addChild(element);
+        }
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        removeOnPanelResizedSubscriber(panelResizedSubscriber);
+        removeOnPanelMovedSubscriber(panelMovedSubscriber);
+    }
+
+    private UIElement createStreakModelDisplay(PlayerStreakModel streakModel) {
+        return ViewFactoryManager.get().createView(streakModel);
     }
 
     private void saveModel() {
-        streakModel.panelModel.get().position.set(getLocalPosition());
-        streakModel.panelModel.get().dimensions.set(getDimensions());
-        streakModel.panelModel.get().scale.set(getLocalScale());
+        streakStoreModel.panelModel.get().position.set(getLocalPosition());
+        streakStoreModel.panelModel.get().dimensions.set(getDimensions());
+        streakStoreModel.panelModel.get().scale.set(getLocalScale());
         StreakTheSpire.getInstance().saveConfig();
     }
 

@@ -98,23 +98,24 @@ public class PropertyHashSet<T> extends HashSet<T> {
     private HashSet<PropertyHashSet.ItemRemovedSubscriber> onItemRemovedSubscribers;
     private HashSet<PropertyHashSet.HashSetClearedSubscriber> onClearedSubscribers;
 
-    public static class ItemAddedSubscriber {
-        public void onItemAdded(Object item) {}
+    public interface ItemAddedSubscriber {
+        void onItemAdded(Object item);
     }
 
-    public static class ItemRemovedSubscriber {
-        public void onItemRemoved(Object item) {}
+    public interface ItemRemovedSubscriber {
+        void onItemRemoved(Object item);
     }
 
-    public static class HashSetClearedSubscriber {
-        public void onCleared() {}
+    public interface HashSetClearedSubscriber {
+        void onCleared();
     }
 
-    public void addOnItemAddedSubscriber(PropertyHashSet.ItemAddedSubscriber subscriber) {
+    public PropertyHashSet.ItemAddedSubscriber addOnItemAddedSubscriber(PropertyHashSet.ItemAddedSubscriber subscriber) {
         if (onItemAddedSubscribers == null)
             onItemAddedSubscribers = new HashSet<>();
 
         onItemAddedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnItemAddedSubscriber(PropertyHashSet.ItemAddedSubscriber subscriber) {
@@ -122,11 +123,12 @@ public class PropertyHashSet<T> extends HashSet<T> {
             onItemAddedSubscribers.remove(subscriber);
     }
 
-    public void addOnItemRemovedSubscriber(PropertyHashSet.ItemRemovedSubscriber subscriber) {
+    public PropertyHashSet.ItemRemovedSubscriber addOnItemRemovedSubscriber(PropertyHashSet.ItemRemovedSubscriber subscriber) {
         if (onItemRemovedSubscribers == null)
             onItemRemovedSubscribers = new HashSet<>();
 
         onItemRemovedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnItemRemovedSubscriber(PropertyHashSet.ItemRemovedSubscriber subscriber) {
@@ -134,17 +136,16 @@ public class PropertyHashSet<T> extends HashSet<T> {
             onItemRemovedSubscribers.remove(subscriber);
     }
 
-    public void addOnListClearedSubscriber(PropertyHashSet.HashSetClearedSubscriber subscriber) {
+    public PropertyHashSet.HashSetClearedSubscriber addOnListClearedSubscriber(PropertyHashSet.HashSetClearedSubscriber subscriber) {
         if (onClearedSubscribers == null)
             onClearedSubscribers = new HashSet<>();
 
         onClearedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnListClearedSubscriber(PropertyHashSet.HashSetClearedSubscriber subscriber) {
         if(onClearedSubscribers != null)
             onClearedSubscribers.remove(subscriber);
     }
-
-
 }

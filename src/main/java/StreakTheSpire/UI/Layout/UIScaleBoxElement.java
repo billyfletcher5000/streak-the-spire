@@ -1,9 +1,10 @@
-package StreakTheSpire.UI;
+package StreakTheSpire.UI.Layout;
 
+import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.math.Vector2;
 
-public class UIScaleBoxElement extends UIElement {
+public class UIScaleBoxElement extends UILayoutBoxElement {
     private Property<Vector2> baseDimensions = new Property<>(null);
 
     public Vector2 getBaseDimensions() { return baseDimensions.get(); }
@@ -20,7 +21,18 @@ public class UIScaleBoxElement extends UIElement {
         super.setDimensions(dimensions);
         Vector2 baseDimensions = getBaseDimensions();
         for(UIElement child : getChildren()) {
-            child.setLocalScale(new Vector2(dimensions.x / baseDimensions.x, dimensions.y / baseDimensions.y));
+            Vector2 adjustedScale = new Vector2(dimensions.x / baseDimensions.x, dimensions.y / baseDimensions.y);
+
+            if(shouldPreserveAspectRatio()) {
+                Vector2 childDimensions = child.getDimensions();
+                float previousAspectRatio = childDimensions.x / childDimensions.y;
+                if(previousAspectRatio < 1.0f)
+                    adjustedScale = new Vector2(adjustedScale.x, adjustedScale.y * previousAspectRatio);
+                else
+                    adjustedScale = new Vector2(adjustedScale.x * previousAspectRatio, adjustedScale.y);
+            }
+
+            child.setLocalScale(adjustedScale);
         }
     }
 }

@@ -189,6 +189,29 @@ public class UIElement implements TweenAccessor<UIElement> {
         }
     }
 
+    public final void destroy() {
+        destroy(false);
+    }
+
+    public final void destroy(boolean destroyChildren) {
+        if(destroyChildren) {
+            for (UIElement element : children) {
+                element.destroy();
+            }
+        }
+
+        UILifetimeManager.EnqueueDestroy(this);
+    }
+
+    public void close() {}
+
+    // There's probably better ways of doing this involving inheritance or something but this is meant to emulate C++'s friend/C#'s internal
+    public void _internalDestroy() {
+        close();
+        if(parent.get() != null)
+            parent.get().removeChild(this);
+    }
+
     protected void invalidateLocalTransform() {
         localTransformDirty = true;
     }

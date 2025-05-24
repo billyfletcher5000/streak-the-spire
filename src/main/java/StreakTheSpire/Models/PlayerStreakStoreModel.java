@@ -3,7 +3,7 @@ package StreakTheSpire.Models;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyHashSet;
 
-public class PlayerStreakStoreModel extends IModel implements IConfigDataModel {
+public class PlayerStreakStoreModel implements IModel, IConfigDataModel {
     public static String RotatingPlayerIdentifier = "ROTATING";
 
     public PropertyHashSet<PlayerStreakModel> playerToStreak = new PropertyHashSet<>();

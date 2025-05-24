@@ -4,7 +4,7 @@ import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 
-public class StreakCriteriaModel extends IModel implements IConfigDataModel {
+public class StreakCriteriaModel implements IModel, IConfigDataModel {
     public static final int HeartKillFloorReached = 56;
 
     public Property<Boolean> requireHeartKill = new Property<>(true);
@@ -20,6 +20,7 @@ public class StreakCriteriaModel extends IModel implements IConfigDataModel {
             AbstractPlayer.PlayerClass.DEFECT.toString(),
             AbstractPlayer.PlayerClass.WATCHER.toString()
     );
+    public Property<Boolean> trackRotating = new Property<>(true);
 
     public StreakCriteriaModel() {}
     public StreakCriteriaModel(String configID) { this.configID = configID; }

@@ -17,7 +17,7 @@ public class ViewFactoryManager {
         return modelClassToFactory.get(modelClass);
     }
 
-    public <T extends IView> T CreateView(IModel model) {
+    public <T extends IView> T createView(IModel model) {
         IViewFactory factory = getViewFactory(model.getClass());
         if (factory == null)
             return null;

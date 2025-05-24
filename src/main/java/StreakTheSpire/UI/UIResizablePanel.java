@@ -83,19 +83,20 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         createHitboxes();
     }
 
-    public static class PanelResizedSubscriber {
-        public void onPanelResized() {}
+    public interface PanelResizedSubscriber {
+        void onPanelResized();
     }
 
-    public static class PanelMovedSubscriber {
-        public void onPanelMoved() {}
+    public interface PanelMovedSubscriber {
+        void onPanelMoved();
     }
 
-    public void addOnPanelResizedSubscriber(PanelResizedSubscriber subscriber) {
+    public PanelResizedSubscriber addOnPanelResizedSubscriber(PanelResizedSubscriber subscriber) {
         if (panelResizedSubscribers == null)
             panelResizedSubscribers = new HashSet<>();
 
         panelResizedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnPanelResizedSubscriber(PanelResizedSubscriber subscriber) {
@@ -103,11 +104,12 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
             panelResizedSubscribers.remove(subscriber);
     }
 
-    public void addOnPanelMovedSubscriber(PanelMovedSubscriber subscriber) {
+    public PanelMovedSubscriber addOnPanelMovedSubscriber(PanelMovedSubscriber subscriber) {
         if (panelMovedSubscribers == null)
             panelMovedSubscribers = new HashSet<>();
 
         panelMovedSubscribers.add(subscriber);
+        return subscriber;
     }
 
     public void removeOnPanelMovedSubscriber(PanelMovedSubscriber subscriber) {

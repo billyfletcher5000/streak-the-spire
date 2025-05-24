@@ -4,7 +4,7 @@ import StreakTheSpire.Models.CharacterSkeletonDisplayModel;
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.SkeletonModifier;
-import StreakTheSpire.UI.UIScaleBoxElement;
+import StreakTheSpire.UI.Layout.UIScaleBoxElement;
 import StreakTheSpire.UI.UISpineAnimationElement;
 
 public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements IView {

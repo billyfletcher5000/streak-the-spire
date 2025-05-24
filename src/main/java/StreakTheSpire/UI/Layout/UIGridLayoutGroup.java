@@ -1,34 +1,33 @@
-package StreakTheSpire.UI;
+package StreakTheSpire.UI.Layout;
 
-import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.UI.Padding;
+import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class UIGridContainerElement extends UIElement {
+public class UIGridLayoutGroup extends UIElement {
     // TODO: Investigate an appropriate way to do layouting properly, it's too complicated for this mod's scope though really
-    private boolean expandToParent = true;
-    private Padding expandPadding = new Padding(10, 10, 10, 10);
+    private Property<Padding> outerPadding = new Property<>(new Padding(10, 10, 10, 10));
+    private Property<Float> gridElementPadding = new Property<>(4.0f);
 
     private static final float VERTICAL_ASPECT_RATIO = 1.5f;
     private static final float HORIZONTAL_ASPECT_RATIO = 0.5f;
 
-    private static enum PackingMode {
+    private enum PackingMode {
         Rectangular,
         Vertical,
         Horizontal
     }
 
-    public UIGridContainerElement() {
-        getDimensionsProperty().addOnChangedSubscriber(new Property.ValueChangedSubscriber() {
-            @Override
-            public void onValueChanged() {
-                onParentResize();
-            }
-        });
+    public UIGridLayoutGroup() {}
+    public UIGridLayoutGroup(Padding outerPadding) {
+        this.outerPadding.set(outerPadding.cpy());
     }
 
-    private void onParentResize() {
+    @Override
+    public void setDimensions(Vector2 dimensions) {
+        super.setDimensions(dimensions);
         updateLayout();
     }
 
@@ -47,11 +46,12 @@ public class UIGridContainerElement extends UIElement {
     private void updateLayout() {
         // Update expand position
         Vector2 parentDimensions = getDimensions();
-        Vector2 dimensions = new Vector2(parentDimensions.x - (expandPadding.left + expandPadding.right), parentDimensions.y - (expandPadding.up + expandPadding.down));
+        Padding outerPadding = this.outerPadding.get();
+        Vector2 dimensions = new Vector2(parentDimensions.x - (outerPadding.left + outerPadding.right), parentDimensions.y - (outerPadding.up + outerPadding.down));
         this.setDimensions(dimensions);
-        this.setLocalPosition(new Vector2(expandPadding.right - expandPadding.left, expandPadding.up - expandPadding.down));
+        this.setLocalPosition(new Vector2(outerPadding.right - outerPadding.left, outerPadding.up - outerPadding.down));
 
-        Rectangle gridRect = new Rectangle(expandPadding.left, expandPadding.down, dimensions.x, dimensions.y);
+        Rectangle gridRect = new Rectangle(outerPadding.left, outerPadding.down, dimensions.x, dimensions.y);
 
         UIElement[] children = getChildren();
         int numChildren = children.length;

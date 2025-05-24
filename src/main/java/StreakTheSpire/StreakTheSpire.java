@@ -8,10 +8,7 @@ import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
-import StreakTheSpire.Views.CharacterSkeletonDisplayView;
-import StreakTheSpire.Views.IView;
-import StreakTheSpire.Views.PlayerStreakStoreView;
-import StreakTheSpire.Views.ViewFactoryManager;
+import StreakTheSpire.Views.*;
 import basemod.BaseMod;
 import basemod.ModPanel;
 import basemod.interfaces.AddAudioSubscriber;
@@ -80,15 +77,20 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private Property<GameStateModel> gameStateModel;
     private Property<StreakCriteriaModel> streakCriteriaModel;
-    private Property<PlayerStreakStoreModel> streakDataModel;
+    private Property<CharacterDisplayPreferencesModel> characterDisplayPreferencesModel;
+    private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
+
+    public GameStateModel getGameStateModel() { return gameStateModel.get(); }
+    public StreakCriteriaModel getStreakCriteriaModel() { return streakCriteriaModel.get(); }
+    public CharacterDisplayPreferencesModel getCharacterDisplayPreferencesModel() { return characterDisplayPreferencesModel.get(); }
+    public PlayerStreakStoreModel getStreakStoreDataModel() { return streakStoreDataModel.get(); }
+    public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
         instance = this;
     }
-
-    UISpineAnimationElement spineAnimationElement;
 
     @Override
     public void receivePostInitialize() {
@@ -104,12 +106,12 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         loadConfig();
 
-        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakDataModel.get());
+        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
 
         String report = controller.createStreakDebugReport();
         logDebug(report);
 
-        controller.CalculateStreakData(streakCriteriaModel.get(), false);
+        controller.calculateStreakData(streakCriteriaModel.get(), false);
 
         report = controller.createStreakDebugReport();
         logDebug(report);
@@ -119,83 +121,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         initialiseUIRoot();
         createViews();
-
-        CharacterSkeletonDisplayModel defectSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
-
-        defectSkeletonDisplayModel.characterName.set("DEFECT");
-        defectSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
-        defectSkeletonDisplayModel.skeletonOffset.set(new Vector2(-21, -17));
-        defectSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/defect/idle/skeleton.atlas");
-        defectSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/defect/idle/skeleton.json");
-        defectSkeletonDisplayModel.skeletonBonesToKeep.add("Neck_3");
-        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Neck_2");
-        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Chest");
-        defectSkeletonDisplayModel.skeletonBonesToRemove.add("root");
-        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
-        defectSkeletonDisplayModel.skeletonRotationAdjustment.set(60.0f);
-
-        CharacterSkeletonDisplayView defectView = createView(defectSkeletonDisplayModel);
-        defectView.setLocalPosition(new Vector2(500, 500));
-        defectView.showDebugDimensionsDisplay(false);
-
-        CharacterSkeletonDisplayModel ironcladSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
-
-        ironcladSkeletonDisplayModel.characterName.set("IRONCLAD");
-        ironcladSkeletonDisplayModel.baseDimensions.set(new Vector2(60, 60));
-        ironcladSkeletonDisplayModel.skeletonOffset.set(new Vector2(-2, -20));
-        ironcladSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/ironclad/idle/skeleton.atlas");
-        ironcladSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/ironclad/idle/skeleton.json");
-        ironcladSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
-        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Neck_2");
-        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("root");
-        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
-        ironcladSkeletonDisplayModel.skeletonRotationAdjustment.set(100.0f);
-
-        CharacterSkeletonDisplayView ironcladView = createView(ironcladSkeletonDisplayModel);
-        ironcladView.setLocalPosition(new Vector2(600, 500));
-        ironcladView.enqueueIdleAnimation(true);
-        ironcladView.showDebugDimensionsDisplay(false);
-
-        CharacterSkeletonDisplayModel silentSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
-
-        silentSkeletonDisplayModel.characterName.set("THE_SILENT");
-        silentSkeletonDisplayModel.baseDimensions.set(new Vector2(112, 112));
-        silentSkeletonDisplayModel.skeletonOffset.set(new Vector2(-22, -60));
-        silentSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/theSilent/idle/skeleton.atlas");
-        silentSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/theSilent/idle/skeleton.json");
-        silentSkeletonDisplayModel.skeletonBonesToKeep.add("Spine_3");
-        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Spine_2");
-        silentSkeletonDisplayModel.skeletonBonesToRemove.add("root");
-        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
-        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Tail_1");
-        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Shadow");
-        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Robe_down");
-        silentSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
-
-        CharacterSkeletonDisplayView silentView = createView(silentSkeletonDisplayModel);
-        silentView.setLocalPosition(new Vector2(700, 500));
-        silentView.enqueueIdleAnimation(true);
-        silentView.showDebugDimensionsDisplay(false);
-
-        CharacterSkeletonDisplayModel watcherSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
-
-        watcherSkeletonDisplayModel.characterName.set("THE_SILENT");
-        watcherSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
-        watcherSkeletonDisplayModel.skeletonOffset.set(new Vector2(-6, -18));
-        watcherSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/watcher/idle/skeleton.atlas");
-        watcherSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/watcher/idle/skeleton.json");
-        watcherSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
-        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("IK_leg_L_goal");
-        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("root");
-        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("HIPS");
-        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Arm_R_");
-        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Neck");
-        watcherSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
-
-        CharacterSkeletonDisplayView watcherView = createView(watcherSkeletonDisplayModel);
-        watcherView.setLocalPosition(new Vector2(820, 500));
-        watcherView.enqueueIdleAnimation(true);
-        watcherView.showDebugDimensionsDisplay(false);
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
@@ -208,11 +133,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     public void saveConfig() {
         for(Map.Entry<Property<? extends IConfigDataModel>, String> entry : configDataModelToConfigID.entrySet()) {
-            IConfigDataModel dataModel = entry.getKey().get();
-            IModel iModel = (IModel) dataModel;
             entry.getKey().get().beforeSaveToConfig(modSpireConfig);
             modSpireConfig.setString(entry.getValue(), gson.toJson(entry.getKey().get()));
-            logDebug("Saved config: configID: " + entry.getValue() + " class: " + entry.getKey().get().getClass().getName() + " modelProp.uuid: " + entry.getKey().getUUID() + " iModel.uuid: " + iModel.getUUID() + "\njson: " + modSpireConfig.getString(entry.getValue()));
+            logDebug("Saved config: configID: " + entry.getValue() + " class: " + entry.getKey().get().getClass().getName() + "\njson: " + modSpireConfig.getString(entry.getValue()));
         }
 
         try {
@@ -239,15 +162,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
                 String configString = modSpireConfig.getString(configID);
                 Property<? extends IConfigDataModel> configModelProp = entry.getKey();
                 IConfigDataModel configModel = configModelProp.get();
-                IModel oldConfigIModel = (IModel) configModel;
 
                 IConfigDataModel loadedConfigModel = gson.fromJson(configString, configModel.getClass());
                 configModelProp.setObject(loadedConfigModel);
-                IModel newConfigIModel = (IModel) loadedConfigModel;
 
                 loadedConfigModel.afterLoadFromConfig(modSpireConfig);
 
-                logDebug("Loading config ID: " + configID + " configPropUUID: " + configModelProp.getUUID() + " oldConfigModel.uuid: " + oldConfigIModel.getUUID() + " newConfigModel.uuid: " + newConfigIModel.getUUID() + " configString: " + configString);
+                logDebug("Loading config ID: " + configID);
             }
             else {
                 logDebug("Did not load config ID: " + configID);
@@ -273,6 +194,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         rootUIElement.update(getDeltaTime());
 
         tweenEngine.update(getDeltaTime());
+
+        UILifetimeManager.ProcessDestroyed();
     }
 
     @Override
@@ -282,7 +205,10 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private void registerViewFactories() {
         ViewFactoryManager.get().registerViewFactory(PlayerStreakStoreModel.class, PlayerStreakStoreView.FACTORY);
+        ViewFactoryManager.get().registerViewFactory(PlayerStreakModel.class, PlayerStreakView.FACTORY);
         ViewFactoryManager.get().registerViewFactory(CharacterSkeletonDisplayModel.class, CharacterSkeletonDisplayView.FACTORY);
+        ViewFactoryManager.get().registerViewFactory(CharacterIconDisplayModel.class, CharacterIconDisplayView.FACTORY);
+        ViewFactoryManager.get().registerViewFactory(CharacterTextDisplayModel.class, CharacterTextDisplayView.FACTORY);
     }
 
     protected <T extends IConfigDataModel> void registerConfigModel(Property<T> dataModel) {
@@ -304,44 +230,125 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     protected void initialiseStreakDataModel() {
-        streakDataModel = new Property<>(new PlayerStreakStoreModel());
+        streakStoreDataModel = new Property<>(new PlayerStreakStoreModel());
         streakCriteriaModel = new Property<>(new StreakCriteriaModel());
 
-        registerConfigModel(streakDataModel);
+        registerConfigModel(streakStoreDataModel);
         registerConfigModel(streakCriteriaModel);
     }
 
     protected void initialiseCharacterDisplayModels() {
+        characterDisplayPreferencesModel = new Property<>(new CharacterDisplayPreferencesModel());
+        registerConfigModel(characterDisplayPreferencesModel);
+
         characterDisplaySetModel = new Property<>(new CharacterDisplaySetModel());
         CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel.get());
 
-        controller.addCharacterIconDisplay(
-                AbstractPlayer.PlayerClass.IRONCLAD.toString(),
-                StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture()
-        );
+        CharacterIconDisplayModel ironcladIconModel = new CharacterIconDisplayModel();
+        ironcladIconModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
+        ironcladIconModel.iconTexture.set(StreakTheSpireTextureDatabase.IRONCLAD_ICON.getTexture());
+        controller.addCharacterDisplayModel(ironcladIconModel);
 
-        controller.addCharacterIconDisplay(
-                AbstractPlayer.PlayerClass.THE_SILENT.toString(),
-                StreakTheSpireTextureDatabase.SILENT_ICON.getTexture()
-        );
+        CharacterIconDisplayModel silentIconModel = new CharacterIconDisplayModel();
+        silentIconModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
+        silentIconModel.iconTexture.set(StreakTheSpireTextureDatabase.SILENT_ICON.getTexture());
+        controller.addCharacterDisplayModel(silentIconModel);
 
-        controller.addCharacterIconDisplay(
-                AbstractPlayer.PlayerClass.DEFECT.toString(),
-                StreakTheSpireTextureDatabase.DEFECT_ICON.getTexture()
-        );
+        CharacterIconDisplayModel defectIconModel = new CharacterIconDisplayModel();
+        defectIconModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
+        defectIconModel.iconTexture.set(StreakTheSpireTextureDatabase.DEFECT_ICON.getTexture());
+        controller.addCharacterDisplayModel(defectIconModel);
 
-        controller.addCharacterIconDisplay(
-                AbstractPlayer.PlayerClass.WATCHER.toString(),
-                StreakTheSpireTextureDatabase.WATCHER_ICON.getTexture()
-        );
+        CharacterIconDisplayModel watcherIconModel = new CharacterIconDisplayModel();
+        watcherIconModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
+        watcherIconModel.iconTexture.set(StreakTheSpireTextureDatabase.WATCHER_ICON.getTexture());
+        controller.addCharacterDisplayModel(watcherIconModel);
+
+        CharacterSkeletonDisplayModel ironcladSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+        ironcladSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
+        ironcladSkeletonDisplayModel.baseDimensions.set(new Vector2(60, 60));
+        ironcladSkeletonDisplayModel.skeletonOffset.set(new Vector2(-2, -20));
+        ironcladSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/ironclad/idle/skeleton.atlas");
+        ironcladSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/ironclad/idle/skeleton.json");
+        ironcladSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
+        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Neck_2");
+        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
+        ironcladSkeletonDisplayModel.skeletonRotationAdjustment.set(100.0f);
+        controller.addCharacterDisplayModel(ironcladSkeletonDisplayModel);
+
+        CharacterSkeletonDisplayModel silentSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+        silentSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
+        silentSkeletonDisplayModel.baseDimensions.set(new Vector2(112, 112));
+        silentSkeletonDisplayModel.skeletonOffset.set(new Vector2(-22, -60));
+        silentSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/theSilent/idle/skeleton.atlas");
+        silentSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/theSilent/idle/skeleton.json");
+        silentSkeletonDisplayModel.skeletonBonesToKeep.add("Spine_3");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Spine_2");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Tail_1");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Shadow");
+        silentSkeletonDisplayModel.skeletonBonesToRemove.add("Robe_down");
+        silentSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
+        controller.addCharacterDisplayModel(silentSkeletonDisplayModel);
+
+        CharacterSkeletonDisplayModel defectSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+        defectSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
+        defectSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
+        defectSkeletonDisplayModel.skeletonOffset.set(new Vector2(-21, -17));
+        defectSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/defect/idle/skeleton.atlas");
+        defectSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/defect/idle/skeleton.json");
+        defectSkeletonDisplayModel.skeletonBonesToKeep.add("Neck_3");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Neck_2");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Chest");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        defectSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
+        defectSkeletonDisplayModel.skeletonRotationAdjustment.set(60.0f);
+        controller.addCharacterDisplayModel(defectSkeletonDisplayModel);
+
+        CharacterSkeletonDisplayModel watcherSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
+        watcherSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
+        watcherSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
+        watcherSkeletonDisplayModel.skeletonOffset.set(new Vector2(-6, -18));
+        watcherSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/watcher/idle/skeleton.atlas");
+        watcherSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/watcher/idle/skeleton.json");
+        watcherSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("IK_leg_L_goal");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("root");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("HIPS");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Arm_R_");
+        watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Neck");
+        watcherSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
+        controller.addCharacterDisplayModel(watcherSkeletonDisplayModel);
+
+        CharacterTextDisplayModel ironcladTextDisplayModel = new CharacterTextDisplayModel();
+        ironcladTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
+        ironcladTextDisplayModel.displayText.set("Ironclad");
+        controller.addCharacterDisplayModel(ironcladTextDisplayModel);
+
+        CharacterTextDisplayModel silentTextDisplayModel = new CharacterTextDisplayModel();
+        silentTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
+        silentTextDisplayModel.displayText.set("Silent");
+        controller.addCharacterDisplayModel(silentTextDisplayModel);
+
+        CharacterTextDisplayModel defectTextDisplayModel = new CharacterTextDisplayModel();
+        defectTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
+        defectTextDisplayModel.displayText.set("Defect");
+        controller.addCharacterDisplayModel(defectTextDisplayModel);
+
+        CharacterTextDisplayModel watcherTextDisplayModel = new CharacterTextDisplayModel();
+        watcherTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
+        watcherTextDisplayModel.displayText.set("Watcher");
+        controller.addCharacterDisplayModel(watcherTextDisplayModel);
     }
 
     private void createViews() {
-        createView(streakDataModel.get());
+        createView(streakStoreDataModel.get());
     }
 
     public <TView extends IView, TModel extends IModel> TView createView(TModel model) {
-        IView view = ViewFactoryManager.get().CreateView(model);
+        IView view = ViewFactoryManager.get().createView(model);
 
         logDebug("View created: " + (view == null ? "null" : view.getClass().getSimpleName()) + " viewIsUIElement: " + (view instanceof UIElement ? "yes" : "no"));
         if(view instanceof UIElement) {

@@ -15,4 +15,8 @@ public class Padding {
         this.left = left;
         this.right = right;
     }
+
+    public Padding cpy() {
+        return new Padding(up, down, left, right);
+    }
 }

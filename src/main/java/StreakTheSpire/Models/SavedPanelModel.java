@@ -3,7 +3,7 @@ package StreakTheSpire.Models;
 import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.math.Vector2;
 
-public class SavedPanelModel extends IModel {
+public class SavedPanelModel implements IModel {
     public Property<Vector2> position = new Property<>(new Vector2(0, 0));
     public Property<Vector2> dimensions = new Property<>(new Vector2(200, 200));
     public Property<Vector2> scale = new Property<>(new Vector2(1, 1));

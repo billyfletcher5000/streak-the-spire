@@ -1,9 +1,12 @@
 package StreakTheSpire.Controllers;
 
 import StreakTheSpire.Models.CharacterDisplayModel;
+import StreakTheSpire.Models.CharacterDisplayPreferencesModel;
 import StreakTheSpire.Models.CharacterDisplaySetModel;
-import StreakTheSpire.Models.CharacterIconDisplayModel;
-import com.badlogic.gdx.graphics.Texture;
+import StreakTheSpire.StreakTheSpire;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 public class CharacterDisplaySetController {
     private CharacterDisplaySetModel model;
@@ -12,19 +15,33 @@ public class CharacterDisplaySetController {
         this.model = model;
     }
 
-    public CharacterDisplayModel getCharacterDisplay(String playerClass) {
-        return model.characterDisplayModels.stream().filter(model -> model.identifier.get().equals(playerClass)).findAny().orElse(null);
+    public CharacterDisplayModel getCharacterDisplay(String playerClass, CharacterDisplayPreferencesModel preferences) {
+        return getCharacterDisplay(playerClass, preferences.style.get());
     }
 
-    public CharacterDisplayModel addCharacterIconDisplay(String playerClass, Texture iconTexture) {
-        CharacterIconDisplayModel displayModel = (CharacterIconDisplayModel) getCharacterDisplay(playerClass);
+    public CharacterDisplayModel getCharacterDisplay(String playerClass, CharacterDisplayPreferencesModel.Style style) {
+        List<Class<? extends CharacterDisplayModel>> preferredModelClasses = CharacterDisplayPreferencesController.getPreferredDisplayModelClassesInOrder(style);
 
-        if(displayModel == null)
-            displayModel = new CharacterIconDisplayModel();
+        Stream<CharacterDisplayModel> possibleDisplays = model.characterDisplayModels.stream()
+                .filter(model -> model.identifier.get().equals(playerClass))
+                .sorted((modelA, modelB) -> {
+                    int indexA = preferredModelClasses.indexOf(modelA.getClass());
+                    int indexB = preferredModelClasses.indexOf(modelB.getClass());
+                    return Integer.compare(indexA, indexB);
+                });
 
-        displayModel.identifier.set(playerClass);
-        displayModel.iconTexture.set(iconTexture);
+        return possibleDisplays.findFirst().orElse(null);
+    }
 
-        return displayModel;
+    public void addCharacterDisplayModel(CharacterDisplayModel displayModel) {
+        Stream<CharacterDisplayModel> possibleDisplays = model.characterDisplayModels.stream()
+                .filter(model -> model.identifier.get().equals(displayModel.identifier) && model.getClass() == displayModel.getClass());
+
+        if(possibleDisplays.findAny().isPresent()) {
+            StreakTheSpire.logWarning("Attempt to add duplicate display model " + displayModel.identifier + " with class " + displayModel.getClass());
+            return;
+        }
+
+        this.model.characterDisplayModels.add(displayModel);
     }
 }

@@ -5,7 +5,6 @@ import StreakTheSpire.Utils.Properties.PropertyList;
 import com.badlogic.gdx.math.Vector2;
 
 public class CharacterSkeletonDisplayModel extends CharacterDisplayModel {
-    public Property<String> characterName = new Property<>(null);
     public Property<Vector2> baseDimensions = new Property<>(new Vector2(64, 64));
     public Property<Vector2> skeletonOffset = new Property<>(new Vector2(0, 0));
     public Property<String> skeletonJsonUrl = new Property<>(null);

@@ -17,6 +17,18 @@ public class UITextElement extends UIVisualElement {
     private int hAlign = Align.center;
     private boolean wrap = true;
 
+    public BitmapFont getFont() { return font; }
+    public void setFont(BitmapFont font) { this.font = font; }
+    public String getText() { return text; }
+    public void setText(String text) { this.text = text; }
+    public int getHAlign() { return hAlign; }
+    public void setHAlign(int hAlign) { this.hAlign = hAlign; }
+    public boolean shouldWordWrap() { return wrap; }
+    public void setWordWrap(boolean wrap) { this.wrap = wrap; }
+
+    public UITextElement(Vector2 position, BitmapFont font, String text) {
+        this(position, VectorOne.cpy(), font, text, VectorOne.cpy(), Color.WHITE.cpy(), Align.center, true);
+    }
     public UITextElement(Vector2 position, BitmapFont font, String text, Vector2 size) {
         this(position, VectorOne.cpy(), font, text, size, Color.WHITE.cpy(), Align.center, true);
     }

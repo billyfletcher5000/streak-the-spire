@@ -32,19 +32,16 @@ public class PlayerStreakStoreController {
         return model.playerToStreak.stream().filter(model -> model.identifier.get().equals(playerClass)).findAny().orElse(null);
     }
 
-    public void CalculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
+    public void calculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
         // This is heavily based on RunHistoryScreen.refreshData to preserve some of the odd legacy bugfixes around files and whatnot
 
         if(recalculateAll) {
             model.playerToStreak.clear();
-            PlayerStreakModel rotatingModel = new PlayerStreakModel();
-            rotatingModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-            model.rotatingPlayerStreakModel.set(rotatingModel);
+            if(criteria.trackRotating.get())
+                createRotatingModel();
         }
-        else if (model.rotatingPlayerStreakModel.get() == null) {
-            PlayerStreakModel rotatingModel = new PlayerStreakModel();
-            rotatingModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-            model.rotatingPlayerStreakModel.set(rotatingModel);
+        else if (model.rotatingPlayerStreakModel.get() == null && criteria.trackRotating.get()) {
+            createRotatingModel();
         }
 
         FileHandle[] subfolders = Gdx.files.local("runs" + File.separator).list();
@@ -142,17 +139,25 @@ public class PlayerStreakStoreController {
                     continue;
                 }
 
-                if(processRunData(criteria, data, streakModel, playerClass))
+                if(processRunData(criteria, data, streakModel, playerClass) && criteria.trackRotating.get())
                     allCharacterSubsets.add(data);
             }
         }
 
-        // Now process rotating streaks
-        allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
+        if(criteria.trackRotating.get()) {
+            // Now process rotating streaks
+            allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
-        for(RunDataSubset data : allCharacterSubsets) {
-            processRunData(criteria, data, model.rotatingPlayerStreakModel.get(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            for(RunDataSubset data : allCharacterSubsets) {
+                processRunData(criteria, data, model.rotatingPlayerStreakModel.get(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
+            }
         }
+    }
+
+    private void createRotatingModel() {
+        PlayerStreakModel rotatingModel = new PlayerStreakModel();
+        rotatingModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        model.rotatingPlayerStreakModel.set(rotatingModel);
     }
 
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
@@ -164,8 +169,6 @@ public class PlayerStreakStoreController {
         }
 
         int streakCount = streakModel.currentStreak.get();
-
-        // TODO: Add rotating support, somehow
 
         boolean disqualified = false;
         for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
