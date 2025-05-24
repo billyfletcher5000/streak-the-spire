@@ -14,6 +14,8 @@ public class UIGridLayoutGroup extends UIElement {
     private static final float VERTICAL_ASPECT_RATIO = 1.5f;
     private static final float HORIZONTAL_ASPECT_RATIO = 0.5f;
 
+    private boolean layoutDirty = true;
+
     private enum PackingMode {
         Rectangular,
         Vertical,
@@ -28,24 +30,36 @@ public class UIGridLayoutGroup extends UIElement {
     @Override
     public void setDimensions(Vector2 dimensions) {
         super.setDimensions(dimensions);
-        updateLayout();
+        layoutDirty = true;
     }
 
     @Override
     public void addChild(UIElement child) {
         super.addChild(child);
-        updateLayout();
+        layoutDirty = true;
     }
 
     @Override
     public void removeChild(UIElement child) {
         super.removeChild(child);
-        updateLayout();
+        layoutDirty = true;
+    }
+
+    @Override
+    protected void elementUpdate(float deltaTime) {
+        super.elementUpdate(deltaTime);
+        if(layoutDirty) {
+            updateLayout();
+            layoutDirty = false;
+        }
     }
 
     private void updateLayout() {
         // Update expand position
         Vector2 parentDimensions = getDimensions();
+        if(parentDimensions.len2() < Epsilon)
+            return;
+
         Padding outerPadding = this.outerPadding.get();
         Vector2 dimensions = new Vector2(parentDimensions.x - (outerPadding.left + outerPadding.right), parentDimensions.y - (outerPadding.up + outerPadding.down));
         this.setLocalPosition(new Vector2(outerPadding.right - outerPadding.left, outerPadding.up - outerPadding.down));
@@ -66,15 +80,16 @@ public class UIGridLayoutGroup extends UIElement {
             case Rectangular:
                 float maxSize = 0f;
                 int chosenWidth = 0; int chosenHeight = 0;
-                for(int w = 1; w < numChildren; w++) {
-                    for(int h = 1; h * w < numChildren; h++) {
-                        float testMaxSize = Math.min(gridRect.width / w, gridRect.height / h);
-                        if (testMaxSize > maxSize) {
-                            maxSize = testMaxSize;
-                            chosenWidth = w;
-                            chosenHeight = h;
-                        }
+                for(int w = 1; w <= numChildren; w++) {
+                    int h = (int)Math.ceil((double) numChildren / w);
+
+                    float testMaxSize = Math.min(gridRect.width / w, gridRect.height / h);
+                    if (testMaxSize > maxSize) {
+                        maxSize = testMaxSize;
+                        chosenWidth = w;
+                        chosenHeight = h;
                     }
+
                 }
 
                 elementSize = maxSize;
@@ -97,9 +112,13 @@ public class UIGridLayoutGroup extends UIElement {
         Vector2 childDimensions = new Vector2(elementSize, elementSize);
         for(int w = 0; w < gridWidth; w++) {
             for(int h = 0; h < gridHeight; h++) {
-                UIElement child = children[w * gridHeight + h];
-                position.x = (gridRect.width * -0.5f) + (w * elementSize);
-                position.y = (gridRect.height * -0.5f) + (h * elementSize);
+                int index = w * gridWidth + h;
+                if(index >= numChildren)
+                    continue;
+
+                UIElement child = children[index];
+                position.x = gridRect.x + (gridRect.width * -0.5f) + (w * elementSize);
+                position.y = gridRect.y + (gridRect.height * -0.5f) + (h * elementSize);
                 child.setLocalPosition(position);
                 child.setDimensions(childDimensions);
             }
@@ -107,10 +126,10 @@ public class UIGridLayoutGroup extends UIElement {
     }
 
     private PackingMode getPackingMode(float aspectRatio) {
-        if(aspectRatio > VERTICAL_ASPECT_RATIO)
-            return PackingMode.Vertical;
-        if(aspectRatio < HORIZONTAL_ASPECT_RATIO)
-            return PackingMode.Horizontal;
+        //if(aspectRatio > VERTICAL_ASPECT_RATIO)
+        //    return PackingMode.Vertical;
+        //if(aspectRatio < HORIZONTAL_ASPECT_RATIO)
+        //    return PackingMode.Horizontal;
 
         return PackingMode.Rectangular;
     }

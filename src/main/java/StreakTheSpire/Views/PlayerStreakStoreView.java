@@ -42,13 +42,15 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
         for(PlayerStreakModel streakModel : streakStoreModel.playerToStreak) {
             UIElement element = createStreakModelDisplay(streakModel);
-            addChild(element);
+            gridLayoutGroup.addChild(element);
         }
 
         if(streakStoreModel.rotatingPlayerStreakModel.get() != null) {
             UIElement element = createStreakModelDisplay(streakStoreModel.rotatingPlayerStreakModel.get());
-            addChild(element);
+            gridLayoutGroup.addChild(element);
         }
+
+        gridLayoutGroup.setDimensions(getDimensions());
     }
 
     @Override

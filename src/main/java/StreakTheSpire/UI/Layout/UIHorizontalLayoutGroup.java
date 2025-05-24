@@ -20,8 +20,8 @@ public class UIHorizontalLayoutGroup extends UIElement {
 
         for(int i = 0; i < children.length; i++) {
             UIElement child = children[i];
-            child.setDimensions(new Vector2((itemWidth * i) - (dimensions.x / 2), dimensions.y));
-            child.setLocalPosition(new Vector2(i * itemWidth, 0));
+            child.setDimensions(new Vector2(itemWidth, dimensions.y));
+            child.setLocalPosition(new Vector2((itemWidth * i) - (dimensions.x / 2), 0));
         }
     }
 }
