@@ -11,22 +11,24 @@ import com.badlogic.gdx.math.Vector2;
 public class CharacterIconDisplayView extends UIImageElement implements IView {
     private CharacterIconDisplayModel model;
 
-    private Property.ValueChangedSubscriber textureChangedSubscriber;
-
     public CharacterIconDisplayModel getModel() { return model; }
 
     public CharacterIconDisplayView(CharacterIconDisplayModel model) {
         super(Vector2.Zero, model.iconTexture.get());
         this.model = model;
-        textureChangedSubscriber = this.model.iconTexture.addOnChangedSubscriber(() -> this.setTextureRegion(new TextureRegion(model.iconTexture.get())));
+        this.model.iconTexture.addOnChangedSubscriber(this::onTextureChanged);
     }
 
     @Override
     public void close() {
         super.close();
 
-        if(this.model != null && this.model.iconTexture != null && textureChangedSubscriber != null)
-            this.model.iconTexture.removeOnChangedSubscriber(textureChangedSubscriber);
+        if(this.model != null)
+            this.model.iconTexture.removeOnChangedSubscriber(this::onTextureChanged);
+    }
+
+    private void onTextureChanged() {
+        setTextureRegion(new TextureRegion(model.iconTexture.get()));
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

@@ -1,6 +1,5 @@
 package StreakTheSpire.Views;
 
-import StreakTheSpire.Models.CharacterIconDisplayModel;
 import StreakTheSpire.Models.CharacterTextDisplayModel;
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.StreakTheSpire;
@@ -13,21 +12,24 @@ public class CharacterTextDisplayView extends UITextElement implements IView {
 
     private CharacterTextDisplayModel model;
 
-    private Property.ValueChangedSubscriber textChangedSubscriber;
 
     public CharacterTextDisplayView(CharacterTextDisplayModel model) {
         super(Vector2.Zero, FontHelper.tipBodyFont, model.displayText.get());
         this.model = model;
 
-        textChangedSubscriber = this.model.displayText.addOnChangedSubscriber(() -> setText(model.displayText.get()));
+         this.model.displayText.addOnChangedSubscriber(this::onTextChanged);
     }
 
     @Override
     public void close() {
         super.close();
 
-        if(model != null && textChangedSubscriber != null)
-            model.displayText.removeOnChangedSubscriber(textChangedSubscriber);
+        if(model != null)
+            model.displayText.removeOnChangedSubscriber(this::onTextChanged);
+    }
+
+    private void onTextChanged() {
+        setText(model.displayText.get());
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

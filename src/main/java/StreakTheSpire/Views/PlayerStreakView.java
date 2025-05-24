@@ -1,20 +1,49 @@
 package StreakTheSpire.Views;
 
-import StreakTheSpire.Models.IModel;
-import StreakTheSpire.Models.PlayerStreakModel;
+import StreakTheSpire.Controllers.CharacterDisplaySetController;
+import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.Layout.UIHorizontalLayoutGroup;
+import StreakTheSpire.UI.UIElement;
+import StreakTheSpire.UI.UITextElement;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
+import com.megacrit.cardcrawl.helpers.FontHelper;
 
 public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
 
     private PlayerStreakModel model = null;
+    private IView characterDisplayView = null;
+    private UITextElement scoreDisplayElement = null;
 
     public PlayerStreakView(PlayerStreakModel model) {
         this.model = model;
 
+        CharacterDisplaySetModel characterDisplaySet = StreakTheSpire.getInstance().getCharacterDisplaySetModel();
+        CharacterDisplayPreferencesModel preferences = StreakTheSpire.getInstance().getCharacterDisplayPreferencesModel();
 
+        CharacterDisplaySetController displaySetController = new CharacterDisplaySetController(characterDisplaySet);
+
+        CharacterDisplayModel displayModel = displaySetController.getCharacterDisplay(model.identifier.get(), preferences);
+        if(displayModel == null) {
+            StreakTheSpire.logError("Character Display Model is null for Player Streak View: " + model.identifier.get());
+            destroy();
+            return;
+        }
+
+        characterDisplayView = ViewFactoryManager.get().createView(displayModel);
+        addChild((UIElement) characterDisplayView);
+
+        scoreDisplayElement = new UITextElement(Vector2.Zero, FontHelper.tipBodyFont, model.currentStreak.get().toString());
+        scoreDisplayElement.setHAlign(Align.center);
+        addChild(scoreDisplayElement);
+
+        model.currentStreak.addOnChangedSubscriber(this::onStreakChanged);
     }
 
+    private void onStreakChanged() {
+
+    }
 
     public static final IViewFactory FACTORY = new IViewFactory() {
         @Override

@@ -48,7 +48,6 @@ public class UIGridLayoutGroup extends UIElement {
         Vector2 parentDimensions = getDimensions();
         Padding outerPadding = this.outerPadding.get();
         Vector2 dimensions = new Vector2(parentDimensions.x - (outerPadding.left + outerPadding.right), parentDimensions.y - (outerPadding.up + outerPadding.down));
-        this.setDimensions(dimensions);
         this.setLocalPosition(new Vector2(outerPadding.right - outerPadding.left, outerPadding.up - outerPadding.down));
 
         Rectangle gridRect = new Rectangle(outerPadding.left, outerPadding.down, dimensions.x, dimensions.y);

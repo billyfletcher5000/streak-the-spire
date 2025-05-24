@@ -13,18 +13,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class PlayerStreakStoreView extends UIResizablePanel implements IView {
+
     private PlayerStreakStoreModel streakStoreModel;
-
     private UIGridLayoutGroup gridLayoutGroup = null;
-
-    private UIResizablePanel.PanelResizedSubscriber panelResizedSubscriber;
-    private UIResizablePanel.PanelMovedSubscriber panelMovedSubscriber;
 
     @Override
     public void setDimensions(Vector2 dimensions) {
         super.setDimensions(dimensions);
         // TODO: With a proper layouting system this would be handled by the child's anchoring
-        gridLayoutGroup.setDimensions(dimensions);
+        if(gridLayoutGroup != null)
+            gridLayoutGroup.setDimensions(dimensions);
     }
 
     public PlayerStreakStoreView(PlayerStreakStoreModel model) {
@@ -36,8 +34,8 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
         this.streakStoreModel = model;
 
-        panelResizedSubscriber = addOnPanelResizedSubscriber(() -> saveModel());
-        panelMovedSubscriber = addOnPanelMovedSubscriber(() -> saveModel());
+        addOnPanelResizedSubscriber(this::saveModel);
+        addOnPanelMovedSubscriber(this::saveModel);
 
         gridLayoutGroup = new UIGridLayoutGroup();
         addChild(gridLayoutGroup);
@@ -56,8 +54,8 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
     @Override
     public void close() {
         super.close();
-        removeOnPanelResizedSubscriber(panelResizedSubscriber);
-        removeOnPanelMovedSubscriber(panelMovedSubscriber);
+        removeOnPanelResizedSubscriber(this::saveModel);
+        removeOnPanelMovedSubscriber(this::saveModel);
     }
 
     private UIElement createStreakModelDisplay(PlayerStreakModel streakModel) {
