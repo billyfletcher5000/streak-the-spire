@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 public class UINineSliceElement extends UIVisualElement {
     private NineSliceTexture nineSliceTexture;
 
+    public UINineSliceElement() {}
+
     public UINineSliceElement(Vector2 position, NineSliceTexture texture, Vector2 size) {
         this(position, VectorOne.cpy(), texture, size, Color.WHITE.cpy());
     }

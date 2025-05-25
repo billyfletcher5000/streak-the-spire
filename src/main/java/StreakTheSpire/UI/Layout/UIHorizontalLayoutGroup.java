@@ -1,9 +1,14 @@
 package StreakTheSpire.UI.Layout;
 
 import StreakTheSpire.UI.UIElement;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class UIHorizontalLayoutGroup extends UIElement {
+
+    public UIHorizontalLayoutGroup() {
+        setDebugColor(Color.PURPLE);
+    }
 
     @Override
     public void setDimensions(Vector2 dimensions) {
@@ -21,7 +26,7 @@ public class UIHorizontalLayoutGroup extends UIElement {
         for(int i = 0; i < children.length; i++) {
             UIElement child = children[i];
             child.setDimensions(new Vector2(itemWidth, dimensions.y));
-            child.setLocalPosition(new Vector2((itemWidth * i) - (dimensions.x / 2), 0));
+            child.setLocalPosition(new Vector2((itemWidth * i) - (dimensions.x / 4), 0));
         }
     }
 }

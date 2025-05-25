@@ -64,6 +64,8 @@ public class UITextElement extends UIVisualElement {
         setColor(color);
         this.hAlign = hAlign;
         this.wrap = wrap;
+
+        setDebugColor(Color.YELLOW);
     }
 
     @Override

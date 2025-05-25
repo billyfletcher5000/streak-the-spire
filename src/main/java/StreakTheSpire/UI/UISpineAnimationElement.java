@@ -52,16 +52,16 @@ public class UISpineAnimationElement extends UIVisualElement {
     }
 
     public UISpineAnimationElement(Vector2 position, String atlasUrl, String skeletonUrl) {
-        setLocalPosition(position);
-        loadSkeleton(atlasUrl, skeletonUrl, null);
+        //setLocalPosition(position);
+        loadSkeleton(atlasUrl, skeletonUrl, null, position);
     }
 
     public UISpineAnimationElement(Vector2 position, String atlasUrl, String skeletonUrl, SkeletonModifier modifier) {
-        setLocalPosition(position);
-        loadSkeleton(atlasUrl, skeletonUrl, modifier);
+        //setLocalPosition(position);
+        loadSkeleton(atlasUrl, skeletonUrl, modifier, position);
     }
 
-    public void loadSkeleton(String atlasUrl, String skeletonUrl, SkeletonModifier modifier) {
+    public void loadSkeleton(String atlasUrl, String skeletonUrl, SkeletonModifier modifier, Vector2 positionOffset) {
         if(skeletonMeshRenderer == null) {
             skeletonMeshRenderer = new SkeletonMeshRenderer();
             skeletonMeshRenderer.setPremultipliedAlpha(true);
@@ -84,7 +84,7 @@ public class UISpineAnimationElement extends UIVisualElement {
 
             this.skeleton = new Skeleton(skeletonData);
             this.skeleton.setColor(Color.WHITE);
-            this.skeleton.setPosition(0,0);
+            this.skeleton.setPosition(positionOffset.x, positionOffset.y);
             this.animationStateData = new AnimationStateData(skeletonData);
             this.animationState = new AnimationState(this.animationStateData);
             setDimensions(new Vector2(skeletonData.getWidth(), skeletonData.getHeight()));

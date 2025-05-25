@@ -23,6 +23,8 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
         skeletonAnimation.setLocalRotation(model.skeletonRotationAdjustment.get());
         skeletonAnimation.getAnimationStateData().setMix(model.skeletonHitAnimationName.get(), model.skeletonIdleAnimationName.get(), model.skeletonAnimationMixDuration.get());
         addChild(skeletonAnimation);
+
+        enqueueIdleAnimation(true);
     }
 
     public void enqueueIdleAnimation(boolean loop) {

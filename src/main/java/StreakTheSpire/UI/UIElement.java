@@ -36,6 +36,8 @@ public class UIElement implements TweenAccessor<UIElement> {
     private final Property<UIElement> parent = new Property<>(null);
     private final PropertyList<UIElement> children = new PropertyList<UIElement>();
 
+    private final Property<Color> debugColor = new Property<>(Color.GREEN);
+
     protected Affine2 localTransform = new Affine2();
     protected Affine2 localToWorldTransform = new Affine2();
     protected boolean localTransformDirty = true;
@@ -122,6 +124,10 @@ public class UIElement implements TweenAccessor<UIElement> {
     public int getLayer() { return layer.get(); }
     public Property<Integer> getLayerProperty() { return layer; }
     public void setLayer(int layer) { this.layer.set(layer); }
+
+    public Color getDebugColor() { return debugColor.get(); }
+    public Property<Color> getDebugColorProperty() { return debugColor; }
+    public void setDebugColor(Color color) { this.debugColor.set(color); }
 
     public Affine2 getLocalTransform() {
         if(localTransformDirty) {
@@ -222,16 +228,9 @@ public class UIElement implements TweenAccessor<UIElement> {
             child.invalidateWorldTransform();
     }
 
-    protected static NineSliceTexture debugBoxNinesliceTexture = null;
-
     public void showDebugDimensionsDisplay(boolean recursive) {
         if(debugDimensionsElement == null) {
-            if(debugBoxNinesliceTexture == null) {
-                debugBoxNinesliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.DEBUG_BOX_NINESLICE.getTexture(), 8, 8, 8, 8);
-            }
-
-            debugDimensionsElement = new UINineSliceElement(Vector2.Zero, debugBoxNinesliceTexture, getDimensions(), Color.GREEN);
-            addChild(debugDimensionsElement);
+            StreakTheSpire.getInstance().createDebugDimensionsDisplay(this);
         }
 
         if(recursive) {
@@ -244,8 +243,7 @@ public class UIElement implements TweenAccessor<UIElement> {
 
     public void hideDebugDimensionsDisplay(boolean recursive) {
         if(debugDimensionsElement != null) {
-            removeChild(debugDimensionsElement);
-            debugDimensionsElement = null;
+            StreakTheSpire.getInstance().removeDebugDimensionsDisplay(this);
         }
 
         if(recursive) {

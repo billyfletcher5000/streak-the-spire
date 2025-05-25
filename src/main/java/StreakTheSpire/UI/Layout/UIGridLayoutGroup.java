@@ -3,6 +3,7 @@ package StreakTheSpire.UI.Layout;
 import StreakTheSpire.UI.Padding;
 import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.Utils.Properties.Property;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -22,8 +23,12 @@ public class UIGridLayoutGroup extends UIElement {
         Horizontal
     }
 
-    public UIGridLayoutGroup() {}
+    public UIGridLayoutGroup() {
+        setDebugColor(Color.CYAN);
+    }
+
     public UIGridLayoutGroup(Padding outerPadding) {
+        this();
         this.outerPadding.set(outerPadding.cpy());
     }
 
@@ -112,7 +117,7 @@ public class UIGridLayoutGroup extends UIElement {
         Vector2 childDimensions = new Vector2(elementSize, elementSize);
         for(int w = 0; w < gridWidth; w++) {
             for(int h = 0; h < gridHeight; h++) {
-                int index = w * gridWidth + h;
+                int index = h * gridWidth + w;
                 if(index >= numChildren)
                     continue;
 

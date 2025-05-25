@@ -2,6 +2,7 @@ package StreakTheSpire.UI.Layout;
 
 import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.Utils.Properties.Property;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 public class UIScaleBoxElement extends UILayoutBoxElement {
@@ -15,6 +16,8 @@ public class UIScaleBoxElement extends UILayoutBoxElement {
         super();
         baseDimensions.set(dimensions.cpy());
         setDimensions(dimensions);
+
+        setDebugColor(Color.BLUE);
     }
 
     public void setDimensions(Vector2 dimensions) {
@@ -26,10 +29,10 @@ public class UIScaleBoxElement extends UILayoutBoxElement {
             if(shouldPreserveAspectRatio()) {
                 Vector2 childDimensions = child.getDimensions();
                 float previousAspectRatio = childDimensions.x / childDimensions.y;
-                if(previousAspectRatio < 1.0f)
-                    adjustedScale = new Vector2(adjustedScale.x, adjustedScale.y * previousAspectRatio);
+                if(previousAspectRatio > 1.0f)
+                    adjustedScale = new Vector2(adjustedScale.x, adjustedScale.x);
                 else
-                    adjustedScale = new Vector2(adjustedScale.x * previousAspectRatio, adjustedScale.y);
+                    adjustedScale = new Vector2(adjustedScale.y, adjustedScale.y);
             }
 
             child.setLocalScale(adjustedScale);
