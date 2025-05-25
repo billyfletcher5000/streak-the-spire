@@ -3,6 +3,7 @@ package StreakTheSpire.Views;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.UI.Layout.UIExpandBoxElement;
 import StreakTheSpire.UI.Layout.UIHorizontalLayoutGroup;
 import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.UI.UITextElement;
@@ -15,6 +16,7 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     private PlayerStreakModel model = null;
     private IView characterDisplayView = null;
     private UITextElement scoreDisplayElement = null;
+    private UITextElement scoreDisplayElement2 = null;
 
     public PlayerStreakView(PlayerStreakModel model) {
         this.model = model;
@@ -34,7 +36,7 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         characterDisplayView = ViewFactoryManager.get().createView(displayModel);
         addChild((UIElement) characterDisplayView);
 
-        scoreDisplayElement = new UITextElement(Vector2.Zero, FontHelper.tipBodyFont, model.currentStreak.get().toString());
+        scoreDisplayElement = new UITextElement(Vector2.Zero, FontHelper.tipBodyFont, "99");
         scoreDisplayElement.setHAlign(Align.center);
         addChild(scoreDisplayElement);
 

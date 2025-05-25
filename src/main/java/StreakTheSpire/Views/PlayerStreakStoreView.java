@@ -32,6 +32,8 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
                 model.panelModel.get().dimensions.get(),
                 Color.WHITE.cpy());
 
+        setMinimumSize(new Vector2(64, 64));
+
         this.streakStoreModel = model;
 
         addOnPanelResizedSubscriber(this::saveModel);

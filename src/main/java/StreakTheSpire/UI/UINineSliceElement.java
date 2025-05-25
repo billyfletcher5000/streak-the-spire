@@ -44,8 +44,8 @@ public class UINineSliceElement extends UIVisualElement {
             int minHeight = nineSliceTexture.topMargin + nineSliceTexture.bottomMargin;
             if (dimensions.x < minWidth || dimensions.y < minHeight) {
                 dimensions = dimensions.cpy();
-                dimensions.x = Math.min(dimensions.x, minWidth);
-                dimensions.y = Math.min(dimensions.y, minHeight);
+                dimensions.x = Math.max(dimensions.x, minWidth);
+                dimensions.y = Math.max(dimensions.y, minHeight);
             }
         }
 

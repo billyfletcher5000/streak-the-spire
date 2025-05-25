@@ -43,7 +43,7 @@ public class UIElement implements TweenAccessor<UIElement> {
     protected boolean localTransformDirty = true;
     protected boolean worldTransformDirty = true;
 
-    private UINineSliceElement debugDimensionsElement = null;
+    private UIDebugDimensionsDisplay debugDimensionsElement = null;
 
     public UIElement getParent() { return parent.get(); }
     public Property<UIElement> getParentProperty() { return parent; }
@@ -209,7 +209,9 @@ public class UIElement implements TweenAccessor<UIElement> {
         UILifetimeManager.EnqueueDestroy(this);
     }
 
-    public void close() {}
+    public void close() {
+        hideDebugDimensionsDisplay(false);
+    }
 
     // There's probably better ways of doing this involving inheritance or something but this is meant to emulate C++'s friend/C#'s internal
     public void _internalDestroy() {
@@ -230,26 +232,23 @@ public class UIElement implements TweenAccessor<UIElement> {
 
     public void showDebugDimensionsDisplay(boolean recursive) {
         if(debugDimensionsElement == null) {
-            StreakTheSpire.getInstance().createDebugDimensionsDisplay(this);
+            debugDimensionsElement = StreakTheSpire.getInstance().createDebugDimensionsDisplay(this);
         }
 
         if(recursive) {
             for (UIElement child : children) {
-                if(child != debugDimensionsElement)
-                    child.showDebugDimensionsDisplay(true);
+                child.showDebugDimensionsDisplay(true);
             }
         }
     }
 
     public void hideDebugDimensionsDisplay(boolean recursive) {
-        if(debugDimensionsElement != null) {
-            StreakTheSpire.getInstance().removeDebugDimensionsDisplay(this);
-        }
+        if(debugDimensionsElement != null)
+            StreakTheSpire.getInstance().removeDebugDimensionsDisplay(debugDimensionsElement);
 
         if(recursive) {
             for (UIElement child : children) {
-                if(child != debugDimensionsElement)
-                    child.hideDebugDimensionsDisplay(true);
+                child.hideDebugDimensionsDisplay(true);
             }
         }
     }

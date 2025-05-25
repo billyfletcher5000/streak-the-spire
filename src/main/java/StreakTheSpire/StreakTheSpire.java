@@ -367,13 +367,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         return (TView) view;
     }
 
-    public void createDebugDimensionsDisplay(UIElement uiElement) {
-        debugRootUIElement.addChild(new UIDebugDimensionsDisplay(uiElement));
+    public UIDebugDimensionsDisplay createDebugDimensionsDisplay(UIElement uiElement) {
+        UIDebugDimensionsDisplay display = new UIDebugDimensionsDisplay(uiElement);
+        debugRootUIElement.addChild(display);
+        return display;
     }
 
-    public void removeDebugDimensionsDisplay(UIElement uiElement) {
-        debugRootUIElement.removeChild(uiElement);
-        uiElement.destroy(true);
+    public void removeDebugDimensionsDisplay(UIDebugDimensionsDisplay debugDisplay) {
+        debugRootUIElement.removeChild(debugDisplay);
+        debugDisplay.destroy(true);
     }
 
     public static void logError(String message) {

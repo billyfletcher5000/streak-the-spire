@@ -171,6 +171,11 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     @Override
     public void startClicking(Hitbox hitbox) {
+        if(currentHitbox != null) {
+            StreakTheSpire.logError("Current hitbox already exists!");
+            return;
+        }
+
         UIElementHitbox uiElementHitbox = (UIElementHitbox) hitbox;
         if(uiElementHitbox == moveHitbox) {
             currentDragDirection = DragDirectionFlags.NONE;
@@ -194,14 +199,14 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     public void clicked(Hitbox hitbox) {
         if(currentHitbox == hitbox) {
             if(currentHitbox == moveHitbox) {
-                panelMovedSubscribers.forEach(subscriber -> subscriber.onPanelMoved());
+                panelMovedSubscribers.forEach(PanelMovedSubscriber::onPanelMoved);
             }
             else if (hitboxToDragDirection.containsKey(hitbox)) {
-                panelResizedSubscribers.forEach(subscriber -> subscriber.onPanelResized());
+                panelResizedSubscribers.forEach(PanelResizedSubscriber::onPanelResized);
             }
-
-            clearCurrentSelection();
         }
+
+        clearCurrentSelection();
     }
 
     private void clearCurrentSelection() {
@@ -213,6 +218,10 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     @Override
     protected void elementUpdate(float deltaTime) {
         super.elementUpdate(deltaTime);
+
+        if(!InputHelper.isMouseDown && currentHitbox != null) {
+            clicked(currentHitbox);
+        }
 
         if(currentHitbox != null) {
             Vector2 dimensions = getDimensions();
@@ -229,28 +238,32 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
             } else if (currentDragDirection != DragDirectionFlags.NONE) {
                 if ((currentDragDirection & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT) {
                     float newSizeX = dimensions.x - difference.x;
-                    float appliedDifference = newSizeX < minimumSize.x ? dimensions.x - minimumSize.x : difference.x;
-                    setDimensions(new Vector2(newSizeX < minimumSize.x ? minimumSize.x : newSizeX, dimensions.y));
-                    setLocalPosition(getLocalPosition().add(appliedDifference * 0.5f, 0));
+                    setDimensions(new Vector2(Math.max(newSizeX, minimumSize.x), dimensions.y));
+                    Vector2 postChangeDimensions = getDimensions();
+                    postChangeDimensions.sub(dimensions);
+                    setLocalPosition(getLocalPosition().add(postChangeDimensions.scl(-0.5f)));
                 } else if ((currentDragDirection & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT) {
                     float newSizeX = dimensions.x + difference.x;
-                    float appliedDifference = newSizeX < minimumSize.x ? dimensions.x - minimumSize.x : difference.x;
-                    setDimensions(new Vector2(newSizeX < minimumSize.x ? minimumSize.x : newSizeX, dimensions.y));
-                    setLocalPosition(getLocalPosition().add(appliedDifference * 0.5f, 0));
+                    setDimensions(new Vector2(Math.max(newSizeX, minimumSize.x), dimensions.y));
+                    Vector2 postChangeDimensions = getDimensions();
+                    postChangeDimensions.sub(dimensions);
+                    setLocalPosition(getLocalPosition().add(postChangeDimensions.scl(0.5f)));
                 }
 
                 dimensions = getDimensions();
 
                 if ((currentDragDirection & DragDirectionFlags.UP) == DragDirectionFlags.UP) {
                     float newSizeY = dimensions.y + difference.y;
-                    float appliedDifference = newSizeY < minimumSize.y ? dimensions.y - minimumSize.y : difference.y;
-                    setDimensions(new Vector2(dimensions.x, newSizeY < minimumSize.x ? minimumSize.x : newSizeY));
-                    setLocalPosition(getLocalPosition().add(0f, appliedDifference * 0.5f));
+                    setDimensions(new Vector2(dimensions.x, Math.max(newSizeY, minimumSize.y)));
+                    Vector2 postChangeDimensions = getDimensions();
+                    postChangeDimensions.sub(dimensions);
+                    setLocalPosition(getLocalPosition().add(postChangeDimensions.scl(0.5f)));
                 } else if ((currentDragDirection & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN) {
                     float newSizeY = dimensions.y - difference.y;
-                    float appliedDifference = newSizeY < minimumSize.y ? dimensions.y - minimumSize.y : difference.y;
-                    setDimensions(new Vector2(dimensions.x, newSizeY < minimumSize.x ? minimumSize.x : newSizeY));
-                    setLocalPosition(getLocalPosition().add(0f, appliedDifference * 0.5f));
+                    setDimensions(new Vector2(dimensions.x, Math.max(newSizeY, minimumSize.y)));
+                    Vector2 postChangeDimensions = getDimensions();
+                    postChangeDimensions.sub(dimensions);
+                    setLocalPosition(getLocalPosition().add(postChangeDimensions.scl(-0.5f)));
                 }
             }
         }

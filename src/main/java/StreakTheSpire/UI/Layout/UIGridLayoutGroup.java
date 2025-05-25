@@ -74,47 +74,28 @@ public class UIGridLayoutGroup extends UIElement {
         UIElement[] children = getChildren();
         int numChildren = children.length;
 
-        float aspectRatio = (float) gridRect.width / gridRect.height;
-        PackingMode packingMode = getPackingMode(aspectRatio);
+        float targetAspectRatio = 16.0f / 9.0f;
 
-        float elementSize = 0f;
-        int gridWidth = 0;
-        int gridHeight = 0;
+        float maxSize = 0f;
+        int chosenWidth = 0; int chosenHeight = 0;
+        for(int w = 1; w <= numChildren; w++) {
+            int h = (int)Math.ceil((double) numChildren / w);
 
-        switch (packingMode) {
-            case Rectangular:
-                float maxSize = 0f;
-                int chosenWidth = 0; int chosenHeight = 0;
-                for(int w = 1; w <= numChildren; w++) {
-                    int h = (int)Math.ceil((double) numChildren / w);
+            float testMaxSize = Math.min(gridRect.width / w, gridRect.height / h);
+            if (testMaxSize > maxSize) {
+                maxSize = testMaxSize;
+                chosenWidth = w;
+                chosenHeight = h;
+            }
 
-                    float testMaxSize = Math.min(gridRect.width / w, gridRect.height / h);
-                    if (testMaxSize > maxSize) {
-                        maxSize = testMaxSize;
-                        chosenWidth = w;
-                        chosenHeight = h;
-                    }
-
-                }
-
-                elementSize = maxSize;
-                gridWidth = chosenWidth;
-                gridHeight = chosenHeight;
-                break;
-            case Vertical:
-                gridWidth = 1;
-                gridHeight = numChildren;
-                elementSize = gridRect.width;
-                break;
-            case Horizontal:
-                gridWidth = numChildren;
-                gridHeight = 1;
-                elementSize = gridRect.height;
-                break;
         }
 
+        float elementSize = maxSize;
+        int gridWidth = chosenWidth;
+        int gridHeight = chosenHeight;
+
         Vector2 position = new Vector2();
-        Vector2 childDimensions = new Vector2(elementSize, elementSize);
+        Vector2 childDimensions = new Vector2(elementSize, elementSize / targetAspectRatio);
         Vector2 sectionSizes = new Vector2(dimensions.x / gridWidth, dimensions.y / gridHeight);
         for(int w = 0; w < gridWidth; w++) {
             for(int h = 0; h < gridHeight; h++) {
@@ -129,14 +110,5 @@ public class UIGridLayoutGroup extends UIElement {
                 child.setDimensions(childDimensions);
             }
         }
-    }
-
-    private PackingMode getPackingMode(float aspectRatio) {
-        //if(aspectRatio > VERTICAL_ASPECT_RATIO)
-        //    return PackingMode.Vertical;
-        //if(aspectRatio < HORIZONTAL_ASPECT_RATIO)
-        //    return PackingMode.Horizontal;
-
-        return PackingMode.Rectangular;
     }
 }
