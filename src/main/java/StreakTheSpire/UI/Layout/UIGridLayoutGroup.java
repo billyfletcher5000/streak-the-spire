@@ -115,6 +115,7 @@ public class UIGridLayoutGroup extends UIElement {
 
         Vector2 position = new Vector2();
         Vector2 childDimensions = new Vector2(elementSize, elementSize);
+        Vector2 sectionSizes = new Vector2(dimensions.x / gridWidth, dimensions.y / gridHeight);
         for(int w = 0; w < gridWidth; w++) {
             for(int h = 0; h < gridHeight; h++) {
                 int index = h * gridWidth + w;
@@ -122,8 +123,8 @@ public class UIGridLayoutGroup extends UIElement {
                     continue;
 
                 UIElement child = children[index];
-                position.x = gridRect.x + (gridRect.width * -0.5f) + (w * elementSize);
-                position.y = gridRect.y + (gridRect.height * -0.5f) + (h * elementSize);
+                position.x = (w * sectionSizes.x) - (dimensions.x * 0.5f) + (childDimensions.x * 0.5f) + ((sectionSizes.x - childDimensions.x) * 0.5f);
+                position.y = (h * sectionSizes.y) - (dimensions.y * 0.5f) + (childDimensions.y * 0.5f) + ((sectionSizes.y - childDimensions.y) * 0.5f);
                 child.setLocalPosition(position);
                 child.setDimensions(childDimensions);
             }

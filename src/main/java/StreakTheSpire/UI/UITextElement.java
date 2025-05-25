@@ -82,7 +82,7 @@ public class UITextElement extends UIVisualElement {
     protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
         super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
         layout.setText(font, text, getTransformedColor(transformedAlpha), getDimensions().x, hAlign, wrap);
-        font.draw(spriteBatch, layout, -layout.width / 2.0F, layout.height / 2.0F);
+        font.draw(spriteBatch, layout, getDimensions().x * -0.5f, layout.height / 2.0F);
     }
 
     @Override
