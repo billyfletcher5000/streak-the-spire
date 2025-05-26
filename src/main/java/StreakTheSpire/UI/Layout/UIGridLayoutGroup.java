@@ -12,8 +12,8 @@ public class UIGridLayoutGroup extends UIElement {
     private Property<Padding> outerPadding = new Property<>(new Padding(10, 10, 10, 10));
     private Property<Float> gridElementPadding = new Property<>(4.0f);
 
-    private static final float VERTICAL_ASPECT_RATIO = 1.5f;
-    private static final float HORIZONTAL_ASPECT_RATIO = 0.5f;
+    private static final float VERTICAL_ASPECT_RATIO = 1 / 2.0f;
+    private static final float HORIZONTAL_ASPECT_RATIO = 2.0f;
 
     private boolean layoutDirty = true;
 
@@ -74,14 +74,22 @@ public class UIGridLayoutGroup extends UIElement {
         UIElement[] children = getChildren();
         int numChildren = children.length;
 
-        float targetAspectRatio = 16.0f / 9.0f;
+        float aspectRatio = (float) gridRect.width / gridRect.height;
+        PackingMode packingMode = getPackingMode(aspectRatio);
 
+        float targetAspectRatio = 2f;//16.0f / 9.0f;
+
+        float elementSize = 0f;
+        int chosenWidth = 0; int chosenHeight = 0;
+
+        /*
         float maxSize = 0f;
         int chosenWidth = 0; int chosenHeight = 0;
         for(int w = 1; w <= numChildren; w++) {
             int h = (int)Math.ceil((double) numChildren / w);
 
-            float testMaxSize = Math.min(gridRect.width / w, gridRect.height / h);
+            //float testMaxSize = Math.min(gridRect.width / w, (gridRect.height / h) / targetAspectRatio);
+            float testMaxSize = (gridRect.width / w) * ((gridRect.height / h) / targetAspectRatio);
             if (testMaxSize > maxSize) {
                 maxSize = testMaxSize;
                 chosenWidth = w;
@@ -89,17 +97,47 @@ public class UIGridLayoutGroup extends UIElement {
             }
 
         }
+         */
 
-        float elementSize = maxSize;
-        int gridWidth = chosenWidth;
-        int gridHeight = chosenHeight;
+        Vector2 childDimensions = new Vector2();
+
+        switch (packingMode) {
+            case Rectangular:
+                for(int w = 1; w <= numChildren; w++) {
+                    int h = (int)Math.ceil((double) numChildren / w);
+
+                    float testMaxSize = Math.min(gridRect.width / w, gridRect.height / h);
+                    if (testMaxSize > elementSize) {
+                        elementSize = testMaxSize;
+                        chosenWidth = w;
+                        chosenHeight = h;
+                    }
+                }
+
+                elementSize = gridRect.width / chosenWidth;
+                childDimensions.set(elementSize, elementSize / targetAspectRatio);
+                break;
+            case Vertical:
+                chosenWidth = 1;
+                chosenHeight = numChildren;
+                elementSize = gridRect.width;
+                childDimensions.set(elementSize, elementSize / targetAspectRatio);
+                break;
+            case Horizontal:
+                chosenWidth = numChildren;
+                chosenHeight = 1;
+                elementSize = gridRect.height;
+                float newTotalWidth = (elementSize * targetAspectRatio) * chosenWidth;
+                elementSize /= newTotalWidth / dimensions.x;
+                childDimensions.set(elementSize * targetAspectRatio, elementSize);
+                break;
+        }
 
         Vector2 position = new Vector2();
-        Vector2 childDimensions = new Vector2(elementSize, elementSize / targetAspectRatio);
-        Vector2 sectionSizes = new Vector2(dimensions.x / gridWidth, dimensions.y / gridHeight);
-        for(int w = 0; w < gridWidth; w++) {
-            for(int h = 0; h < gridHeight; h++) {
-                int index = h * gridWidth + w;
+        Vector2 sectionSizes = new Vector2(dimensions.x / chosenWidth, dimensions.y / chosenHeight);
+        for(int w = 0; w < chosenWidth; w++) {
+            for(int h = 0; h < chosenHeight; h++) {
+                int index = h * chosenWidth + w;
                 if(index >= numChildren)
                     continue;
 
@@ -110,5 +148,14 @@ public class UIGridLayoutGroup extends UIElement {
                 child.setDimensions(childDimensions);
             }
         }
+    }
+
+    private PackingMode getPackingMode(float aspectRatio) {
+        if(aspectRatio < VERTICAL_ASPECT_RATIO)
+            return PackingMode.Vertical;
+        if(aspectRatio > HORIZONTAL_ASPECT_RATIO)
+            return PackingMode.Horizontal;
+
+        return PackingMode.Rectangular;
     }
 }

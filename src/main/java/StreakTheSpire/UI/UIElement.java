@@ -129,6 +129,8 @@ public class UIElement implements TweenAccessor<UIElement> {
     public Property<Color> getDebugColorProperty() { return debugColor; }
     public void setDebugColor(Color color) { this.debugColor.set(color); }
 
+    public float getPreferredAspectRatio() { return 1.0f; }
+
     public Affine2 getLocalTransform() {
         if(localTransformDirty) {
             localTransform.setToTrnRotScl(localPosition.get(), localRotation.get(), localScale.get());

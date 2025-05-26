@@ -6,14 +6,23 @@ import com.badlogic.gdx.math.Vector2;
 
 public class UIHorizontalLayoutGroup extends UIElement {
 
+    // This is essentially meant to be X/Y but in our case it will always be X/1
+    @Override
+    public float getPreferredAspectRatio() { return getChildren().length; }
+
     public UIHorizontalLayoutGroup() {
         setDebugColor(Color.PURPLE);
     }
 
     @Override
     public void setDimensions(Vector2 dimensions) {
+        Vector2 prevDimensions = getDimensions();
         super.setDimensions(dimensions);
-        updateLayout();
+
+        if(Math.abs(prevDimensions.x - getDimensions().x) > Epsilon)
+            updateLayout();
+        else
+            updateLayout();
     }
 
     private void updateLayout() {
