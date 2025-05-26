@@ -1,5 +1,7 @@
 package StreakTheSpire.Views;
 
+import StreakTheSpire.Ceremonies.CeremonyManager;
+import StreakTheSpire.Ceremonies.IScoreChangeCeremony;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
@@ -15,6 +17,9 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     private PlayerStreakModel model = null;
     private IView characterDisplayView = null;
     private UITextElement scoreDisplayElement = null;
+    private int lastProcessedScore = -1;
+
+    private IScoreChangeCeremony scoreChangeCeremony = null;
 
     public PlayerStreakModel getModel() { return model; }
     public IView getCharacterDisplayView() { return characterDisplayView; }
@@ -38,7 +43,8 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         characterDisplayView = ViewFactoryManager.get().createView(displayModel);
         addChild((UIElement) characterDisplayView);
 
-        scoreDisplayElement = new UITextElement(Vector2.Zero, FontHelper.tipBodyFont, model.currentStreak.get().toString());
+        lastProcessedScore = model.currentStreak.get();
+        scoreDisplayElement = new UITextElement(Vector2.Zero, FontHelper.tipBodyFont, String.valueOf(lastProcessedScore));
         scoreDisplayElement.setHAlign(Align.center);
         addChild(scoreDisplayElement);
 
@@ -52,7 +58,39 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     }
 
     private void onStreakChanged() {
+        CeremonyPreferencesModel preferences = StreakTheSpire.get().getCeremonyPreferences();
+        int newScore = model.currentStreak.get();
+        if(lastProcessedScore == newScore) {
+            StreakTheSpire.logWarning("Score changed to same last processed value! Very unexpected!");
+            return;
+        }
 
+        String ceremonyClassName = newScore > lastProcessedScore ? preferences.scoreIncreaseCeremony.get() : preferences.scoreDecreaseCeremony.get();
+
+        lastProcessedScore = newScore;
+
+        Class<? extends IScoreChangeCeremony> scoreCeremonyClass = CeremonyManager.get().getScoreChangeCeremonyClass(ceremonyClassName);
+        try {
+            scoreChangeCeremony = scoreCeremonyClass.newInstance();
+            scoreChangeCeremony.addOnChangedSubscriber(this::cleanUpCeremony);
+            scoreChangeCeremony.start(model.currentStreak.get(), this);
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Error while instantiating score change ceremony: " + e.getMessage());
+        }
+    }
+
+    private void cleanUpCeremony() {
+        scoreChangeCeremony.removeOnChangedSubscriber(this::cleanUpCeremony);
+        scoreChangeCeremony = null;
+    }
+
+    @Override
+    protected void elementUpdate(float deltaTime) {
+        super.elementUpdate(deltaTime);
+        if(scoreChangeCeremony != null) {
+            scoreChangeCeremony.update(deltaTime);
+        }
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

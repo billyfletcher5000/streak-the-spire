@@ -1,5 +1,9 @@
 package StreakTheSpire;
 
+import StreakTheSpire.Ceremonies.CeremonyManager;
+import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreDecreaseCeremony;
+import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreIncreaseCeremony;
+import StreakTheSpire.Ceremonies.Panel.SimpleTextScoreChangeCeremony;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
@@ -16,6 +20,7 @@ import basemod.interfaces.PostInitializeSubscriber;
 import basemod.interfaces.PostUpdateSubscriber;
 import basemod.interfaces.RenderSubscriber;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -25,6 +30,7 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,6 +87,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<CharacterDisplayPreferencesModel> characterDisplayPreferencesModel;
     private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
+    private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
 
     public TweenEngine getTweenEngine() { return tweenEngine; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
@@ -88,6 +95,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public CharacterDisplayPreferencesModel getCharacterDisplayPreferencesModel() { return characterDisplayPreferencesModel.get(); }
     public PlayerStreakStoreModel getStreakStoreDataModel() { return streakStoreDataModel.get(); }
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
+    public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
@@ -97,6 +105,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     @Override
     public void receivePostInitialize() {
         registerViewFactories();
+        registerCeremonies();
 
         tweenEngine = TweenEngine.build();
 
@@ -104,6 +113,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
+        initialiseCeremonyModels();
         initialiseStreakDataModel();
 
         loadConfig();
@@ -199,6 +209,17 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     @Override
     public void receivePostUpdate() {
         gameStateModel.get().gameMode.set(CardCrawlGame.mode);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
+            PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
+            PlayerStreakModel defectModel = controller.getStreakModel("DEFECT");
+            defectModel.currentStreak.set(defectModel.currentStreak.get() + 1);
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
+            PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
+            PlayerStreakModel defectModel = controller.getStreakModel("DEFECT");
+            defectModel.currentStreak.set(0);
+        }
+
         rootUIElement.update(getDeltaTime());
 
         tweenEngine.update(getDeltaTime());
@@ -219,6 +240,12 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         ViewFactoryManager.get().registerViewFactory(CharacterSkeletonDisplayModel.class, CharacterSkeletonDisplayView.FACTORY);
         ViewFactoryManager.get().registerViewFactory(CharacterIconDisplayModel.class, CharacterIconDisplayView.FACTORY);
         ViewFactoryManager.get().registerViewFactory(CharacterTextDisplayModel.class, CharacterTextDisplayView.FACTORY);
+    }
+
+    private void registerCeremonies() {
+        CeremonyManager.get().registerScoreChangeCeremony(SimpleTextScoreChangeCeremony.class);
+        CeremonyManager.get().registerScoreChangeCeremony(LightFlourishScoreIncreaseCeremony.class);
+        CeremonyManager.get().registerScoreChangeCeremony(LightFlourishScoreDecreaseCeremony.class);
     }
 
     protected <T extends IConfigDataModel> void registerConfigModel(Property<T> dataModel) {
@@ -351,6 +378,11 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         watcherTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
         watcherTextDisplayModel.displayText.set("Watcher");
         controller.addCharacterDisplayModel(watcherTextDisplayModel);
+    }
+
+    private void initialiseCeremonyModels() {
+        ceremonyPreferencesModel = new Property<>(new CeremonyPreferencesModel());
+        registerConfigModel(ceremonyPreferencesModel);
     }
 
     private void createViews() {

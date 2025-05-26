@@ -34,7 +34,7 @@ public class UIVisualElement extends UIElement {
     public Property<Color> getColorProperty() { return color; }
     public void setColor(Color color) { this.color.set(color); }
 
-    public Color getMaskColor() { return maskColor.get(); }
+    public Color getMaskColor() { return maskColor.get().cpy(); }
     public Property<Color> getMaskColorProperty() { return maskColor; }
     public void setMaskColor(Color color) { this.maskColor.set(color); }
 
@@ -146,6 +146,7 @@ public class UIVisualElement extends UIElement {
                     visElementColor.r = newValues[0];
                     visElementColor.clamp();
                     visualElement.setColor(visElementColor);
+                    StreakTheSpire.logInfo(this.getClass().getName() + ": COLOR_R: " + visElementColor.r);
                     return;
 
                 case TweenTypes.COLOR_G:
@@ -201,6 +202,7 @@ public class UIVisualElement extends UIElement {
                     visElementColor.a = newValues[0];
                     visElementColor.clamp();
                     visualElement.setMaskColor(visElementColor);
+                    StreakTheSpire.logInfo(this.getClass().getName() + ": MASK_A: " + visElementColor.a);
                     return;
             }
         }

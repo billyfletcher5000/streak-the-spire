@@ -317,6 +317,7 @@ public class UIElement implements TweenAccessor<UIElement> {
 
             case TweenTypes.SCALE_XY:
                 target.setLocalScale(new Vector2(newValues[0], newValues[1]));
+                StreakTheSpire.logInfo(this.getClass().getName() + ": SCALE_XY: " + target.localScale.get());
                 break;
 
             case TweenTypes.SCALE_X:

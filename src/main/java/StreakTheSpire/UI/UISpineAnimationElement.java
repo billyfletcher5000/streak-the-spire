@@ -38,6 +38,7 @@ public class UISpineAnimationElement extends UIVisualElement {
     public Property<Boolean> getFlipYProperty() { return flipY; }
     public void setFlipY(boolean flipY) { this.flipY.set(flipY); }
 
+    public Skeleton getSkeleton() { return skeleton; }
     public AnimationState getAnimationState() { return animationState; }
     public AnimationStateData getAnimationStateData() { return animationStateData; }
 

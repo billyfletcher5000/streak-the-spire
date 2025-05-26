@@ -6,6 +6,7 @@ import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.SkeletonModifier;
 import StreakTheSpire.UI.Layout.UIScaleBoxElement;
 import StreakTheSpire.UI.UISpineAnimationElement;
+import com.esotericsoftware.spine.Animation;
 
 public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements IView {
 
@@ -31,8 +32,17 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
         skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonIdleAnimationName.get(), loop, 0f);
     }
 
+    public void immediatelyPlayHitAnimation() {
+        skeletonAnimation.getAnimationState().setAnimation(0, model.skeletonHitAnimationName.get(), false);
+    }
+
     public void enqueueHitAnimation() {
         skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonHitAnimationName.get(), false, 0.0f);
+    }
+
+    public float getHitAnimationDuration() {
+        Animation anim = skeletonAnimation.getSkeleton().getData().findAnimation(model.skeletonHitAnimationName.get());
+        return anim.getDuration();
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {
