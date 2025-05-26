@@ -13,6 +13,8 @@ public class CharacterSkeletonDisplayModel extends CharacterDisplayModel {
     public PropertyList<String> skeletonBonesToRemove = new PropertyList<>();
     public Property<String> skeletonIdleAnimationName = new Property<>("Idle");
     public Property<String> skeletonHitAnimationName = new Property<>("Hit");
+    public Property<Float> skeletonIdleAnimationSpeed = new Property<>(1.0f);
+    public Property<Float> skeletonHitAnimationSpeed = new Property<>(1.0f);
     public Property<Float> skeletonAnimationMixDuration = new Property<>(0.0f);
     public Property<Float> skeletonRotationAdjustment = new Property<>(0.0f);
 }

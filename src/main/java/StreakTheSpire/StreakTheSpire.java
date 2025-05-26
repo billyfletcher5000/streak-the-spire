@@ -358,6 +358,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("root");
         ironcladSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
         ironcladSkeletonDisplayModel.skeletonRotationAdjustment.set(100.0f);
+        ironcladSkeletonDisplayModel.skeletonIdleAnimationSpeed.set(0.6f);
         controller.addCharacterDisplayModel(ironcladSkeletonDisplayModel);
 
         CharacterSkeletonDisplayModel silentSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
@@ -374,6 +375,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         silentSkeletonDisplayModel.skeletonBonesToRemove.add("Shadow");
         silentSkeletonDisplayModel.skeletonBonesToRemove.add("Robe_down");
         silentSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
+        silentSkeletonDisplayModel.skeletonIdleAnimationSpeed.set(0.6f);
         controller.addCharacterDisplayModel(silentSkeletonDisplayModel);
 
         CharacterSkeletonDisplayModel defectSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
@@ -388,6 +390,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         defectSkeletonDisplayModel.skeletonBonesToRemove.add("root");
         defectSkeletonDisplayModel.skeletonBonesToRemove.add("Hips");
         defectSkeletonDisplayModel.skeletonRotationAdjustment.set(60.0f);
+        defectSkeletonDisplayModel.skeletonIdleAnimationSpeed.set(0.2f);
         controller.addCharacterDisplayModel(defectSkeletonDisplayModel);
 
         CharacterSkeletonDisplayModel watcherSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
@@ -403,6 +406,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Arm_R_");
         watcherSkeletonDisplayModel.skeletonBonesToRemove.add("Neck");
         watcherSkeletonDisplayModel.skeletonRotationAdjustment.set(80f);
+        watcherSkeletonDisplayModel.skeletonIdleAnimationSpeed.set(0.8f);
         controller.addCharacterDisplayModel(watcherSkeletonDisplayModel);
 
         CharacterTextDisplayModel ironcladTextDisplayModel = new CharacterTextDisplayModel();

@@ -7,11 +7,14 @@ import StreakTheSpire.UI.SkeletonModifier;
 import StreakTheSpire.UI.Layout.UIScaleBoxElement;
 import StreakTheSpire.UI.UISpineAnimationElement;
 import com.esotericsoftware.spine.Animation;
+import com.esotericsoftware.spine.AnimationState;
+import com.esotericsoftware.spine.Event;
 
 public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements IView {
 
-    private CharacterSkeletonDisplayModel model;
-    private UISpineAnimationElement skeletonAnimation;
+    private final CharacterSkeletonDisplayModel model;
+    private final UISpineAnimationElement skeletonAnimation;
+    private AnimationState.AnimationStateListener animStateListener = null;
 
     public CharacterSkeletonDisplayModel getModel() { return model; }
     public UISpineAnimationElement getSkeletonAnimation() { return skeletonAnimation; }
@@ -25,19 +28,73 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
         skeletonAnimation.getAnimationStateData().setMix(model.skeletonHitAnimationName.get(), model.skeletonIdleAnimationName.get(), model.skeletonAnimationMixDuration.get());
         addChild(skeletonAnimation);
 
-        enqueueIdleAnimation(true);
+        if(model.skeletonHitAnimationSpeed.get() != 1.0f || model.skeletonIdleAnimationSpeed.get() != 1.0f) {
+            animStateListener = new AnimationState.AnimationStateListener() {
+
+                @Override
+                public void event(int i, Event event) {}
+
+                @Override
+                public void complete(int i, int i1) {}
+
+                @Override
+                public void start(int i) {
+                    AnimationState state = skeletonAnimation.getAnimationState();
+                    AnimationState.TrackEntry entry = state.getCurrent(i);
+                    String animName = entry.getAnimation().getName();
+                    if(animName.equals(model.skeletonHitAnimationName.get())) {
+                        state.setTimeScale(model.skeletonHitAnimationSpeed.get());
+                    } else if(animName.equals(model.skeletonIdleAnimationName.get())) {
+                        state.setTimeScale(model.skeletonIdleAnimationSpeed.get());
+                    }
+                }
+
+                @Override
+                public void end(int i) {
+                }
+            };
+            skeletonAnimation.getAnimationState().addListener(animStateListener);
+        }
+
+        immediatelyPlayIdleAnimation(true);
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        if(animStateListener != null) {
+            skeletonAnimation.getAnimationState().removeListener(animStateListener);
+        }
+    }
+
+    public void immediatelyPlayIdleAnimation(boolean loop) {
+        AnimationState state = skeletonAnimation.getAnimationState();
+        state.setTimeScale(model.skeletonIdleAnimationSpeed.get());
+        state.setAnimation(0, model.skeletonIdleAnimationName.get(), loop);
     }
 
     public void enqueueIdleAnimation(boolean loop) {
-        skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonIdleAnimationName.get(), loop, 0f);
+        AnimationState state = skeletonAnimation.getAnimationState();
+
+        if(state.getCurrent(0) == null)
+            state.setTimeScale(model.skeletonIdleAnimationSpeed.get());
+
+        state.addAnimation(0, model.skeletonIdleAnimationName.get(), loop, 0f);
     }
 
     public void immediatelyPlayHitAnimation() {
-        skeletonAnimation.getAnimationState().setAnimation(0, model.skeletonHitAnimationName.get(), false);
+        AnimationState state = skeletonAnimation.getAnimationState();
+        state.setTimeScale(model.skeletonHitAnimationSpeed.get());
+        state.setAnimation(0, model.skeletonHitAnimationName.get(), false);
     }
 
     public void enqueueHitAnimation() {
-        skeletonAnimation.getAnimationState().addAnimation(0, model.skeletonHitAnimationName.get(), false, 0.0f);
+        AnimationState state = skeletonAnimation.getAnimationState();
+
+        if(state.getCurrent(0) == null)
+            state.setTimeScale(model.skeletonHitAnimationSpeed.get());
+
+        state.addAnimation(0, model.skeletonHitAnimationName.get(), false, 0f);
     }
 
     public float getHitAnimationDuration() {
