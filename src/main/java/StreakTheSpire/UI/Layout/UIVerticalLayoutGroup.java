@@ -5,6 +5,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class UIVerticalLayoutGroup extends UIElement {
 
+    // This is essentially meant to be X/Y but in our case it will always be 1/X
+    @Override
+    public float getPreferredAspectRatio() { return 1.0f / getChildren().length; }
+
     @Override
     public void setDimensions(Vector2 dimensions) {
         super.setDimensions(dimensions);

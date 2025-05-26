@@ -35,7 +35,7 @@ public class UIHorizontalLayoutGroup extends UIElement {
         for(int i = 0; i < children.length; i++) {
             UIElement child = children[i];
             child.setDimensions(new Vector2(itemWidth, dimensions.y));
-            child.setLocalPosition(new Vector2((itemWidth * i) - (dimensions.x / 4), 0));
+            child.setLocalPosition(new Vector2((itemWidth * (i + 1)) - (dimensions.x * 0.5f) - (itemWidth * 0.5f), 0)); // TODO: Fix this divide by 4, it's dumb and will fall apart
         }
     }
 }

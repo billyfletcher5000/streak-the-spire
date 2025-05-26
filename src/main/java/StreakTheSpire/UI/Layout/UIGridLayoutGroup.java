@@ -77,7 +77,7 @@ public class UIGridLayoutGroup extends UIElement {
         float aspectRatio = (float) gridRect.width / gridRect.height;
         PackingMode packingMode = getPackingMode(aspectRatio);
 
-        float targetAspectRatio = 2f;//16.0f / 9.0f;
+        float targetAspectRatio = numChildren > 0 ? children[0].getPreferredAspectRatio() : 1.0f;
 
         float elementSize = 0f;
         int chosenWidth = 0; int chosenHeight = 0;

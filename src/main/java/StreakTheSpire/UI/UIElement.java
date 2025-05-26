@@ -3,7 +3,6 @@ package StreakTheSpire.UI;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
-import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Affine2;
@@ -234,7 +233,7 @@ public class UIElement implements TweenAccessor<UIElement> {
 
     public void showDebugDimensionsDisplay(boolean recursive) {
         if(debugDimensionsElement == null) {
-            debugDimensionsElement = StreakTheSpire.getInstance().createDebugDimensionsDisplay(this);
+            debugDimensionsElement = StreakTheSpire.get().createDebugDimensionsDisplay(this);
         }
 
         if(recursive) {
@@ -246,7 +245,7 @@ public class UIElement implements TweenAccessor<UIElement> {
 
     public void hideDebugDimensionsDisplay(boolean recursive) {
         if(debugDimensionsElement != null)
-            StreakTheSpire.getInstance().removeDebugDimensionsDisplay(debugDimensionsElement);
+            StreakTheSpire.get().removeDebugDimensionsDisplay(debugDimensionsElement);
 
         if(recursive) {
             for (UIElement child : children) {

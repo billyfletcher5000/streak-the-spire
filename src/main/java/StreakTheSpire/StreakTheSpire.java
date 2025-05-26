@@ -48,7 +48,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public static final String modDescription = "A Slay The Spire mod to automatically track your streaks, both individual and rotating, with each character.";
 
     private static StreakTheSpire instance;
-    public static StreakTheSpire getInstance() { return instance; }
+    public static StreakTheSpire get() { return instance; }
 
     // Config
     private static final String configFileName = "Config";
@@ -82,6 +82,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
 
+    public TweenEngine getTweenEngine() { return tweenEngine; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
     public StreakCriteriaModel getStreakCriteriaModel() { return streakCriteriaModel.get(); }
     public CharacterDisplayPreferencesModel getCharacterDisplayPreferencesModel() { return characterDisplayPreferencesModel.get(); }

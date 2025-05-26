@@ -70,7 +70,7 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         streakStoreModel.panelModel.get().position.set(getLocalPosition());
         streakStoreModel.panelModel.get().dimensions.set(getDimensions());
         streakStoreModel.panelModel.get().scale.set(getLocalScale());
-        StreakTheSpire.getInstance().saveConfig();
+        StreakTheSpire.get().saveConfig();
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {
