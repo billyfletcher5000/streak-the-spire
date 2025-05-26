@@ -47,6 +47,11 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     public Property<Vector2> getMinimumSizeProperty() { return minimumSize; }
     public void setMinimumSize(Vector2 minimumSize) { this.minimumSize.set(minimumSize.cpy()); }
 
+    public UIResizablePanel() {
+        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
+        createHitboxes();
+    }
+
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size) {
         super(position, texture, size);
         setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));

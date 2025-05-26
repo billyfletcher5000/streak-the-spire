@@ -4,6 +4,7 @@ import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreDecreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreIncreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.SimpleTextScoreChangeCeremony;
+import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
@@ -12,6 +13,7 @@ import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
+import StreakTheSpire.Utils.TextureCache;
 import StreakTheSpire.Views.*;
 import basemod.BaseMod;
 import basemod.ModPanel;
@@ -30,7 +32,6 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,6 +76,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         }
     }
 
+    private TextureCache textureCache = new TextureCache();
     private TweenEngine tweenEngine;
     private UIElement rootUIElement;
     private UIElement debugRootUIElement;
@@ -84,18 +86,21 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     private Property<GameStateModel> gameStateModel;
     private Property<StreakCriteriaModel> streakCriteriaModel;
-    private Property<CharacterDisplayPreferencesModel> characterDisplayPreferencesModel;
+    private Property<DisplayPreferencesModel> displayPreferencesModel;
     private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
     private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
+    private Property<BorderStyleSetModel> borderStyleSetModel;
 
+    public TextureCache getTextureCache() { return textureCache; }
     public TweenEngine getTweenEngine() { return tweenEngine; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
     public StreakCriteriaModel getStreakCriteriaModel() { return streakCriteriaModel.get(); }
-    public CharacterDisplayPreferencesModel getCharacterDisplayPreferencesModel() { return characterDisplayPreferencesModel.get(); }
+    public DisplayPreferencesModel getDisplayPreferencesModel() { return displayPreferencesModel.get(); }
     public PlayerStreakStoreModel getStreakStoreDataModel() { return streakStoreDataModel.get(); }
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
+    public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
@@ -111,10 +116,12 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         StreakTheSpireTextureDatabase.loadAll();
 
+        initialisePreferenceModels();
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
         initialiseCeremonyModels();
         initialiseStreakDataModel();
+        initialiseBorderStyleModels();
 
         loadConfig();
 
@@ -139,7 +146,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
-
     private void initialiseUIRoot() {
         rootUIElement = new UIElement();
         rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
@@ -220,6 +226,15 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             defectModel.currentStreak.set(0);
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_1)) {
+            displayPreferencesModel.get().borderStyle.set("Invisible");
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_2)) {
+            displayPreferencesModel.get().borderStyle.set("TipBox");
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_3)) {
+            displayPreferencesModel.get().borderStyle.set("TopBar");
+        }
+
+
         rootUIElement.update(getDeltaTime());
 
         tweenEngine.update(getDeltaTime());
@@ -260,6 +275,11 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         configDataModelToConfigID.put(dataModel, configID);
     }
 
+    private void initialisePreferenceModels() {
+        displayPreferencesModel = new Property<>(new DisplayPreferencesModel());
+        registerConfigModel(displayPreferencesModel);
+    }
+
     protected void initialiseGameStateModel() {
         gameStateModel = new Property<>(new GameStateModel());
 
@@ -275,9 +295,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     protected void initialiseCharacterDisplayModels() {
-        characterDisplayPreferencesModel = new Property<>(new CharacterDisplayPreferencesModel());
-        registerConfigModel(characterDisplayPreferencesModel);
-
         characterDisplaySetModel = new Property<>(new CharacterDisplaySetModel());
         CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel.get());
 
@@ -383,6 +400,34 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private void initialiseCeremonyModels() {
         ceremonyPreferencesModel = new Property<>(new CeremonyPreferencesModel());
         registerConfigModel(ceremonyPreferencesModel);
+    }
+
+    private void initialiseBorderStyleModels() {
+        borderStyleSetModel = new Property<>(new BorderStyleSetModel());
+        BorderStyleSetController controller = new BorderStyleSetController(borderStyleSetModel.get());
+
+        BorderStyleModel invisibleStyle = new BorderStyleModel();
+        invisibleStyle.identifier.set("Invisible");
+        invisibleStyle.showInGameMode.set(false);
+        invisibleStyle.texturePath.set("StreakTheSpire/textures/ui/tip_box_9slice_sq.png");
+        invisibleStyle.textureMargins.set(new IntMargins(48, 48, 35, 35));
+        controller.addStyle(invisibleStyle);
+
+        BorderStyleModel tipBoxStyle = new BorderStyleModel();
+        tipBoxStyle.identifier.set("TipBox");
+        tipBoxStyle.showInGameMode.set(true);
+        tipBoxStyle.texturePath.set("StreakTheSpire/textures/ui/tip_box_9slice_sq.png");
+        tipBoxStyle.textureMargins.set(new IntMargins(48, 48, 35, 35));
+        controller.addStyle(tipBoxStyle);
+
+        BorderStyleModel topBarStyle = new BorderStyleModel();
+        topBarStyle.identifier.set("TopBar");
+        topBarStyle.showInGameMode.set(true);
+        topBarStyle.texturePath.set("StreakTheSpire/textures/ui/top_bar_9slice.png");
+        topBarStyle.textureMargins.set(new IntMargins(16, 16, 16, 16));
+        controller.addStyle(topBarStyle);
+
+        displayPreferencesModel.get().borderStyle.set(tipBoxStyle.identifier.get());
     }
 
     private void createViews() {

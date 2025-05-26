@@ -15,7 +15,7 @@ public class UIDebugDimensionsDisplay extends UINineSliceElement {
         this.targetElement = targetElement;
 
         if(debugBoxNinesliceTexture == null) {
-            debugBoxNinesliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.DEBUG_BOX_NINESLICE.getTexture(), 8, 8, 8, 8);
+            debugBoxNinesliceTexture = new NineSliceTexture(StreakTheSpireTextureDatabase.DEBUG_BOX_NINESLICE.getTexture(), new IntMargins(8, 8, 8, 8));
         }
 
         this.setNineSliceTexture(debugBoxNinesliceTexture);

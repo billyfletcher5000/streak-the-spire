@@ -40,8 +40,8 @@ public class UINineSliceElement extends UIVisualElement {
     @Override
     public void setDimensions(Vector2 dimensions) {
         if(nineSliceTexture != null) {
-            int minWidth = nineSliceTexture.leftMargin + nineSliceTexture.rightMargin;
-            int minHeight = nineSliceTexture.topMargin + nineSliceTexture.bottomMargin;
+            int minWidth = nineSliceTexture.margins.left + nineSliceTexture.margins.right;
+            int minHeight = nineSliceTexture.margins.top + nineSliceTexture.margins.bottom;
             if (dimensions.x < minWidth || dimensions.y < minHeight) {
                 dimensions = dimensions.cpy();
                 dimensions.x = Math.max(dimensions.x, minWidth);
@@ -77,14 +77,14 @@ public class UINineSliceElement extends UIVisualElement {
         Vector2 outerBottomLeft = extents.cpy().scl(-1f, -1f);
         Vector2 outerTopRight = extents.cpy().scl(1f, 1f);
 
-        float middleMarginX = dimensions.x - nineSliceTexture.leftMargin - nineSliceTexture.rightMargin;
-        float middleMarginY = dimensions.y - nineSliceTexture.topMargin - nineSliceTexture.bottomMargin;
+        float middleMarginX = dimensions.x - nineSliceTexture.margins.left - nineSliceTexture.margins.right;
+        float middleMarginY = dimensions.y - nineSliceTexture.margins.top - nineSliceTexture.margins.bottom;
 
-        float normalisedLeftSize = (float)nineSliceTexture.leftMargin / textureWidth;
-        float normalisedTopSize = (float)nineSliceTexture.topMargin / textureHeight;
+        float normalisedLeftSize = (float)nineSliceTexture.margins.left / textureWidth;
+        float normalisedTopSize = (float)nineSliceTexture.margins.top / textureHeight;
 
-        float normalisedMiddleSizeX = (textureWidth - nineSliceTexture.leftMargin - nineSliceTexture.rightMargin) / textureWidth;
-        float normalisedMiddleSizeY = (textureHeight - nineSliceTexture.topMargin - nineSliceTexture.bottomMargin) / textureHeight;
+        float normalisedMiddleSizeX = (textureWidth - nineSliceTexture.margins.left - nineSliceTexture.margins.right) / textureWidth;
+        float normalisedMiddleSizeY = (textureHeight - nineSliceTexture.margins.top - nineSliceTexture.margins.bottom) / textureHeight;
 
         float colorBits = getTransformedColor(transformedAlpha).toFloatBits();
 
@@ -92,13 +92,13 @@ public class UINineSliceElement extends UIVisualElement {
 
         // bottom left
         Vector2 sectionBottomLeft = outerBottomLeft.cpy();
-        Vector2 sectionTopRight = new Vector2(outerBottomLeft.x + nineSliceTexture.leftMargin, outerBottomLeft.y + nineSliceTexture.topMargin);
+        Vector2 sectionTopRight = new Vector2(outerBottomLeft.x + nineSliceTexture.margins.left, outerBottomLeft.y + nineSliceTexture.margins.top);
         Vector2 uv1 = new Vector2(0, 0);
         Vector2 uv2 = new Vector2(normalisedLeftSize, normalisedTopSize);
         drawSection(vertexComponents, 0, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // bottom middle
-        sectionBottomLeft.x += nineSliceTexture.leftMargin;
+        sectionBottomLeft.x += nineSliceTexture.margins.left;
         sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;
@@ -112,14 +112,14 @@ public class UINineSliceElement extends UIVisualElement {
         drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 2, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // middle left
-        sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.topMargin);
-        sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.leftMargin, outerBottomLeft.y + nineSliceTexture.topMargin + middleMarginY);
+        sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.margins.top);
+        sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.margins.left, outerBottomLeft.y + nineSliceTexture.margins.top + middleMarginY);
         uv1.set(0, normalisedTopSize);
         uv2.set(normalisedLeftSize, normalisedTopSize + normalisedMiddleSizeY);
         drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 3, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // middle middle
-        sectionBottomLeft.x += nineSliceTexture.leftMargin;
+        sectionBottomLeft.x += nineSliceTexture.margins.left;
         sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;
@@ -133,14 +133,14 @@ public class UINineSliceElement extends UIVisualElement {
         drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 5, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // top left
-        sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.topMargin + middleMarginY);
-        sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.leftMargin, outerTopRight.y);
+        sectionBottomLeft.set(outerBottomLeft.x, outerBottomLeft.y + nineSliceTexture.margins.top + middleMarginY);
+        sectionTopRight.set(outerBottomLeft.x + nineSliceTexture.margins.left, outerTopRight.y);
         uv1.set(0, normalisedTopSize + normalisedMiddleSizeY);
         uv2.set(normalisedLeftSize, 1);
         drawSection(vertexComponents, VertexWindingID.NUM * VertexComponent.NUM * 6, transformationMatrix, sectionBottomLeft, sectionTopRight, uv1, uv2, colorBits);
 
         // top middle
-        sectionBottomLeft.x += nineSliceTexture.leftMargin;
+        sectionBottomLeft.x += nineSliceTexture.margins.left;
         sectionTopRight.x += middleMarginX;
         uv1.x += normalisedLeftSize;
         uv2.x += normalisedMiddleSizeX;

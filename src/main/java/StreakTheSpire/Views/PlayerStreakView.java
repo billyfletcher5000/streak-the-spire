@@ -29,7 +29,7 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         this.model = model;
 
         CharacterDisplaySetModel characterDisplaySet = StreakTheSpire.get().getCharacterDisplaySetModel();
-        CharacterDisplayPreferencesModel preferences = StreakTheSpire.get().getCharacterDisplayPreferencesModel();
+        DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
 
         CharacterDisplaySetController displaySetController = new CharacterDisplaySetController(characterDisplaySet);
 

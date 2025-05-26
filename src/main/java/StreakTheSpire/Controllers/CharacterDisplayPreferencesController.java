@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CharacterDisplayPreferencesController {
 
-    public static List<Class<? extends CharacterDisplayModel>> getPreferredDisplayModelClassesInOrder(CharacterDisplayPreferencesModel.Style style) {
+    public static List<Class<? extends CharacterDisplayModel>> getPreferredDisplayModelClassesInOrder(DisplayPreferencesModel.CharacterStyle style) {
         switch (style) {
             case AnimatedIcon:
                 return Arrays.asList(CharacterSkeletonDisplayModel.class, CharacterIconDisplayModel.class, CharacterTextDisplayModel.class);

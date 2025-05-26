@@ -1,7 +1,7 @@
 package StreakTheSpire.Controllers;
 
 import StreakTheSpire.Models.CharacterDisplayModel;
-import StreakTheSpire.Models.CharacterDisplayPreferencesModel;
+import StreakTheSpire.Models.DisplayPreferencesModel;
 import StreakTheSpire.Models.CharacterDisplaySetModel;
 import StreakTheSpire.StreakTheSpire;
 
@@ -15,11 +15,11 @@ public class CharacterDisplaySetController {
         this.model = model;
     }
 
-    public CharacterDisplayModel getCharacterDisplay(String playerClass, CharacterDisplayPreferencesModel preferences) {
-        return getCharacterDisplay(playerClass, preferences.style.get());
+    public CharacterDisplayModel getCharacterDisplay(String playerClass, DisplayPreferencesModel preferences) {
+        return getCharacterDisplay(playerClass, preferences.characterStyle.get());
     }
 
-    public CharacterDisplayModel getCharacterDisplay(String playerClass, CharacterDisplayPreferencesModel.Style style) {
+    public CharacterDisplayModel getCharacterDisplay(String playerClass, DisplayPreferencesModel.CharacterStyle style) {
         List<Class<? extends CharacterDisplayModel>> preferredModelClasses = CharacterDisplayPreferencesController.getPreferredDisplayModelClassesInOrder(style);
 
         Stream<CharacterDisplayModel> possibleDisplays = model.characterDisplayModels.stream()
