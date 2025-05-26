@@ -17,10 +17,7 @@ import StreakTheSpire.Utils.TextureCache;
 import StreakTheSpire.Views.*;
 import basemod.BaseMod;
 import basemod.ModPanel;
-import basemod.interfaces.AddAudioSubscriber;
-import basemod.interfaces.PostInitializeSubscriber;
-import basemod.interfaces.PostUpdateSubscriber;
-import basemod.interfaces.RenderSubscriber;
+import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -41,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpireInitializer
-public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, AddAudioSubscriber {
+public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, PostRenderSubscriber, PreRoomRenderSubscriber, AddAudioSubscriber {
 
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
     public static final LoggingLevel loggingLevel = LoggingLevel.DEBUG;
@@ -92,6 +89,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
     private Property<BorderStyleSetModel> borderStyleSetModel;
 
+    private boolean showDebug = false;
+
     public TextureCache getTextureCache() { return textureCache; }
     public TweenEngine getTweenEngine() { return tweenEngine; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
@@ -125,6 +124,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         loadConfig();
 
+        displayPreferencesModel.get().renderLayer.set(DisplayPreferencesModel.RenderLayer.TopPanel);
+
         PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
 
         String report = controller.createStreakDebugReport();
@@ -141,11 +142,10 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseUIRoot();
         createViews();
 
-        rootUIElement.showDebugDimensionsDisplay(true);
-
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
+
     private void initialiseUIRoot() {
         rootUIElement = new UIElement();
         rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
@@ -206,9 +206,31 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     @Override
-    public void receiveRender(SpriteBatch sb) {
-        rootUIElement.render(sb);
-        debugRootUIElement.render(sb);
+    public void receivePreRoomRender(SpriteBatch spriteBatch) {
+        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.PreRoom)
+            performRender(spriteBatch);
+    }
+
+    public void receiveTopPanelRender(SpriteBatch spriteBatch) {
+        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.TopPanel)
+            performRender(spriteBatch);
+    }
+
+    @Override
+    public void receiveRender(SpriteBatch spriteBatch) {
+        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.Default)
+            performRender(spriteBatch);
+    }
+
+    @Override
+    public void receivePostRender(SpriteBatch spriteBatch) {
+        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveAll)
+            performRender(spriteBatch);
+    }
+
+    private void performRender(SpriteBatch spriteBatch) {
+        rootUIElement.render(spriteBatch);
+        debugRootUIElement.render(spriteBatch);
     }
 
 
@@ -234,6 +256,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             displayPreferencesModel.get().borderStyle.set("TopBar");
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
+            showDebug = !showDebug;
+            if(showDebug)
+                rootUIElement.showDebugDimensionsDisplay(true);
+            else
+                rootUIElement.hideDebugDimensionsDisplay(true);
+        }
 
         rootUIElement.update(getDeltaTime());
 

@@ -9,8 +9,17 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
         Text
     }
 
+    public enum RenderLayer {
+        PreRoom,
+        Room,
+        TopPanel,
+        Default,
+        AboveAll
+    }
+
     public Property<CharacterStyle> characterStyle = new Property<>(CharacterStyle.AnimatedIcon);
     public Property<String> borderStyle = new Property<>(null);
+    public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.Default);
 
     public DisplayPreferencesModel() {}
 
