@@ -80,6 +80,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private UIElement rootUIElement;
     private UIElement debugRootUIElement;
     private ModPanel settingsPanel;
+    private boolean trueVictoryCutsceneActive = false;
 
     private final HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
 
@@ -128,7 +129,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         loadConfig();
 
-        displayPreferencesModel.get().renderLayer.set(DisplayPreferencesModel.RenderLayer.AboveAll);
+        displayPreferencesModel.get().renderLayer.set(DisplayPreferencesModel.RenderLayer.Default);
 
         PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
 
@@ -211,24 +212,24 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     @Override
     public void receivePreRoomRender(SpriteBatch spriteBatch) {
-        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.PreRoom)
+        if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.PreRoom)
             performRender(spriteBatch);
     }
 
     public void receiveTopPanelRender(SpriteBatch spriteBatch) {
-        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.TopPanel)
+        if(trueVictoryCutsceneActive || displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.TopPanel)
             performRender(spriteBatch);
     }
 
     @Override
     public void receiveRender(SpriteBatch spriteBatch) {
-        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.Default)
+        if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.Default)
             performRender(spriteBatch);
     }
 
     @Override
     public void receivePostRender(SpriteBatch spriteBatch) {
-        if(displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveAll)
+        if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveAll)
             performRender(spriteBatch);
     }
 
@@ -280,6 +281,19 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     @Override
     public void receiveAddAudio() {
         //BaseMod.addAudio("AUDIO_ID", "StreakTheSpire/AUDIO_WAV.wav");
+    }
+
+    public void notifyRunEnd() {
+        PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
+        controller.calculateStreakData(streakCriteriaModel.get(), false);
+    }
+
+    public void notifyTrueVictoryCutsceneStart() {
+        trueVictoryCutsceneActive = true;
+    }
+
+    public void notifyTrueVictoryCutsceneEnd() {
+        trueVictoryCutsceneActive = false;
     }
 
     private void registerViewFactories() {
