@@ -152,11 +152,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     private void initialiseUIRoot() {
+
+
         rootUIElement = new UIElement();
-        rootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
+        rootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
 
         debugRootUIElement = new UIElement();
-        debugRootUIElement.setLocalScale(new Vector2(Settings.xScale, Settings.yScale));
+        debugRootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
     }
 
     public void saveConfig() {

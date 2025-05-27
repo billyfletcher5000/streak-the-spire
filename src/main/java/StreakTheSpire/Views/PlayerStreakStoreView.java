@@ -9,9 +9,12 @@ import StreakTheSpire.UI.NineSliceTexture;
 import StreakTheSpire.UI.UIElement;
 import StreakTheSpire.UI.UIResizablePanel;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
+import com.megacrit.cardcrawl.core.Settings;
 
 public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
@@ -40,6 +43,10 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         setDimensions(panelModel.dimensions.get());
         setMinimumSize(new Vector2(64, 64));
 
+        //TODO: Work out why this is necessary, it shouldn't be if the screen size scaling is applied appropriately.
+        //      Could be that the order of operations is wrong or we should save the location divided by Settings.xScale/yScale
+        ensureOnScreen();
+
         this.streakStoreModel = model;
 
         addOnPanelResizedSubscriber(this::saveModel);
@@ -61,6 +68,35 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         gridLayoutGroup.setDimensions(getDimensions());
     }
 
+    private void ensureOnScreen() {
+        Affine2 localToWorld = getLocalToWorldTransform();
+        Vector2 bottomLeft = getDimensions().scl(-0.5f);
+        localToWorld.applyTo(bottomLeft);
+        Vector2 topRight = getDimensions().scl(-0.5f);
+        localToWorld.applyTo(topRight);
+
+        // Check for resolution changes pushing this off screen, note that this is dependent (unnecessarily so I imagine)
+        // on it being a 'top level' item and not a child element of anything other than the root UI element
+        Vector2 halfDimensions = getDimensions().scl(0.5f);
+        Vector2 localPosition = getLocalPosition();
+        float xScale = Settings.xScale;
+        float yScale = Settings.yScale;
+        float unscaledWidth = Settings.WIDTH / xScale;
+        float unscaledHeight = Settings.HEIGHT / yScale;
+
+        if(bottomLeft.x > unscaledWidth)
+            localPosition.x = unscaledWidth - halfDimensions.x;
+        else if (topRight.x < 0)
+            localPosition.x = halfDimensions.x;
+
+        if(bottomLeft.y > unscaledHeight)
+            localPosition.y = unscaledHeight - halfDimensions.y;
+        else if(topRight.y < 0)
+            localPosition.y = halfDimensions.y;
+
+        setLocalPosition(localPosition);
+    }
+
     @Override
     public void close() {
         super.close();
@@ -79,6 +115,7 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         streakStoreModel.panelModel.get().position.set(getLocalPosition());
         streakStoreModel.panelModel.get().dimensions.set(getDimensions());
         streakStoreModel.panelModel.get().scale.set(getLocalScale());
+        StreakTheSpire.logInfo("Saving panel model: " + streakStoreModel.panelModel.get().toString());
         StreakTheSpire.get().saveConfig();
     }
 
