@@ -438,7 +438,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         CharacterSkeletonDisplayModel rotatingSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
         rotatingSkeletonDisplayModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-        rotatingSkeletonDisplayModel.baseDimensions.set(new Vector2(246.55f, 257.59f));
+        rotatingSkeletonDisplayModel.baseDimensions.set(new Vector2(61.64f, 64.4f));
         rotatingSkeletonDisplayModel.skeletonOffset.set(new Vector2(0, 0));
         rotatingSkeletonDisplayModel.skeletonAtlasUrl.set("StreakTheSpire/skeletons/rotating_streak/skeleton.atlas");
         rotatingSkeletonDisplayModel.skeletonJsonUrl.set("StreakTheSpire/skeletons/rotating_streak/skeleton.json");
