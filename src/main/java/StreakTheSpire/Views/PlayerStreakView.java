@@ -7,7 +7,10 @@ import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.Layout.UIHorizontalLayoutGroup;
 import StreakTheSpire.UI.UIElement;
+import StreakTheSpire.UI.UISDFTextElement;
 import StreakTheSpire.UI.UITextElement;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.megacrit.cardcrawl.helpers.FontHelper;
@@ -44,7 +47,9 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         addChild((UIElement) characterDisplayView);
 
         lastProcessedScore = model.currentStreak.get();
-        scoreDisplayElement = new UITextElement(Vector2.Zero, FontHelper.tipBodyFont, String.valueOf(lastProcessedScore));
+        BitmapFont font = StreakTheSpire.get().getFontCache().getFont(preferences.fontIdentifier.get());
+        scoreDisplayElement = new UISDFTextElement(Vector2.Zero, font, String.valueOf(lastProcessedScore));
+        scoreDisplayElement.setColor(new Color(0.95f, 0.95f, 0.95f, 1.0f));
         scoreDisplayElement.setHAlign(Align.center);
         addChild(scoreDisplayElement);
 

@@ -26,6 +26,8 @@ public class UITextElement extends UIVisualElement {
     public boolean shouldWordWrap() { return wrap; }
     public void setWordWrap(boolean wrap) { this.wrap = wrap; }
 
+    public UITextElement() {}
+
     public UITextElement(Vector2 position, BitmapFont font, String text) {
         this(position, VectorOne.cpy(), font, text, VectorOne.cpy(), Color.WHITE.cpy(), Align.center, true);
     }
@@ -41,7 +43,6 @@ public class UITextElement extends UIVisualElement {
     public UITextElement(Vector2 position, BitmapFont font, String text, Vector2 size, int hAlign, boolean wrap) {
         this(position, VectorOne.cpy(), font, text, size, Color.WHITE.cpy(), hAlign, wrap);
     }
-
     public UITextElement(Vector2 position, BitmapFont font, String text, Vector2 size, Color color) {
         this(position, VectorOne.cpy(), font, text, size, color, Align.center, true);
     }

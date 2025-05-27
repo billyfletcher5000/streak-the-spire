@@ -20,6 +20,7 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
     public Property<CharacterStyle> characterStyle = new Property<>(CharacterStyle.AnimatedIcon);
     public Property<String> borderStyle = new Property<>(null);
     public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.Default);
+    public Property<String> fontIdentifier = new Property<>("Kreon_SDF_Outline_Shadow");
 
     public DisplayPreferencesModel() {}
 

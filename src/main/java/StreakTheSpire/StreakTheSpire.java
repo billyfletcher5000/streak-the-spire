@@ -9,6 +9,7 @@ import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
+import StreakTheSpire.Utils.FontCache;
 import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
@@ -74,6 +75,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     }
 
     private TextureCache textureCache = new TextureCache();
+    private FontCache fontCache = new FontCache();
     private TweenEngine tweenEngine;
     private UIElement rootUIElement;
     private UIElement debugRootUIElement;
@@ -92,6 +94,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private boolean showDebug = false;
 
     public TextureCache getTextureCache() { return textureCache; }
+    public FontCache getFontCache() { return fontCache; }
     public TweenEngine getTweenEngine() { return tweenEngine; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
     public StreakCriteriaModel getStreakCriteriaModel() { return streakCriteriaModel.get(); }
@@ -114,6 +117,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         tweenEngine = TweenEngine.build();
 
         StreakTheSpireTextureDatabase.loadAll();
+        initialiseFonts();
 
         initialisePreferenceModels();
         initialiseGameStateModel();
@@ -124,7 +128,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         loadConfig();
 
-        displayPreferencesModel.get().renderLayer.set(DisplayPreferencesModel.RenderLayer.TopPanel);
+        displayPreferencesModel.get().renderLayer.set(DisplayPreferencesModel.RenderLayer.AboveAll);
 
         PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
 
@@ -302,6 +306,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             throw new IllegalArgumentException("ConfigID \"" + configID + "\" is already registered!");
 
         configDataModelToConfigID.put(dataModel, configID);
+    }
+
+    private void initialiseFonts() {
+        fontCache.createSDFFont("Kreon_SDF_Outline_Shadow",
+                "StreakTheSpire/fonts/Kreon_Bold_SDF_Numbers.fnt",
+                "StreakTheSpire/fonts/Kreon_Bold_SDF_Numbers.png",
+                textureCache);
     }
 
     private void initialisePreferenceModels() {
