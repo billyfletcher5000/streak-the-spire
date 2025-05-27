@@ -10,7 +10,7 @@ import dorkbox.tweenEngine.*;
 
 public class LightFlourishScoreIncreaseCeremony extends IScoreChangeCeremony {
 
-    public float scaleMultiplier = 1.5f;
+    public float scaleMultiplier = 2.5f;
     public float duration = 1.0f;
 
     private Timeline sequence = null;
