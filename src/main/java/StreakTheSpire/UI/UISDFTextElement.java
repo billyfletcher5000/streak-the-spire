@@ -2,6 +2,7 @@ package StreakTheSpire.UI;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -41,6 +42,8 @@ public class UISDFTextElement extends UITextElement {
         float convertedShadowOffsetX = getShadowOffset().x / fontTexture.getWidth();
         float convertedShadowOffsetY = getShadowOffset().y / fontTexture.getWidth();
 
+        Color maskColor = getMaskColor();
+
         ShaderProgram fontShader = UIShaderRepository.getSDFOutlineShadowFontShader();
         spriteBatch.setShader(fontShader);
         fontShader.setUniformf("u_scale", fontScale);
@@ -48,6 +51,7 @@ public class UISDFTextElement extends UITextElement {
         fontShader.setUniformf("u_outlineColor", outlineColor.r, outlineColor.g, outlineColor.b, outlineColor.a);
         fontShader.setUniformf("u_shadowOffset", convertedShadowOffsetX, convertedShadowOffsetY);
         fontShader.setUniformf("u_shadowSmoothing", shadowSmoothing);
+        fontShader.setUniformf("u_mask_color", maskColor.r, maskColor.g, maskColor.b, maskColor.a);
     }
 
     @Override
@@ -59,5 +63,13 @@ public class UISDFTextElement extends UITextElement {
     protected void elementPostRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
         spriteBatch.setShader(null);
         super.elementPostRender(transformationMatrix, spriteBatch, transformedAlpha);
+    }
+
+    @Override
+    protected void applyMaskColorPreRender(Batch spriteBatch) {
+    }
+
+    @Override
+    protected void revertMaskColorPostRender(Batch spriteBatch) {
     }
 }

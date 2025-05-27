@@ -8,6 +8,7 @@ uniform float u_outlineDistance; // Between 0 and 0.5, 0 = thick outline, 0.5 = 
 uniform vec4 u_outlineColor;
 uniform vec2 u_shadowOffset; // Between 0 and spread(3.0) / textureSize
 uniform float u_shadowSmoothing; // Between 0 and 0.5
+uniform vec4 u_mask_color;
 
 varying vec4 v_color;
 varying vec2 v_texCoord;
@@ -21,11 +22,13 @@ void main() {
     vec4 text = mix(u_outlineColor, v_color, outlineFactor);
     float alpha = smoothstep(u_outlineDistance - smoothing, u_outlineDistance + smoothing, distance);
     text.a = text.a * alpha;
-    gl_FragColor = text;
 
     float shadowDistance = texture2D(u_texture, v_texCoord - u_shadowOffset).a;
     float shadowAlpha = smoothstep(0.5 - u_shadowSmoothing, 0.5 + u_shadowSmoothing, shadowDistance);
     vec4 shadow = vec4(shadowColor.rgb, shadowColor.a * shadowAlpha);
 
-    gl_FragColor = mix(shadow, text, text.a);
+    vec4 textWithShadow = mix(shadow, text, text.a);
+
+    gl_FragColor.rgb = mix(textWithShadow.rgb, u_mask_color.rgb, u_mask_color.a);
+    gl_FragColor.a = textWithShadow.a;
 }
