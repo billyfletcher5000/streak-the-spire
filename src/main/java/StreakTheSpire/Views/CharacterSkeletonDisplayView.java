@@ -23,6 +23,8 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
         super(model.baseDimensions.get());
         this.model = model;
 
+        SkeletonModifier skeletonModifier = !model.skeletonBonesToKeep.isEmpty() || !model.skeletonBonesToRemove.isEmpty() ? new SkeletonModifier(model.skeletonBonesToRemove, model.skeletonBonesToKeep) : null;
+
         skeletonAnimation = new UISpineAnimationElement(model.skeletonOffset.get(), model.skeletonAtlasUrl.get(), model.skeletonJsonUrl.get(), new SkeletonModifier(model.skeletonBonesToRemove, model.skeletonBonesToKeep));
         skeletonAnimation.setLocalRotation(model.skeletonRotationAdjustment.get());
         skeletonAnimation.getAnimationStateData().setMix(model.skeletonHitAnimationName.get(), model.skeletonIdleAnimationName.get(), model.skeletonAnimationMixDuration.get());

@@ -37,6 +37,15 @@ public class SkeletonModifier {
 
         JsonParser parser = new JsonParser();
         JsonElement rootElement = parser.parse(file.readString());
+
+        if(!rootElement.isJsonObject()) {
+            throw new IllegalArgumentException("file is not a JSON object.");
+        }
+
+        if(!rootElement.getAsJsonObject().has("bones")) {
+            throw new IllegalArgumentException("file lacks any bone definitions!");
+        }
+
         JsonArray bonesArray = rootElement.getAsJsonObject().get("bones").getAsJsonArray();
 
         HashMap<String, JsonElement> boneNameToJson = new HashMap<>();
@@ -111,151 +120,158 @@ public class SkeletonModifier {
         }
 
         Array<String> slotRemoveList = new Array();
-        Array<JsonElement> slotElementsToRemove = new Array();
-        JsonArray slotsArray = rootElement.getAsJsonObject().get("slots").getAsJsonArray();
+        if(rootElement.getAsJsonObject().has("slots")) {
+            Array<JsonElement> slotElementsToRemove = new Array();
+            JsonArray slotsArray = rootElement.getAsJsonObject().get("slots").getAsJsonArray();
 
-        for(JsonElement slot : slotsArray) {
-            String slotName = slot.getAsJsonObject().get("name").getAsString();
-            String boneName = slot.getAsJsonObject().get("bone").getAsString();
+            for (JsonElement slot : slotsArray) {
+                String slotName = slot.getAsJsonObject().get("name").getAsString();
+                String boneName = slot.getAsJsonObject().get("bone").getAsString();
 
-            if(boneRemoveList.contains(boneName)) {
-                slotRemoveList.add(slotName);
-                slotElementsToRemove.add(slot);
-            }
-        }
-
-        for(JsonElement slot : slotElementsToRemove)
-            slotsArray.remove(slot);
-
-
-        Array<JsonElement> ikElementsToRemove = new Array();
-        JsonArray ikArray = rootElement.getAsJsonObject().get("ik").getAsJsonArray();
-
-        for(JsonElement ik : ikArray) {
-            JsonArray ikBonesArray = ik.getAsJsonObject().get("bones").getAsJsonArray();
-            for(JsonElement ikBone : ikBonesArray) {
-                if(boneRemoveList.contains(ikBone.getAsString())) {
-                    ikElementsToRemove.add(ik);
-                    break;
+                if (boneRemoveList.contains(boneName)) {
+                    slotRemoveList.add(slotName);
+                    slotElementsToRemove.add(slot);
                 }
             }
+
+            for (JsonElement slot : slotElementsToRemove)
+                slotsArray.remove(slot);
         }
 
-        for(JsonElement ik : ikElementsToRemove)
-            ikArray.remove(ik);
+        if(rootElement.getAsJsonObject().has("ik")) {
+            Array<JsonElement> ikElementsToRemove = new Array();
+            JsonArray ikArray = rootElement.getAsJsonObject().get("ik").getAsJsonArray();
 
-
-        Array<String> skinElementsToRemove = new Array();
-        JsonObject skinsRoot = rootElement.getAsJsonObject().get("skins").getAsJsonObject();
-        for (Map.Entry<String, JsonElement> skinDefinitionElementPair : skinsRoot.entrySet()) {
-
-            skinElementsToRemove.clear();
-
-            JsonObject skinDefinition = skinDefinitionElementPair.getValue().getAsJsonObject();
-            for(Map.Entry<String, JsonElement> skinElement : skinDefinition.entrySet()) {
-                String elementName = skinElement.getKey();
-                if (slotRemoveList.contains(elementName, false)) {
-                    skinElementsToRemove.add(elementName);
-                    continue;
-                }
-
-                JsonObject skinElementObj = skinElement.getValue().getAsJsonObject();
-                for(Map.Entry<String, JsonElement> skinSubElementPair : skinElementObj.entrySet()) {
-                    JsonObject skinSubElementObj = skinSubElementPair.getValue().getAsJsonObject();
-                    if(skinSubElementObj.has("type") && skinSubElementObj.get("type").getAsString().equals("mesh")) {
-                        JsonArray uvsArray = skinSubElementObj.get("uvs").getAsJsonArray();
-                        JsonArray verticesArray = skinSubElementObj.getAsJsonArray("vertices");
-                        int verticesLength = verticesArray.size();
-
-                        // So we have to skip ones which have the same vertex count as uv count, as they're encoded in a different way,
-                        // this is again, another innovation by the team behind Spine and definitely good, maintainable practice that
-                        // we should all emulate.
-                        if(uvsArray.size() == verticesLength)
-                            continue;
-
-                        float[] vertices = new float[verticesLength];
-                        for (int i = 0; i < verticesArray.size(); i++) {
-                            vertices[i] = verticesArray.get(i).getAsFloat();
-                        }
-
-                        int vertFloatArrayIndex = 0;
-
-                        while (vertFloatArrayIndex < verticesLength) {
-                            int boneCount = (int)vertices[vertFloatArrayIndex++];
-
-                            for (int nn = vertFloatArrayIndex + boneCount * 4; vertFloatArrayIndex < nn; vertFloatArrayIndex += 4) {
-                                int oldBoneIndex = (int)vertices[vertFloatArrayIndex];
-                                //JsonElement vertexJsonElement = verticesArray.get(vertFloatArrayIndex);
-                                //vertices[vertFloatArrayIndex] = oldBoneIndexToNewBoneIndex.get(oldBoneIndex);
-
-                                int newBoneIndex = oldBoneIndexToNewBoneIndex.get(oldBoneIndex);
-                                JsonPrimitive newPrimitive = new JsonPrimitive((float)newBoneIndex);
-                                verticesArray.set(vertFloatArrayIndex, new JsonPrimitive(oldBoneIndexToNewBoneIndex.get(oldBoneIndex).floatValue()));
-                            }
-                        }
-
+            for (JsonElement ik : ikArray) {
+                JsonArray ikBonesArray = ik.getAsJsonObject().get("bones").getAsJsonArray();
+                for (JsonElement ikBone : ikBonesArray) {
+                    if (boneRemoveList.contains(ikBone.getAsString())) {
+                        ikElementsToRemove.add(ik);
+                        break;
                     }
                 }
             }
 
-            for(String skinElementName : skinElementsToRemove)
-                skinDefinition.remove(skinElementName);
+
+            for (JsonElement ik : ikElementsToRemove)
+                ikArray.remove(ik);
+        }
+
+        Array<String> skinElementsToRemove = new Array();
+        if(rootElement.getAsJsonObject().has("skins")) {
+            JsonObject skinsRoot = rootElement.getAsJsonObject().get("skins").getAsJsonObject();
+            for (Map.Entry<String, JsonElement> skinDefinitionElementPair : skinsRoot.entrySet()) {
+
+                skinElementsToRemove.clear();
+
+                JsonObject skinDefinition = skinDefinitionElementPair.getValue().getAsJsonObject();
+                for (Map.Entry<String, JsonElement> skinElement : skinDefinition.entrySet()) {
+                    String elementName = skinElement.getKey();
+                    if (slotRemoveList.contains(elementName, false)) {
+                        skinElementsToRemove.add(elementName);
+                        continue;
+                    }
+
+                    JsonObject skinElementObj = skinElement.getValue().getAsJsonObject();
+                    for (Map.Entry<String, JsonElement> skinSubElementPair : skinElementObj.entrySet()) {
+                        JsonObject skinSubElementObj = skinSubElementPair.getValue().getAsJsonObject();
+                        if (skinSubElementObj.has("type") && skinSubElementObj.get("type").getAsString().equals("mesh")) {
+                            JsonArray uvsArray = skinSubElementObj.get("uvs").getAsJsonArray();
+                            JsonArray verticesArray = skinSubElementObj.getAsJsonArray("vertices");
+                            int verticesLength = verticesArray.size();
+
+                            // So we have to skip ones which have the same vertex count as uv count, as they're encoded in a different way,
+                            // this is again, another innovation by the team behind Spine and definitely good, maintainable practice that
+                            // we should all emulate.
+                            if (uvsArray.size() == verticesLength)
+                                continue;
+
+                            float[] vertices = new float[verticesLength];
+                            for (int i = 0; i < verticesArray.size(); i++) {
+                                vertices[i] = verticesArray.get(i).getAsFloat();
+                            }
+
+                            int vertFloatArrayIndex = 0;
+
+                            while (vertFloatArrayIndex < verticesLength) {
+                                int boneCount = (int) vertices[vertFloatArrayIndex++];
+
+                                for (int nn = vertFloatArrayIndex + boneCount * 4; vertFloatArrayIndex < nn; vertFloatArrayIndex += 4) {
+                                    int oldBoneIndex = (int) vertices[vertFloatArrayIndex];
+                                    //JsonElement vertexJsonElement = verticesArray.get(vertFloatArrayIndex);
+                                    //vertices[vertFloatArrayIndex] = oldBoneIndexToNewBoneIndex.get(oldBoneIndex);
+
+                                    int newBoneIndex = oldBoneIndexToNewBoneIndex.get(oldBoneIndex);
+                                    JsonPrimitive newPrimitive = new JsonPrimitive((float) newBoneIndex);
+                                    verticesArray.set(vertFloatArrayIndex, new JsonPrimitive(oldBoneIndexToNewBoneIndex.get(oldBoneIndex).floatValue()));
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                for (String skinElementName : skinElementsToRemove)
+                    skinDefinition.remove(skinElementName);
+            }
         }
 
         // Now we need to remap the skin vertex indices because ofcourse, once again, despite having a
         // json, name based format, they decide to encode information by index directly. Why even support json?!
         // Please do not give your money to the Spine people, it's a ridiculously bad product at a ridiculous price
 
-        JsonObject animationsRoot = rootElement.getAsJsonObject().get("animations").getAsJsonObject();
+        if(rootElement.getAsJsonObject().has("animations")) {
+            JsonObject animationsRoot = rootElement.getAsJsonObject().get("animations").getAsJsonObject();
 
-        for(Map.Entry<String, JsonElement> animElement : animationsRoot.entrySet()) {
-            JsonObject animation = animElement.getValue().getAsJsonObject();
+            for (Map.Entry<String, JsonElement> animElement : animationsRoot.entrySet()) {
+                JsonObject animation = animElement.getValue().getAsJsonObject();
 
-            if(animation.has("slots")) {
-                JsonObject slotsRoot = animation.get("slots").getAsJsonObject();
-                Array<String> animSlotsToRemove = new Array();
-                for (Map.Entry<String, JsonElement> animSlot : slotsRoot.entrySet()) {
-                    String slotName = animSlot.getKey();
-                    if (slotRemoveList.contains(slotName, false)) {
-                        animSlotsToRemove.add(slotName);
-                    }
-                }
-
-                for (String animSlotName : animSlotsToRemove)
-                    slotsRoot.remove(animSlotName);
-            }
-
-            if(animation.has("bones")) {
-                JsonObject bonesRoot = animation.get("bones").getAsJsonObject();
-
-                Array<String> animBonesToRemove = new Array();
-                for (Map.Entry<String, JsonElement> animBone : bonesRoot.entrySet()) {
-                    String boneName = animBone.getKey();
-                    if (boneRemoveList.contains(boneName)) {
-                        animBonesToRemove.add(boneName);
-                    }
-                }
-
-                for (String animBonesName : animBonesToRemove)
-                    bonesRoot.remove(animBonesName);
-            }
-
-            if(animation.has("deform")) {
-                JsonObject deformationsRoot = animation.get("deform").getAsJsonObject();
-                Array<String> animDeformationsToRemove = new Array();
-                for (Map.Entry<String, JsonElement> deformSectionElement : deformationsRoot.entrySet()) {
-                    animDeformationsToRemove.clear();
-                    JsonObject deformationSection = deformSectionElement.getValue().getAsJsonObject();
-
-                    for (Map.Entry<String, JsonElement> deformationElement : deformationSection.entrySet()) {
-                        String deformationName = deformationElement.getKey();
-                        if (skinElementsToRemove.contains(deformationName, false)) {
-                            animDeformationsToRemove.add(deformationName);
+                if (animation.has("slots")) {
+                    JsonObject slotsRoot = animation.get("slots").getAsJsonObject();
+                    Array<String> animSlotsToRemove = new Array();
+                    for (Map.Entry<String, JsonElement> animSlot : slotsRoot.entrySet()) {
+                        String slotName = animSlot.getKey();
+                        if (slotRemoveList.contains(slotName, false)) {
+                            animSlotsToRemove.add(slotName);
                         }
                     }
 
-                    for (String deformationName : animDeformationsToRemove)
-                        deformationSection.remove(deformationName);
+                    for (String animSlotName : animSlotsToRemove)
+                        slotsRoot.remove(animSlotName);
+                }
+
+                if (animation.has("bones")) {
+                    JsonObject bonesRoot = animation.get("bones").getAsJsonObject();
+
+                    Array<String> animBonesToRemove = new Array();
+                    for (Map.Entry<String, JsonElement> animBone : bonesRoot.entrySet()) {
+                        String boneName = animBone.getKey();
+                        if (boneRemoveList.contains(boneName)) {
+                            animBonesToRemove.add(boneName);
+                        }
+                    }
+
+                    for (String animBonesName : animBonesToRemove)
+                        bonesRoot.remove(animBonesName);
+                }
+
+                if (animation.has("deform")) {
+                    JsonObject deformationsRoot = animation.get("deform").getAsJsonObject();
+                    Array<String> animDeformationsToRemove = new Array();
+                    for (Map.Entry<String, JsonElement> deformSectionElement : deformationsRoot.entrySet()) {
+                        animDeformationsToRemove.clear();
+                        JsonObject deformationSection = deformSectionElement.getValue().getAsJsonObject();
+
+                        for (Map.Entry<String, JsonElement> deformationElement : deformationSection.entrySet()) {
+                            String deformationName = deformationElement.getKey();
+                            if (skinElementsToRemove.contains(deformationName, false)) {
+                                animDeformationsToRemove.add(deformationName);
+                            }
+                        }
+
+                        for (String deformationName : animDeformationsToRemove)
+                            deformationSection.remove(deformationName);
+                    }
                 }
             }
         }
