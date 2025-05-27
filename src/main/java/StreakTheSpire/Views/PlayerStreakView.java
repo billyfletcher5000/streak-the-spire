@@ -51,6 +51,8 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         scoreDisplayElement = new UISDFTextElement(Vector2.Zero, font, String.valueOf(lastProcessedScore));
         scoreDisplayElement.setColor(new Color(0.95f, 0.95f, 0.95f, 1.0f));
         scoreDisplayElement.setHAlign(Align.center);
+        scoreDisplayElement.setAutoScale(true);
+        scoreDisplayElement.setAutoScalePaddingRelative(0.7f);
         addChild(scoreDisplayElement);
 
         model.currentStreak.addOnChangedSubscriber(this::onStreakChanged);

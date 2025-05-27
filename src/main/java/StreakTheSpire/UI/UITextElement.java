@@ -16,6 +16,9 @@ public class UITextElement extends UIVisualElement {
     private String text;
     private int hAlign = Align.center;
     private boolean wrap = true;
+    private boolean autoScale = false;
+    private float autoScalePaddingPixels = 0.0f;
+    private float autoScalePaddingRelative = 0.0f;
 
     public BitmapFont getFont() { return font; }
     public void setFont(BitmapFont font) { this.font = font; }
@@ -25,6 +28,12 @@ public class UITextElement extends UIVisualElement {
     public void setHAlign(int hAlign) { this.hAlign = hAlign; }
     public boolean shouldWordWrap() { return wrap; }
     public void setWordWrap(boolean wrap) { this.wrap = wrap; }
+    public boolean shouldAutoScale() { return autoScale; }
+    public void setAutoScale(boolean autoScale) { this.autoScale = autoScale; }
+    public float getAutoScalePaddingPixels() { return autoScalePaddingPixels; }
+    public void setAutoScalePaddingPixels(float autoScalePaddingPixels) { this.autoScalePaddingPixels = autoScalePaddingPixels; }
+    public float getAutoScalePaddingRelative() { return autoScalePaddingRelative; }
+    public void setAutoScalePaddingRelative(float autoScalePaddingRelative) { this.autoScalePaddingRelative = autoScalePaddingRelative; }
 
     public UITextElement() {}
 
@@ -82,8 +91,32 @@ public class UITextElement extends UIVisualElement {
     @Override
     protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
         super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
-        layout.setText(font, text, getTransformedColor(transformedAlpha), getDimensions().x, hAlign, wrap);
-        font.draw(spriteBatch, layout, getDimensions().x * -0.5f, layout.height / 2.0F);
+
+        float oldScale = font.getData().scaleX;
+        float appliedScale = oldScale;
+
+        Vector2 dimensions = getDimensions();
+        layout.setText(font, text, getTransformedColor(transformedAlpha), dimensions.x, hAlign, wrap);
+
+        if(autoScale) {
+            float paddedWidth = dimensions.x - autoScalePaddingPixels;
+            float paddedHeight = dimensions.y - autoScalePaddingPixels;
+
+            float xScale = (paddedWidth / layout.width) / (1.0f + autoScalePaddingRelative);
+            float yScale = (paddedHeight / layout.height) / (1.0f + autoScalePaddingRelative);
+
+            appliedScale = Math.min(xScale, yScale);
+            font.getData().setScale(appliedScale);
+        }
+
+        float halfXDimension = (dimensions.x * -0.5f);
+        float widthApplied = (layout.width * appliedScale);
+        float widthDiff = widthApplied - layout.width;
+        float fontDrawX = halfXDimension - (widthDiff * 0.5f);
+        float fontDrawY = (layout.height * appliedScale) / 2.0F;
+
+        font.draw(spriteBatch, layout,  fontDrawX, fontDrawY);
+        font.getData().setScale(oldScale);
     }
 
     @Override
