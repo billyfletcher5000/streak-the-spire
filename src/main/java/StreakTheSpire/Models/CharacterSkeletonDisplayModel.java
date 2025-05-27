@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class CharacterSkeletonDisplayModel extends CharacterDisplayModel {
     public Property<Vector2> baseDimensions = new Property<>(new Vector2(64, 64));
-    public Property<Vector2> skeletonOffset = new Property<>(new Vector2(0, 0));
+    public Property<Vector2> skeletonOffset = new Property<>(new Vector2(0, 0)); // Note: This is applied BEFORE rotation
     public Property<String> skeletonJsonUrl = new Property<>(null);
     public Property<String> skeletonAtlasUrl = new Property<>(null);
     public PropertyList<String> skeletonBonesToKeep = new PropertyList<>();

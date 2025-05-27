@@ -44,32 +44,16 @@ public class PlayerStreakStoreController {
             createRotatingModel();
         }
 
-        FileHandle[] subfolders = Gdx.files.local("runs" + File.separator).list();
+        FileHandle[] subfolders = Arrays.stream(Gdx.files.local("runs" + File.separator).list()).filter(fileHandle ->
+            criteria.trackedCharacterClasses.contains(fileHandle.name())
+        ).toArray(FileHandle[]::new);
 
         ArrayList<RunDataSubset> allCharacterSubsets = new ArrayList<>();
 
         for (FileHandle subFolder : subfolders) {
             StreakTheSpire.logDebug("Evaluating Subfolder: " + subFolder.path());
 
-            String folderName = subFolder.name();
-
-            switch (CardCrawlGame.saveSlot) {
-                case 0:
-                    if (folderName.contains("0_") || folderName.contains("1_") || folderName.contains("2_")) {
-                        continue;
-                    }
-                    break;
-                default:
-                    if (!folderName.contains(CardCrawlGame.saveSlot + "_")) {
-                        continue;
-                    }
-            }
-
-            String playerClass = null;
-            for(String testPlayerClass : criteria.trackedCharacterClasses) {
-                if(folderName.contains(testPlayerClass))
-                    playerClass = testPlayerClass;
-            }
+            String playerClass = subFolder.name();
 
             if(playerClass == null)
                 continue;

@@ -3,20 +3,21 @@ package StreakTheSpire.Utils.Properties;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 import java.util.function.Predicate;
 
-public class PropertyHashSet<T> extends HashSet<T> {
-    public PropertyHashSet() {
+public class PropertyLinkedHashSet<T> extends LinkedHashSet<T> {
+    public PropertyLinkedHashSet() {
         super();
     }
 
-    public PropertyHashSet(HashSet<T> elements) {
+    public PropertyLinkedHashSet(HashSet<T> elements) {
         super(elements);
     }
 
     @SafeVarargs
-    public PropertyHashSet(T... elements) {
+    public PropertyLinkedHashSet(T... elements) {
         Stream.of(elements).forEach(element -> {
             if(element != null)
                 add(element);
@@ -92,7 +93,7 @@ public class PropertyHashSet<T> extends HashSet<T> {
             onItemRemovedSubscribers.forEach(subscriber -> { subscriber.onItemRemoved(element); });
 
         if(isEmpty() && onClearedSubscribers != null)
-            onClearedSubscribers.forEach(HashSetClearedSubscriber::onCleared);
+            onClearedSubscribers.forEach(PropertyHashSet.HashSetClearedSubscriber::onCleared);
     }
 
     private HashSet<PropertyHashSet.ItemAddedSubscriber> onItemAddedSubscribers;

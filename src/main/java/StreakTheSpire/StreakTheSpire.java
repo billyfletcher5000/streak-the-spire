@@ -377,7 +377,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CharacterSkeletonDisplayModel ironcladSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
         ironcladSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
         ironcladSkeletonDisplayModel.baseDimensions.set(new Vector2(60, 60));
-        ironcladSkeletonDisplayModel.skeletonOffset.set(new Vector2(-20, 8));
+        ironcladSkeletonDisplayModel.skeletonOffset.set(new Vector2(-20, 2)); // Note: This is applied BEFORE rotation
         ironcladSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/ironclad/idle/skeleton.atlas");
         ironcladSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/ironclad/idle/skeleton.json");
         ironcladSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
@@ -391,7 +391,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CharacterSkeletonDisplayModel silentSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
         silentSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
         silentSkeletonDisplayModel.baseDimensions.set(new Vector2(112, 112));
-        silentSkeletonDisplayModel.skeletonOffset.set(new Vector2(-55, 15));
+        silentSkeletonDisplayModel.skeletonOffset.set(new Vector2(-55, 4)); // Note: This is applied BEFORE rotation
         silentSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/theSilent/idle/skeleton.atlas");
         silentSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/theSilent/idle/skeleton.json");
         silentSkeletonDisplayModel.skeletonBonesToKeep.add("Spine_3");
@@ -408,7 +408,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CharacterSkeletonDisplayModel defectSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
         defectSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
         defectSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
-        defectSkeletonDisplayModel.skeletonOffset.set(new Vector2(-24, 8));
+        defectSkeletonDisplayModel.skeletonOffset.set(new Vector2(-24, 8)); // Note: This is applied BEFORE rotation
         defectSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/defect/idle/skeleton.atlas");
         defectSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/defect/idle/skeleton.json");
         defectSkeletonDisplayModel.skeletonBonesToKeep.add("Neck_3");
@@ -423,7 +423,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CharacterSkeletonDisplayModel watcherSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
         watcherSkeletonDisplayModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
         watcherSkeletonDisplayModel.baseDimensions.set(new Vector2(64, 64));
-        watcherSkeletonDisplayModel.skeletonOffset.set(new Vector2(-20, 4));
+        watcherSkeletonDisplayModel.skeletonOffset.set(new Vector2(-20, 0)); // Note: This is applied BEFORE rotation
         watcherSkeletonDisplayModel.skeletonAtlasUrl.set("images/characters/watcher/idle/skeleton.atlas");
         watcherSkeletonDisplayModel.skeletonJsonUrl.set("images/characters/watcher/idle/skeleton.json");
         watcherSkeletonDisplayModel.skeletonBonesToKeep.add("Head");
@@ -438,8 +438,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         CharacterSkeletonDisplayModel rotatingSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
         rotatingSkeletonDisplayModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-        rotatingSkeletonDisplayModel.baseDimensions.set(new Vector2(61.64f, 64.4f));
-        rotatingSkeletonDisplayModel.skeletonOffset.set(new Vector2(0, 0));
+        rotatingSkeletonDisplayModel.baseDimensions.set(new Vector2(61.64f * 1.325f, 64.4f * 1.325f));
+        rotatingSkeletonDisplayModel.skeletonOffset.set(new Vector2(4, 0)); // Note: This is applied BEFORE rotation
         rotatingSkeletonDisplayModel.skeletonAtlasUrl.set("StreakTheSpire/skeletons/rotating_streak/skeleton.atlas");
         rotatingSkeletonDisplayModel.skeletonJsonUrl.set("StreakTheSpire/skeletons/rotating_streak/skeleton.json");
         rotatingSkeletonDisplayModel.skeletonIdleAnimationSpeed.set(1.0f);

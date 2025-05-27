@@ -97,6 +97,48 @@ public abstract class PropertyTypeAdapters {
         }
     }
 
+    public static class PropertyLinkedHashSetTypeAdapter<E> extends TypeAdapter<PropertyLinkedHashSet<E>> {
+
+        public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
+            @Override
+            public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+                Class<T> rawType = (Class<T>) type.getRawType();
+                if (rawType != PropertyHashSet.class) {
+                    return null;
+                }
+                final ParameterizedType parameterizedType = (ParameterizedType) type.getType();
+                final Type actualType = parameterizedType.getActualTypeArguments()[0];
+                final TypeAdapter<?> adapter = gson.getAdapter(TypeToken.get(actualType));
+                return new PropertyHashSetTypeAdapter(adapter);
+            }
+        };
+        private final TypeAdapter<E> adapter;
+
+        public PropertyLinkedHashSetTypeAdapter(TypeAdapter<E> adapter) {
+            this.adapter = adapter;
+        }
+
+        @Override
+        public PropertyLinkedHashSet<E> read(JsonReader in) throws IOException {
+            in.beginArray();
+            PropertyLinkedHashSet<E> ls = new PropertyLinkedHashSet<>();
+            while (in.peek() != JsonToken.END_ARRAY) {
+                ls.add(adapter.read(in));
+            }
+            in.endArray();
+            return ls;
+        }
+
+        @Override
+        public void write(JsonWriter out, PropertyLinkedHashSet<E> value) throws IOException {
+            out.beginArray();
+            for (E e : value) {
+                adapter.write(out, e);
+            }
+            out.endArray();
+        }
+    }
+
     public static class PropertyListTypeAdapter<E> extends TypeAdapter<PropertyList<E>> {
 
         public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {

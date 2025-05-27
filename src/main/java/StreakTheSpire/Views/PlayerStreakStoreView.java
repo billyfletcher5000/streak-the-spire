@@ -55,7 +55,15 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         gridLayoutGroup = new UIGridLayoutGroup();
         addChild(gridLayoutGroup);
 
-        for(PlayerStreakModel streakModel : streakStoreModel.playerToStreak) {
+        PlayerStreakModel[] sortedStreakModels = streakStoreModel.playerToStreak.stream().sorted((a, b) -> {
+            int indexA = preferences.characterOrder.indexOf(a.identifier.get());
+            int indexB = preferences.characterOrder.indexOf(b.identifier.get());
+            indexA = indexA == -1 ? preferences.characterOrder.indexOf(DisplayPreferencesModel.CharacterWildcard) : indexA;
+            indexB = indexB == -1 ? preferences.characterOrder.indexOf(DisplayPreferencesModel.CharacterWildcard) : indexB;
+            return Integer.compare(indexA, indexB);
+        }).toArray(PlayerStreakModel[]::new);
+
+        for(PlayerStreakModel streakModel : sortedStreakModels) {
             UIElement element = createStreakModelDisplay(streakModel);
             gridLayoutGroup.addChild(element);
         }

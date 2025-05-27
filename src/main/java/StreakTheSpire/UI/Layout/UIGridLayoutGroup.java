@@ -143,7 +143,7 @@ public class UIGridLayoutGroup extends UIElement {
 
                 UIElement child = children[index];
                 position.x = (w * sectionSizes.x) - (dimensions.x * 0.5f) + (childDimensions.x * 0.5f) + ((sectionSizes.x - childDimensions.x) * 0.5f);
-                position.y = (h * sectionSizes.y) - (dimensions.y * 0.5f) + (childDimensions.y * 0.5f) + ((sectionSizes.y - childDimensions.y) * 0.5f);
+                position.y = ((h * sectionSizes.y) - (dimensions.y * 0.5f) + (childDimensions.y * 0.5f) + ((sectionSizes.y - childDimensions.y) * 0.5f)) * -1f;
                 child.setLocalPosition(position);
                 child.setDimensions(childDimensions);
             }
