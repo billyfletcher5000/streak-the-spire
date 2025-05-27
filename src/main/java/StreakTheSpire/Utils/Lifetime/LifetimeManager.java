@@ -1,14 +1,16 @@
-package StreakTheSpire.UI;
+package StreakTheSpire.Utils.Lifetime;
+
+import StreakTheSpire.UI.UIElement;
 
 import java.util.ArrayList;
 
-public class UILifetimeManager {
+public class LifetimeManager {
 
-    private static ArrayList<UIElement> elementsToDestroy = new ArrayList<>();
-    private static ArrayList<UIElement> pendingElementsToDestroy = new ArrayList<>();
+    private static ArrayList<IDestroyable> elementsToDestroy = new ArrayList<>();
+    private static ArrayList<IDestroyable> pendingElementsToDestroy = new ArrayList<>();
     private static boolean isProcessing = false;
 
-    public static void EnqueueDestroy(UIElement element) {
+    public static void EnqueueDestroy(IDestroyable element) {
         if(isProcessing)
             pendingElementsToDestroy.add(element);
         else
@@ -17,8 +19,8 @@ public class UILifetimeManager {
 
     public static void ProcessDestroyed() {
         isProcessing = true;
-        for (UIElement element : elementsToDestroy) {
-            element._internalDestroy();
+        for (IDestroyable element : elementsToDestroy) {
+            element.onDestroy();
         }
 
         elementsToDestroy.clear();

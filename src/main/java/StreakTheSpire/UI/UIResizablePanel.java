@@ -17,44 +17,77 @@ import java.util.Map;
 public class UIResizablePanel extends UINineSliceElement implements HitboxListener {
 
     private final Property<Boolean> resizeEnabled = new Property<>(false);
-    private final Property<Float> hitboxWidth = new Property<>(16.0f);
+    private final Property<Float> hitboxSize = new Property<>(16.0f);
     private final Property<Vector2> minimumSize = new Property<>(Vector2.Zero.cpy());
 
     private final HashMap<UIElementHitbox, Integer> hitboxToDragDirection = new HashMap<>();
     private UIElementHitbox moveHitbox;
     private UIElementHitbox currentHitbox = null;
+    private UIElementHitbox currentHoverTarget = null;
     private int currentDragDirection = DragDirectionFlags.NONE;
-    private Vector2 currentOffset = new Vector2();
+    private final Vector2 currentOffset = new Vector2();
+    private CursorOverrideData cursorOverrideMove = null;
+    private final HashMap<Integer, CursorOverrideData> cursorOverrideMap = new HashMap<>();
 
     private HashSet<PanelResizedSubscriber> panelResizedSubscribers = new HashSet<>();
     private HashSet<PanelMovedSubscriber> panelMovedSubscribers = new HashSet<>();
 
-    // Intently disabled rotation for these, see UIElementHitbox comments
-    // Note: This will not prevent setting rotation higher, but any rotation higher will cause issues with
-    //       this element.
-    //@Override
-    //public void setLocalRotation(float localRotation) { }
-
     public boolean isResizeEnabled() { return resizeEnabled.get(); }
     public Property<Boolean> getResizeEnabledProperty() { return resizeEnabled; }
-    public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled.set(resizeEnabled); if(!resizeEnabled) clearCurrentSelection(); }
+    public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled.set(resizeEnabled); if(!resizeEnabled) flushCurrentSelection(); }
 
-    public float getHitboxWidth() { return hitboxWidth.get(); }
-    public Property<Float> getHitboxWidthProperty() { return hitboxWidth; }
-    public void setHitboxWidth(float hitboxWidth) { this.hitboxWidth.set(hitboxWidth); }
+    public float getHitboxSize() { return hitboxSize.get(); }
+    public Property<Float> getHitboxWidthProperty() { return hitboxSize; }
+    public void setHitboxSize(float hitboxSize) { this.hitboxSize.set(hitboxSize); }
 
     public Vector2 getMinimumSize() { return minimumSize.get().cpy(); }
     public Property<Vector2> getMinimumSizeProperty() { return minimumSize; }
     public void setMinimumSize(Vector2 minimumSize) { this.minimumSize.set(minimumSize.cpy()); }
 
+    public void setCursorOverrideMove(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMove = cursorOverrideData;
+    }
+
+    public void setCursorOverrideTop(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.UP, cursorOverrideData);
+    }
+
+    public void setCursorOverrideBottom(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.DOWN, cursorOverrideData);
+    }
+
+    public void setCursorOverrideLeft(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.LEFT, cursorOverrideData);
+    }
+
+    public void setCursorOverrideRight(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.RIGHT, cursorOverrideData);
+    }
+
+    public void setCursorOverrideDiagonalTopLeft(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.UP | DragDirectionFlags.LEFT, cursorOverrideData);
+    }
+
+    public void setCursorOverrideDiagonalTopRight(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.UP | DragDirectionFlags.RIGHT, cursorOverrideData);
+    }
+
+    public void setCursorOverrideDiagonalBottomLeft(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.DOWN | DragDirectionFlags.LEFT, cursorOverrideData);
+    }
+
+    public void setCursorOverrideDiagonalBottomRight(CursorOverrideData cursorOverrideData) {
+        cursorOverrideMap.put(DragDirectionFlags.DOWN | DragDirectionFlags.RIGHT, cursorOverrideData);
+    }
+
     public UIResizablePanel() {
-        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
+        setMinimumSize(new Vector2(hitboxSize.get() * 6.0f, hitboxSize.get() * 6.0f));
         createHitboxes();
     }
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size) {
         super(position, texture, size);
-        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
+        setMinimumSize(new Vector2(hitboxSize.get() * 6.0f, hitboxSize.get() * 6.0f));
         createHitboxes();
     }
 
@@ -66,7 +99,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     public UIResizablePanel(Vector2 position, NineSliceTexture texture, Vector2 size, Color color) {
         super(position, texture, size, color);
-        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
+        setMinimumSize(new Vector2(hitboxSize.get() * 6.0f, hitboxSize.get() * 6.0f));
         createHitboxes();
     }
 
@@ -78,7 +111,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     public UIResizablePanel(Vector2 position, Vector2 scale, NineSliceTexture texture, Vector2 size, Color color) {
         super(position, scale, texture, size, color);
-        setMinimumSize(new Vector2(hitboxWidth.get() * 6.0f, hitboxWidth.get() * 6.0f));
+        setMinimumSize(new Vector2(hitboxSize.get() * 6.0f, hitboxSize.get() * 6.0f));
         createHitboxes();
     }
 
@@ -128,54 +161,64 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         Vector2 dimensions = getDimensions();
         Vector2 halfDimensions = getDimensions().scl(0.5f);
 
-        float hitboxWidth = getHitboxWidth();
-        float cardinalWidth = dimensions.x - (hitboxWidth * 2.0f);
-        float cardinalHeight = dimensions.y - (hitboxWidth * 2.0f);
+        float hitboxSize = getHitboxSize();
+        float cardinalWidth = dimensions.x - (hitboxSize * 2.0f);
+        float cardinalHeight = dimensions.y - (hitboxSize * 2.0f);
 
         moveHitbox = new UIElementHitbox(0f, 0f, cardinalWidth, cardinalHeight, this);
 
         // Cardinals
-        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, 0f, hitboxWidth, cardinalHeight, this), DragDirectionFlags.LEFT);
-        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, 0f, hitboxWidth, cardinalHeight, this), DragDirectionFlags.RIGHT);
-        hitboxToDragDirection.put(new UIElementHitbox(0, halfDimensions.y, cardinalWidth, hitboxWidth, this), DragDirectionFlags.UP);
-        hitboxToDragDirection.put(new UIElementHitbox(0, -halfDimensions.y, cardinalWidth, hitboxWidth, this), DragDirectionFlags.DOWN);
+        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, 0f, hitboxSize, cardinalHeight, this), DragDirectionFlags.LEFT);
+        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, 0f, hitboxSize, cardinalHeight, this), DragDirectionFlags.RIGHT);
+        hitboxToDragDirection.put(new UIElementHitbox(0, halfDimensions.y, cardinalWidth, hitboxSize, this), DragDirectionFlags.UP);
+        hitboxToDragDirection.put(new UIElementHitbox(0, -halfDimensions.y, cardinalWidth, hitboxSize, this), DragDirectionFlags.DOWN);
 
         // Diagonals
-        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, halfDimensions.y, hitboxWidth, hitboxWidth, this), DragDirectionFlags.LEFT | DragDirectionFlags.UP);
-        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, -halfDimensions.y, hitboxWidth, hitboxWidth, this), DragDirectionFlags.LEFT | DragDirectionFlags.DOWN);
-        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, halfDimensions.y, hitboxWidth, hitboxWidth, this), DragDirectionFlags.RIGHT | DragDirectionFlags.UP);
-        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, -halfDimensions.y, hitboxWidth, hitboxWidth, this), DragDirectionFlags.RIGHT | DragDirectionFlags.DOWN);
+        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.LEFT | DragDirectionFlags.UP);
+        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, -halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.LEFT | DragDirectionFlags.DOWN);
+        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.RIGHT | DragDirectionFlags.UP);
+        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, -halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.RIGHT | DragDirectionFlags.DOWN);
     }
 
     @Override
     public void hoverStarted(Hitbox hitbox) {
+        if(!isResizeEnabled())
+            return;
+
         UIElementHitbox uiElementHitbox = (UIElementHitbox) hitbox;
-        if(uiElementHitbox == null || !hitboxToDragDirection.containsKey(uiElementHitbox)) {
+        if(uiElementHitbox == null) {
             StreakTheSpire.logError("UIElementHitbox does not exist or is invalid!");
             return;
         }
 
-        int dragDirection = hitboxToDragDirection.get(uiElementHitbox);
-        if(DragDirectionFlags.isCardinal(dragDirection)) {
-            if(DragDirectionFlags.isVertical(dragDirection)) {
-                // Set mouse cursor to vertical resize cursor
-            }
-            else {
-                // Set mouse cursor to horizontal mouse cursor
-            }
+        currentHoverTarget = uiElementHitbox;
+        CursorOverrideData cursorOverrideData = null;
+
+        if(hitbox == moveHitbox) {
+            cursorOverrideData = cursorOverrideMove;
         }
         else {
-            if(DragDirectionFlags.isBottomToTopDiagonal(dragDirection)) {
-                // Set mouse cursor to bottom-to-top diagonal resize cursor
-            }
-            else {
-                // Set mouse cursor to top-to-bottom diagonal resize cursor
+            int dragDirection = hitboxToDragDirection.get(uiElementHitbox);
+            if (cursorOverrideMap.containsKey(dragDirection)) {
+                cursorOverrideData = cursorOverrideMap.get(dragDirection);
+            } else {
+                for (Integer availableOverride : cursorOverrideMap.keySet()) {
+                    if ((dragDirection & availableOverride) == availableOverride) {
+                        cursorOverrideData = cursorOverrideMap.get(availableOverride);
+                        break;
+                    }
+                }
             }
         }
+
+        StreakTheSpire.get().getCursorOverride().setData(cursorOverrideData);
     }
 
     @Override
     public void startClicking(Hitbox hitbox) {
+        if(!isResizeEnabled())
+            return;
+
         if(currentHitbox != null) {
             StreakTheSpire.logError("Current hitbox already exists!");
             return;
@@ -214,6 +257,13 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         clearCurrentSelection();
     }
 
+    private void flushCurrentSelection() {
+        if(currentHitbox != null)
+            clicked(currentHitbox);
+        else
+            clearCurrentSelection();
+    }
+
     private void clearCurrentSelection() {
         currentHitbox = null;
         currentDragDirection = DragDirectionFlags.NONE;
@@ -223,6 +273,11 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     @Override
     protected void elementUpdate(float deltaTime) {
         super.elementUpdate(deltaTime);
+
+        if(currentHoverTarget != null && !currentHoverTarget.hovered) {
+            currentHoverTarget = null;
+            StreakTheSpire.get().getCursorOverride().setData(null);
+        }
 
         if(!InputHelper.isMouseDown && currentHitbox != null) {
             clicked(currentHitbox);
@@ -278,7 +333,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     private void updateHitboxes(Affine2 worldTransform) {
         Vector2 baseSize = new Vector2(getDimensions());
-        float hitboxWidth = getHitboxWidth();
+        float hitboxWidth = getHitboxSize();
         baseSize.sub(new Vector2(hitboxWidth * 2, hitboxWidth * 2));
 
         moveHitbox.setLocalSize(baseSize);
@@ -329,18 +384,5 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         public static final int DOWN = 2;
         public static final int LEFT = 4;
         public static final int RIGHT = 8;
-
-        public static boolean isCardinal(int direction) {
-            return direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT;
-        }
-
-        public static boolean isVertical(int direction) {
-            return direction == UP || direction == DOWN;
-        }
-
-        public static boolean isBottomToTopDiagonal(int direction) {
-            return ((direction & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT && (direction & DragDirectionFlags.UP) == DragDirectionFlags.UP) ||
-                    ((direction & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT && (direction & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN);
-        }
     }
 }

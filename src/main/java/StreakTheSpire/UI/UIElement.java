@@ -1,6 +1,8 @@
 package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.Lifetime.IDestroyable;
+import StreakTheSpire.Utils.Lifetime.LifetimeManager;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +13,7 @@ import dorkbox.tweenEngine.TweenAccessor;
 
 import java.util.*;
 
-public class UIElement implements TweenAccessor<UIElement> {
+public class UIElement implements TweenAccessor<UIElement>, IDestroyable {
     public static class TweenTypes {
         public static final int POSITION_XY = 0;
         public static final int POSITION_X = 1;
@@ -32,6 +34,7 @@ public class UIElement implements TweenAccessor<UIElement> {
     private final Property<Vector2> dimensions = new Property<>(Vector2.Zero.cpy());
     private final Property<Float> localAlpha = new Property<>(1.0f); // Elements have their own alpha to allow hierarchical alpha without affecting individual element color alpha choice
     private final Property<Integer> layer = new Property<>(0);
+    private final Property<Boolean> visible = new Property<>(true);
     private final Property<UIElement> parent = new Property<>(null);
     private final PropertyList<UIElement> children = new PropertyList<UIElement>();
 
@@ -124,6 +127,15 @@ public class UIElement implements TweenAccessor<UIElement> {
     public Property<Integer> getLayerProperty() { return layer; }
     public void setLayer(int layer) { this.layer.set(layer); }
 
+    public boolean isVisible() { return visible.get(); }
+    public Property<Boolean> getVisibleProperty() { return visible; }
+    public void setVisible(boolean visible) { this.visible.set(visible); }
+    public void setVisibleRecursive(boolean visible) {
+        setVisible(visible);
+        for(UIElement child : children)
+            child.setVisibleRecursive(visible);
+    }
+
     public Color getDebugColor() { return debugColor.get(); }
     public Property<Color> getDebugColorProperty() { return debugColor; }
     public void setDebugColor(Color color) { this.debugColor.set(color); }
@@ -173,10 +185,12 @@ public class UIElement implements TweenAccessor<UIElement> {
         Affine2 newTransformationStack = new Affine2(transformationStack);
         newTransformationStack.mul(getLocalTransform());
         transformedAlpha *= getAlpha();
-        elementPreRender(newTransformationStack, spriteBatch, transformedAlpha);
-        elementRender(newTransformationStack, spriteBatch, transformedAlpha);
-        elementPostRender(newTransformationStack, spriteBatch, transformedAlpha);
-        children.sort((elementA, elementB) -> elementA.layer.get() < elementB.layer.get() ? -1 : 1);
+        if(isVisible()) {
+            elementPreRender(newTransformationStack, spriteBatch, transformedAlpha);
+            elementRender(newTransformationStack, spriteBatch, transformedAlpha);
+            elementPostRender(newTransformationStack, spriteBatch, transformedAlpha);
+        }
+        children.sort(Comparator.comparingInt(UIElement::getLayer));
         float finalAlpha = transformedAlpha;
         children.forEach(child -> child.render(newTransformationStack, spriteBatch, finalAlpha));
     }
@@ -207,7 +221,7 @@ public class UIElement implements TweenAccessor<UIElement> {
             }
         }
 
-        UILifetimeManager.EnqueueDestroy(this);
+        LifetimeManager.EnqueueDestroy(this);
     }
 
     public void close() {
@@ -215,7 +229,7 @@ public class UIElement implements TweenAccessor<UIElement> {
     }
 
     // There's probably better ways of doing this involving inheritance or something but this is meant to emulate C++'s friend/C#'s internal
-    public void _internalDestroy() {
+    public void onDestroy() {
         close();
         if(parent.get() != null)
             parent.get().removeChild(this);

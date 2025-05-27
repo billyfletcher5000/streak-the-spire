@@ -10,6 +10,7 @@ import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
 import StreakTheSpire.Utils.FontCache;
+import StreakTheSpire.Utils.Lifetime.LifetimeManager;
 import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
@@ -79,6 +80,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private TweenEngine tweenEngine;
     private UIElement rootUIElement;
     private UIElement debugRootUIElement;
+    private CursorOverride cursorOverride;
     private ModPanel settingsPanel;
     private boolean trueVictoryCutsceneActive = false;
 
@@ -97,6 +99,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public TextureCache getTextureCache() { return textureCache; }
     public FontCache getFontCache() { return fontCache; }
     public TweenEngine getTweenEngine() { return tweenEngine; }
+    public CursorOverride getCursorOverride() { return cursorOverride; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
     public StreakCriteriaModel getStreakCriteriaModel() { return streakCriteriaModel.get(); }
     public DisplayPreferencesModel getDisplayPreferencesModel() { return displayPreferencesModel.get(); }
@@ -144,21 +147,21 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         logDebug("saveConfig");
         saveConfig();
 
-        initialiseUIRoot();
+        initialiseUI();
         createViews();
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
 
-    private void initialiseUIRoot() {
-
-
+    private void initialiseUI() {
         rootUIElement = new UIElement();
         rootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
 
         debugRootUIElement = new UIElement();
         debugRootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
+
+        cursorOverride = new CursorOverride(gameStateModel.get().editModeActive);
     }
 
     public void saveConfig() {
@@ -233,6 +236,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public void receivePostRender(SpriteBatch spriteBatch) {
         if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveAll)
             performRender(spriteBatch);
+
+        cursorOverride.render(spriteBatch);
     }
 
     private void performRender(SpriteBatch spriteBatch) {
@@ -244,7 +249,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     @Override
     public void receivePostUpdate() {
         gameStateModel.get().gameMode.set(CardCrawlGame.mode);
+        gameStateModel.get().editModeActive.set(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
 
+        //region Debug inputs
         if(Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
             PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
             PlayerStreakModel defectModel = controller.getStreakModel("DEFECT");
@@ -270,6 +277,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             else
                 rootUIElement.hideDebugDimensionsDisplay(true);
         }
+        //endregion
 
         rootUIElement.update(getDeltaTime());
 
@@ -277,7 +285,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         debugRootUIElement.update(getDeltaTime());
 
-        UILifetimeManager.ProcessDestroyed();
+        LifetimeManager.ProcessDestroyed();
     }
 
     @Override

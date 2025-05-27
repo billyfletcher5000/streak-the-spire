@@ -146,7 +146,6 @@ public class UIVisualElement extends UIElement {
                     visElementColor.r = newValues[0];
                     visElementColor.clamp();
                     visualElement.setColor(visElementColor);
-                    StreakTheSpire.logInfo(this.getClass().getName() + ": COLOR_R: " + visElementColor.r);
                     return;
 
                 case TweenTypes.COLOR_G:
@@ -202,7 +201,6 @@ public class UIVisualElement extends UIElement {
                     visElementColor.a = newValues[0];
                     visElementColor.clamp();
                     visualElement.setMaskColor(visElementColor);
-                    StreakTheSpire.logInfo(this.getClass().getName() + ": MASK_A: " + visElementColor.a);
                     return;
             }
         }

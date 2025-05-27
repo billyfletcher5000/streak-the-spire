@@ -3,14 +3,9 @@ package StreakTheSpire.Views;
 import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
-import StreakTheSpire.UI.IntMargins;
+import StreakTheSpire.UI.*;
 import StreakTheSpire.UI.Layout.UIGridLayoutGroup;
-import StreakTheSpire.UI.NineSliceTexture;
-import StreakTheSpire.UI.UIElement;
-import StreakTheSpire.UI.UIResizablePanel;
 import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
@@ -38,10 +33,15 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
         preferences.borderStyle.addOnChangedSubscriber(this::updateBorder);
 
+        GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
+        gsm.editModeActive.addOnChangedSubscriber(this::onEditModeChanged);
+
         updateBorder();
 
         setDimensions(panelModel.dimensions.get());
         setMinimumSize(new Vector2(64, 64));
+
+        initialiseCursorOverrides();
 
         //TODO: Work out why this is necessary, it shouldn't be if the screen size scaling is applied appropriately.
         //      Could be that the order of operations is wrong or we should save the location divided by Settings.xScale/yScale
@@ -113,6 +113,9 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
         DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
         preferences.borderStyle.removeOnChangedSubscriber(this::updateBorder);
+
+        GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
+        gsm.editModeActive.removeOnChangedSubscriber(this::onEditModeChanged);
     }
 
     private UIElement createStreakModelDisplay(PlayerStreakModel streakModel) {
@@ -123,8 +126,13 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         streakStoreModel.panelModel.get().position.set(getLocalPosition());
         streakStoreModel.panelModel.get().dimensions.set(getDimensions());
         streakStoreModel.panelModel.get().scale.set(getLocalScale());
-        StreakTheSpire.logInfo("Saving panel model: " + streakStoreModel.panelModel.get().toString());
         StreakTheSpire.get().saveConfig();
+    }
+
+    private void onEditModeChanged() {
+        GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
+        setResizeEnabled(gsm.editModeActive.get());
+        updateBorderVisibility();
     }
 
     private void updateBorder() {
@@ -136,6 +144,67 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         Texture texture = StreakTheSpire.get().getTextureCache().getTexture(borderStyle.texturePath.get());
         NineSliceTexture nineSliceTexture = new NineSliceTexture(texture, borderStyle.textureMargins.get());
         setNineSliceTexture(nineSliceTexture);
+
+        updateBorderVisibility();
+    }
+
+    private void updateBorderVisibility() {
+        GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
+
+        DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
+        BorderStyleSetModel borderStyles = StreakTheSpire.get().getBorderStyles();
+        BorderStyleSetController borderStyleSetController = new BorderStyleSetController(borderStyles);
+
+        BorderStyleModel borderStyle = borderStyleSetController.getModel(preferences.borderStyle.get());
+
+        setVisible(gsm.editModeActive.get() || borderStyle.showInGameMode.get());
+    }
+
+    private void initialiseCursorOverrides() {
+        CursorOverrideData moveOverride = new CursorOverrideData();
+        moveOverride.texture = StreakTheSpireTextureDatabase.CURSOR_MOVE.getTexture();
+        setCursorOverrideMove(moveOverride);
+
+        Texture texture = StreakTheSpireTextureDatabase.CURSOR_RESIZE.getTexture();
+
+        CursorOverrideData topOverride = new CursorOverrideData();
+        topOverride.texture = texture;
+        topOverride.rotation = 90.0f;
+        setCursorOverrideTop(topOverride);
+
+        CursorOverrideData bottomOverride = new CursorOverrideData();
+        bottomOverride.texture = texture;
+        bottomOverride.rotation = -90.0f;
+        setCursorOverrideBottom(bottomOverride);
+
+        CursorOverrideData leftOverride = new CursorOverrideData();
+        leftOverride.texture = texture;
+        leftOverride.rotation = 180.0f;
+        setCursorOverrideLeft(leftOverride);
+
+        CursorOverrideData rightOverride = new CursorOverrideData();
+        rightOverride.texture = texture;
+        setCursorOverrideRight(rightOverride);
+
+        CursorOverrideData diagonalTopLeftOverride = new CursorOverrideData();
+        diagonalTopLeftOverride.texture = texture;
+        diagonalTopLeftOverride.rotation = 135.0f;
+        setCursorOverrideDiagonalTopLeft(diagonalTopLeftOverride);
+
+        CursorOverrideData diagonalTopRightOverride = new CursorOverrideData();
+        diagonalTopRightOverride.texture = texture;
+        diagonalTopRightOverride.rotation = 45.0f;
+        setCursorOverrideDiagonalTopRight(diagonalTopRightOverride);
+
+        CursorOverrideData diagonalBottomLeftOverride = new CursorOverrideData();
+        diagonalBottomLeftOverride.texture = texture;
+        diagonalBottomLeftOverride.rotation = -135.0f;
+        setCursorOverrideDiagonalBottomLeft(diagonalBottomLeftOverride);
+
+        CursorOverrideData diagonalBottomRightOverride = new CursorOverrideData();
+        diagonalBottomRightOverride.texture = texture;
+        diagonalBottomRightOverride.rotation = -45.0f;
+        setCursorOverrideDiagonalBottomRight(diagonalBottomRightOverride);
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

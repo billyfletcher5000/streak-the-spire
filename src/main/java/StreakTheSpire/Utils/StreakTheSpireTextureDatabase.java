@@ -9,6 +9,9 @@ public enum StreakTheSpireTextureDatabase {
     DEBUG_BOX_NINESLICE("StreakTheSpire/textures/ui/debug_box_9slice.png"),
     DEBUG_CENTRE("StreakTheSpire/textures/ui/debug_centre.png"),
 
+    CURSOR_RESIZE("StreakTheSpire/textures/ui/cursor_resize.png"),
+    CURSOR_MOVE("StreakTheSpire/textures/ui/cursor_move.png"),
+
     IRONCLAD_ICON("images/ui/charSelect/ironcladButton.png"),
     SILENT_ICON("images/ui/charSelect/silentButton.png"),
     DEFECT_ICON("images/ui/charSelect/defectButton.png"),
