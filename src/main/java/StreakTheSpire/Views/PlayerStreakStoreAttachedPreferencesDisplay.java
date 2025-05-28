@@ -2,6 +2,7 @@ package StreakTheSpire.Views;
 
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.UI.Layout.UIExpandBoxElement;
 import StreakTheSpire.UI.Layout.UIGridLayoutGroup;
 import StreakTheSpire.UI.UIElement;
 import com.badlogic.gdx.math.Affine2;
@@ -48,6 +49,7 @@ public class PlayerStreakStoreAttachedPreferencesDisplay extends UIElement imple
         playerStreakStoreView.getDimensionsProperty().addOnChangedSubscriber(this::markLocationDirty);
 
         gridLayoutGroup = new UIGridLayoutGroup();
+        gridLayoutGroup.setRestrictToSmallestSize(true);
         addChild(gridLayoutGroup);
 
         createButtons();
@@ -115,7 +117,10 @@ public class PlayerStreakStoreAttachedPreferencesDisplay extends UIElement imple
         if(maxButtonSize > minimumSize)
             minimumSize = maxButtonSize;
 
-        gridLayoutGroup.addChild(borderStyleButton);
+        UIExpandBoxElement expandBoxElement = new UIExpandBoxElement();
+        expandBoxElement.addChild(borderStyleButton);
+        expandBoxElement.setPreserveAspectRatio(true);
+        gridLayoutGroup.addChild(expandBoxElement);
     }
 
     private void updateBorderStyleButton() {
@@ -168,6 +173,14 @@ public class PlayerStreakStoreAttachedPreferencesDisplay extends UIElement imple
         float rightDistance = screenDimensions.x - targetTopRight.x;
         float topDistance = screenDimensions.y - targetTopRight.y;
 
+        float screenAspectRatio = (float)Settings.WIDTH / Settings.HEIGHT;
+        bottomDistance *= screenAspectRatio;
+        topDistance *= screenAspectRatio;
+
+        float targetAspectRatio = targetDimensions.x / targetDimensions.y;
+        bottomDistance *= targetAspectRatio;
+        topDistance *= targetAspectRatio;
+
         if(bottomDistance > maxDistance) {
             maxDistance = bottomDistance;
             direction = Direction.Down;
@@ -194,7 +207,7 @@ public class PlayerStreakStoreAttachedPreferencesDisplay extends UIElement imple
                 newDimensions = new Vector2(minimumSize, targetDimensions.y);
                 break;
             case Up:
-                newPosition = new Vector2(targetPosition.x, targetBottomLeft.y + (minimumSize * 0.5f));
+                newPosition = new Vector2(targetPosition.x, targetTopRight.y + (minimumSize * 0.5f));
                 newDimensions = new Vector2(targetDimensions.x, minimumSize);
                 break;
             case Down:

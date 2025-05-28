@@ -17,6 +17,10 @@ public class UIGridLayoutGroup extends UIElement {
 
     private boolean layoutDirty = true;
 
+    private boolean restrictToSmallestSize = false;
+    public void setRestrictToSmallestSize(boolean restrictToSmallestSize) { this.restrictToSmallestSize = restrictToSmallestSize; }
+    public boolean doesRestrictToSmallestSize() { return restrictToSmallestSize; }
+
     private enum PackingMode {
         Rectangular,
         Vertical,
@@ -131,6 +135,10 @@ public class UIGridLayoutGroup extends UIElement {
                 elementSize /= newTotalWidth / dimensions.x;
                 childDimensions.set(elementSize * targetAspectRatio, elementSize);
                 break;
+        }
+
+        if(restrictToSmallestSize) {
+            childDimensions.x = childDimensions.y = Math.min(childDimensions.x, Math.min(gridRect.width, gridRect.height));
         }
 
         Vector2 position = new Vector2();
