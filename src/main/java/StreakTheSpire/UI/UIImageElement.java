@@ -15,6 +15,8 @@ public class UIImageElement extends UIVisualElement {
     public Property<TextureRegion> getTextureRegionProperty() { return textureRegion; }
     public void setTextureRegion(TextureRegion textureRegion) { this.textureRegion.set(textureRegion); }
 
+    public UIImageElement() {}
+
     public UIImageElement(Vector2 position, Texture texture) {
         this(position, VectorOne.cpy(), texture);
     }
@@ -56,10 +58,14 @@ public class UIImageElement extends UIVisualElement {
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Color color) {
-        this(position, scale, textureRegion, new Vector2(textureRegion.getRegionWidth(), textureRegion.getRegionHeight()), color);
+        this(position, scale, textureRegion, textureRegion != null ? new Vector2(textureRegion.getRegionWidth(), textureRegion.getRegionHeight()) : Vector2.Zero, color);
     }
 
     public UIImageElement(Vector2 position, Vector2 scale, TextureRegion textureRegion, Vector2 size, Color color) {
+        initialise(position, scale, textureRegion, size, color);
+    }
+
+    public void initialise(Vector2 position, Vector2 scale, TextureRegion textureRegion, Vector2 size, Color color) {
         this.setLocalPosition(position);
         this.setLocalScale(scale);
         this.setTextureRegion(textureRegion);
@@ -71,6 +77,12 @@ public class UIImageElement extends UIVisualElement {
     protected void elementRender(Affine2 transformationMatrix, SpriteBatch spriteBatch, float transformedAlpha) {
         super.elementRender(transformationMatrix, spriteBatch, transformedAlpha);
 
+        TextureRegion textureRegion = getTextureRegion();
+
+        if(textureRegion == null) {
+            return;
+        }
+
         float[] vertices = new float[VertexWindingID.NUM * VertexComponent.NUM];
 
         Vector2 extents = getDimensions().cpy().scl(0.5f);
@@ -81,7 +93,6 @@ public class UIImageElement extends UIVisualElement {
 
         float colorBits = getTransformedColor(transformedAlpha).toFloatBits();
 
-        TextureRegion textureRegion = getTextureRegion();
 
         int vertexIndex = VertexWindingID.TL * VertexComponent.NUM;
         vertices[vertexIndex + VertexComponent.X] = topLeft.x;

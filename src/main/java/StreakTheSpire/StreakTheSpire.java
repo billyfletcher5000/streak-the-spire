@@ -22,6 +22,8 @@ import basemod.ModPanel;
 import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -149,6 +151,22 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         initialiseUI();
         createViews();
+
+        Texture tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_highlighted.png");
+        UIElement elem = new UIImageElement(new Vector2(500f, 500f), tex);
+        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_border.png");
+        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
+        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_1.png");
+        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
+        rootUIElement.addChild(elem);
+
+        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_normal.png");
+        elem = new UIImageElement(new Vector2(550f, 500f), tex);
+        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_border.png");
+        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
+        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_off.png");
+        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
+        rootUIElement.addChild(elem);
 
         settingsPanel = createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
@@ -360,6 +378,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     protected void initialiseCharacterDisplayModels() {
         characterDisplaySetModel = new Property<>(new CharacterDisplaySetModel());
+
+        // TODO: Evaluate loading all this from Json, it does work, but doing it in code ensures it's always correct to
+        //       version and StS main game constants can be used. Should add a mechanism for loading additional models though.
         CharacterDisplaySetController controller = new CharacterDisplaySetController(characterDisplaySetModel.get());
 
         CharacterIconDisplayModel ironcladIconModel = new CharacterIconDisplayModel();
@@ -483,11 +504,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         borderStyleSetModel = new Property<>(new BorderStyleSetModel());
         BorderStyleSetController controller = new BorderStyleSetController(borderStyleSetModel.get());
 
+        // TODO: Also loadable from Json for extensibility, add mechanism to do so.
         BorderStyleModel invisibleStyle = new BorderStyleModel();
         invisibleStyle.identifier.set("Invisible");
         invisibleStyle.showInGameMode.set(false);
         invisibleStyle.texturePath.set("StreakTheSpire/textures/ui/tip_box_9slice_sq.png");
+        invisibleStyle.color.set(new Color(1f, 1f, 1f, 0.5f));
         invisibleStyle.textureMargins.set(new IntMargins(48, 48, 35, 35));
+        invisibleStyle.buttonOverlayTexturePath.set("StreakTheSpire/textures/ui/button_overlay_off.png");
         controller.addStyle(invisibleStyle);
 
         BorderStyleModel tipBoxStyle = new BorderStyleModel();
@@ -495,6 +519,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         tipBoxStyle.showInGameMode.set(true);
         tipBoxStyle.texturePath.set("StreakTheSpire/textures/ui/tip_box_9slice_sq.png");
         tipBoxStyle.textureMargins.set(new IntMargins(48, 48, 35, 35));
+        tipBoxStyle.buttonOverlayTexturePath.set("StreakTheSpire/textures/ui/button_overlay_1.png");
         controller.addStyle(tipBoxStyle);
 
         BorderStyleModel topBarStyle = new BorderStyleModel();
@@ -502,13 +527,20 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         topBarStyle.showInGameMode.set(true);
         topBarStyle.texturePath.set("StreakTheSpire/textures/ui/top_bar_9slice.png");
         topBarStyle.textureMargins.set(new IntMargins(16, 16, 16, 16));
+        topBarStyle.buttonOverlayTexturePath.set("StreakTheSpire/textures/ui/button_overlay_2.png");
         controller.addStyle(topBarStyle);
 
         displayPreferencesModel.get().borderStyle.set(tipBoxStyle.identifier.get());
     }
 
     private void createViews() {
-        createView(streakStoreDataModel.get());
+        PlayerStreakStoreView streakStoreView = createView(streakStoreDataModel.get());
+
+        // TODO: Have to create this 'unautomatically' as it tracks a specific PlayerStreakStoreView to attach, rather than
+        //       by being part of the same hierarchy. It probably would be better to do it that way, but it means the store view
+        //       needs to contain its resizable panel as a separate element. Which would be better, but it's a lot of work.
+        PlayerStreakStoreAttachedPreferencesDisplay attachedPreferencesDisplay = new PlayerStreakStoreAttachedPreferencesDisplay(streakStoreView);
+        rootUIElement.addChild(attachedPreferencesDisplay);
     }
 
     public <TView extends IView, TModel extends IModel> TView createView(TModel model) {

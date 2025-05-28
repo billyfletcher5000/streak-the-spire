@@ -1,9 +1,9 @@
 package StreakTheSpire.Models;
 
-import StreakTheSpire.Utils.Properties.PropertyHashSet;
+import StreakTheSpire.Utils.Properties.PropertyLinkedHashSet;
 
 public class BorderStyleSetModel implements IModel {
-    public PropertyHashSet<BorderStyleModel> borderStyles = new PropertyHashSet<>();
+    public PropertyLinkedHashSet<BorderStyleModel> borderStyles = new PropertyLinkedHashSet<>();
 
     public BorderStyleSetModel() {}
 }

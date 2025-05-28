@@ -13,7 +13,7 @@ import com.megacrit.cardcrawl.core.Settings;
 
 public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
-    private PlayerStreakStoreModel streakStoreModel;
+    private final PlayerStreakStoreModel streakStoreModel;
     private UIGridLayoutGroup gridLayoutGroup = null;
 
     @Override
@@ -144,6 +144,8 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         Texture texture = StreakTheSpire.get().getTextureCache().getTexture(borderStyle.texturePath.get());
         NineSliceTexture nineSliceTexture = new NineSliceTexture(texture, borderStyle.textureMargins.get());
         setNineSliceTexture(nineSliceTexture);
+
+        setColor(borderStyle.color.get());
 
         updateBorderVisibility();
     }
