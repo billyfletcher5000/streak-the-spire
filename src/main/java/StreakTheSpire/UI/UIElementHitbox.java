@@ -56,4 +56,11 @@ public class UIElementHitbox extends Hitbox {
         else
             update();
     }
+
+    public void clearState() {
+        this.clickStarted = false;
+        this.clicked = false;
+        this.justHovered = false;
+        this.hovered = false;
+    }
 }

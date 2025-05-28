@@ -73,6 +73,18 @@ public class UIButtonElement extends UIImageElement implements HitboxListener {
         }
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        hitbox.clearState();
+        if(!visible) {
+            setPressed(false);
+            setHovered(false);
+        } else {
+            hitbox.update(getLocalToWorldTransform());
+        }
+    }
+
     public UIButtonElement() {}
 
     public UIButtonElement(Vector2 localPosition, Texture backgroundNormal, Texture backgroundHover, Texture backgroundPressed, Texture midground, Texture foreground, Vector2 pressedOffset) {
@@ -139,20 +151,23 @@ public class UIButtonElement extends UIImageElement implements HitboxListener {
 
     @Override
     public void hoverStarted(Hitbox hitbox) {
-        if(hitbox == this.hitbox) {
+        if(isVisible() && hitbox == this.hitbox) {
             setHovered(true);
         }
     }
 
     @Override
     public void startClicking(Hitbox hitbox) {
-        setPressed(true);
+        if(isVisible())
+            setPressed(true);
     }
 
     @Override
     public void clicked(Hitbox hitbox) {
-        setPressed(false);
-        dispatchOnClicked();
+        if(isVisible() && hitbox == this.hitbox) {
+            setPressed(false);
+            dispatchOnClicked();
+        }
     }
 
     @Override

@@ -34,7 +34,12 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     public boolean isResizeEnabled() { return resizeEnabled.get(); }
     public Property<Boolean> getResizeEnabledProperty() { return resizeEnabled; }
-    public void setResizeEnabled(boolean resizeEnabled) { this.resizeEnabled.set(resizeEnabled); if(!resizeEnabled) flushCurrentSelection(); }
+    public void setResizeEnabled(boolean resizeEnabled) {
+        this.resizeEnabled.set(resizeEnabled);
+        if(!resizeEnabled)
+            flushCurrentSelection();
+        checkCursorOverrides();
+    }
 
     public float getHitboxSize() { return hitboxSize.get(); }
     public Property<Float> getHitboxWidthProperty() { return hitboxSize; }
@@ -269,6 +274,15 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
         currentDragDirection = DragDirectionFlags.NONE;
         currentOffset.set(0, 0);
     }
+
+    private void checkCursorOverrides() {
+        Affine2 worldToLocal = getWorldToLocalTransform();
+        moveHitbox.update(worldToLocal);
+        for(UIElementHitbox hitbox : hitboxToDragDirection.keySet()) {
+            hitbox.update(worldToLocal);
+        }
+    }
+
 
     @Override
     protected void elementUpdate(float deltaTime) {
