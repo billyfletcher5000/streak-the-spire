@@ -21,9 +21,9 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
         AboveAll
     }
 
-    public Property<CharacterStyle> characterStyle = new Property<>(CharacterStyle.AnimatedIcon);
-    public Property<String> borderStyle = new Property<>(null);
-    public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.Default);
+    public @ConfigProperty(type = CharacterStyle.class) Property<CharacterStyle> characterStyle = new Property<>(CharacterStyle.AnimatedIcon);
+    public @ConfigProperty(type = String.class) Property<String> borderStyle = new Property<>(null);
+    public @ConfigProperty(type = RenderLayer.class) Property<RenderLayer> renderLayer = new Property<>(RenderLayer.Default);
     public Property<String> fontIdentifier = new Property<>("Kreon_SDF_Outline_Shadow");
     public PropertyList<String> characterOrder = new PropertyList<>(
             AbstractPlayer.PlayerClass.IRONCLAD.toString(),

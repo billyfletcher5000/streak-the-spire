@@ -19,7 +19,7 @@ public class UIButtonElement extends UIImageElement implements HitboxListener {
     private TextureRegion backgroundHover;
     private Vector2 pressedOffset = new Vector2(1f, -2f);
     private UIImageElement midgroundElement;
-    private UIImageElement foregroundElement;
+    protected UIImageElement foregroundElement;
 
     public boolean isHovered() { return isHovered; }
     public void setHovered(boolean isHovered) {
@@ -63,10 +63,13 @@ public class UIButtonElement extends UIImageElement implements HitboxListener {
     public void setForeground(Texture texture) { setForeground(new TextureRegion(texture != null ? new TextureRegion(texture) : null)); }
     public void setForeground(TextureRegion texture) { foregroundElement.setTextureRegion(texture); if(texture != null) foregroundElement.setDimensions(new Vector2(texture.getRegionWidth(), texture.getRegionHeight())); }
     public void setPressedOffset(Vector2 offset) { pressedOffset = offset; }
+    public Vector2 getPressedOffset() { return pressedOffset; }
 
     @Override
     public void setDimensions(Vector2 dimensions) {
         super.setDimensions(dimensions);
+        midgroundElement.setDimensions(dimensions);
+        foregroundElement.setDimensions(dimensions);
         if(hitbox != null) {
             Vector2 processedDimensions = getDimensions();
             hitbox.setLocalSize(processedDimensions);

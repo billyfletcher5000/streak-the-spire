@@ -38,8 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SpireInitializer
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, PostRenderSubscriber, PreRoomRenderSubscriber, AddAudioSubscriber {
@@ -86,7 +85,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private ModPanel settingsPanel;
     private boolean trueVictoryCutsceneActive = false;
 
-    private final HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
+    private final LinkedHashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new LinkedHashMap<>();
 
     private Property<GameStateModel> gameStateModel;
     private Property<StreakCriteriaModel> streakCriteriaModel;
@@ -109,6 +108,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
     public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
+    public LinkedHashMap<Property<? extends IConfigDataModel>, String> getConfigDataModelToConfigIDMap() { return configDataModelToConfigID; }
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
