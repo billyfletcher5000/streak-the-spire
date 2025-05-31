@@ -50,11 +50,13 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.requireHeartKill,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequireHeartKillLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequireHeartKillTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
         addElement(requireHeartKillButton);
 
+        //TODO: Create an encapsulated int prop element or turn it into carousel, either way, support tooltips
         elementPosition.y -= ConfigModPanel.LineHeight;
         IUIElement[] requiredAscensionInputElements = createIntPropElements(
                 elementPosition.x,
@@ -77,6 +79,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.trackContinuous,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackContinuousLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackContinuousTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -88,6 +91,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.enforceRotating,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.EnforceRotatingLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.EnforceRotatingTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -111,6 +115,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.allowCustomSeeds,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowCustomSeedsLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowCustomSeedsTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -122,6 +127,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.allowDailies,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDailiesLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDailiesTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -133,6 +139,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.allowDailies,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowEndlessLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowEndlessTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -145,6 +152,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.allowBeta,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowBetaLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowBetaTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -156,6 +164,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 criteriaModel.allowDemo,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDemoLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDemoTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -189,6 +198,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabeledToggleButton button = new FixedModLabeledToggleButton(
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerPreRoomLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerPreRoomTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -207,6 +217,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTopPanelLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTopPanelTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -225,6 +236,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveMostLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveMostTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -243,6 +255,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveAllLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveAllTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -259,7 +272,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         addElement(button);
 
         elementPosition.x = ConfigModPanel.PageTopLeft.x;
-        elementPosition.y = ConfigModPanel.PageTopLeft.y - ConfigModPanel.PageDimensions.y + 20f;
+        elementPosition.y = ConfigModPanel.PageTopLeft.y - ConfigModPanel.PageDimensions.y + 40f;
         FixedModLabel defaultNoteLabel = new FixedModLabel(uiStrings.TEXT_DICT.get(LocalizationConstants.Config.DefaultNoteLabel),
                 elementPosition.x,
                 elementPosition.y,

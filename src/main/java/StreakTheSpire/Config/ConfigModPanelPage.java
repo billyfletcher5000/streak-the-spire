@@ -27,12 +27,17 @@ public abstract class ConfigModPanelPage {
     public abstract void initialise(ModPanel modPanel);
 
     protected FixedModLabeledToggleButton createBooleanPropElement(float x, float y, Property<Boolean> property, String labelTitle, ModPanel modPanel) {
-        return createBooleanPropElement(x, y, property, labelTitle, modPanel, null);
+        return createBooleanPropElement(x, y, property, labelTitle, null, modPanel, null);
     }
 
-    protected FixedModLabeledToggleButton createBooleanPropElement(float x, float y, Property<Boolean> property, String labelTitle, ModPanel modPanel, Consumer<Property<Boolean>> callback) {
+    protected FixedModLabeledToggleButton createBooleanPropElement(float x, float y, Property<Boolean> property, String labelTitle, String tooltipText, ModPanel modPanel) {
+        return createBooleanPropElement(x, y, property, labelTitle, tooltipText, modPanel, null);
+    }
+
+    protected FixedModLabeledToggleButton createBooleanPropElement(float x, float y, Property<Boolean> property, String labelTitle, String tooltipText, ModPanel modPanel, Consumer<Property<Boolean>> callback) {
         FixedModLabeledToggleButton button = new FixedModLabeledToggleButton(
                 labelTitle,
+                tooltipText,
                 x,
                 y,
                 Settings.CREAM_COLOR,
