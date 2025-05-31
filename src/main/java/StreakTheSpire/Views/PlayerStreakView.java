@@ -99,6 +99,11 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         tipDataModel = tipSystemController.createTipDataModel(isVisible(), tipHitbox, headerText, bodyText, additionalLocalText);
     }
 
+    private void updateTipBodyText() {
+        UIStrings tipUIStrings = StreakTheSpire.get().getTipUIStrings();
+        tipDataModel.tipBodyText.set(getTipBodyText(tipUIStrings, model));
+    }
+
     private String getTipBodyText(UIStrings tipUIStrings, PlayerStreakModel model) {
         String output = "";
 
@@ -135,6 +140,8 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     }
 
     private void onStreakChanged() {
+        updateTipBodyText();
+
         if(scoreChangeCeremony != null) {
             scoreChangeCeremony.forceEnd();
         }

@@ -5,6 +5,8 @@ import StreakTheSpire.Models.PlayerStreakModel;
 import StreakTheSpire.Models.StreakCriteriaModel;
 import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.Properties.Property;
+import StreakTheSpire.Utils.Properties.PropertyList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.JsonSyntaxException;
@@ -33,6 +35,8 @@ public class PlayerStreakStoreController {
 
     public void calculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
         // This is heavily based on RunHistoryScreen.refreshData to preserve some of the odd legacy bugfixes around files and whatnot
+
+        HashMap<PlayerStreakModel, Property<Integer>> temporaryStreakCountMap = new HashMap<>();
 
         if(recalculateAll) {
             for (PlayerStreakModel streakModel : model.playerToStreak) {
@@ -129,13 +133,19 @@ public class PlayerStreakStoreController {
 
             ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
 
+            if(!temporaryStreakCountMap.containsKey(streakModel)) {
+                temporaryStreakCountMap.put(streakModel, new Property<>(streakModel.currentStreak.get()));
+            }
+
+            Property<Integer> tempCurrentStreakProperty = temporaryStreakCountMap.get(streakModel);
+
             for (RunDataSubset data : runDataToProcess) {
                 if(!data.character_chosen.equals(playerClass)) {
                     StreakTheSpire.logError("{}: character_chosen \"{}\" differs from player class: {}", data.filename, data.character_chosen, playerClass);
                     continue;
                 }
 
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModel, playerClass);
+                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, tempCurrentStreakProperty, streakModel, playerClass);
                 if(result != ProcessResult.Disqualified && criteria.trackContinuous.get()) {
                     allCharacterSubsets.add(data);
 
@@ -158,9 +168,18 @@ public class PlayerStreakStoreController {
             // Now process rotating streaks
             allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
-            ArrayList<String> currentStreakCharacterIDs = model.rotatingPlayerStreakModel.get().currentStreakCharacterIDs;
+            PlayerStreakModel streakModel = model.rotatingPlayerStreakModel.get();
+            ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
+
+            if(!temporaryStreakCountMap.containsKey(streakModel)) {
+                temporaryStreakCountMap.put(streakModel, new Property<>(streakModel.currentStreak.get()));
+            }
+
+            Property<Integer> tempCurrentStreakProperty = temporaryStreakCountMap.get(streakModel);
+
+
             for(RunDataSubset data : allCharacterSubsets) {
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, model.rotatingPlayerStreakModel.get(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
+                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, tempCurrentStreakProperty, streakModel, PlayerStreakStoreModel.RotatingPlayerIdentifier);
                 if(result == ProcessResult.StreakIncreased) {
                     currentStreakCharacterIDs.add(0, data.character_chosen);
                 } else if(result == ProcessResult.StreakReset) {
@@ -171,6 +190,10 @@ public class PlayerStreakStoreController {
             if(addedRotatingCondition) {
                 disqualifyingConditions.remove(uniqueCharacterCondition);
             }
+        }
+
+        for(Map.Entry<PlayerStreakModel, Property<Integer>> entry : temporaryStreakCountMap.entrySet()) {
+            entry.getKey().currentStreak.set(entry.getValue().get());
         }
     }
 
@@ -188,14 +211,14 @@ public class PlayerStreakStoreController {
     }
 
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
-    private static ProcessResult processRunData(StreakCriteriaModel criteria, RunDataSubset data, ArrayList<String> currentStreakCharacterIDs, PlayerStreakModel streakModel, String identifier) {
+    private static ProcessResult processRunData(StreakCriteriaModel criteria, RunDataSubset data, ArrayList<String> currentStreakCharacterIDs, Property<Integer> currentStreakProp, PlayerStreakModel streakModel, String identifier) {
         String currentStreakTimestamp = streakModel.highestStreakTimestamp.get();
         if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
             StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
             return ProcessResult.Disqualified;
         }
 
-        int streakCount = streakModel.currentStreak.get();
+        int streakCount = currentStreakProp.get();
 
         ProcessResult processResult = ProcessResult.Undefined;
         boolean disqualified = false;
@@ -236,7 +259,7 @@ public class PlayerStreakStoreController {
                 processResult = ProcessResult.StreakIncreased;
             }
 
-            streakModel.currentStreak.set(streakCount);
+            currentStreakProp.set(streakCount);
             streakModel.currentStreakTimestamp.set(data.timestamp);
 
             if (streakModel.highestStreak.get() < streakCount) {

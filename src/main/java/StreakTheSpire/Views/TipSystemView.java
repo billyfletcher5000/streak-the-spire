@@ -35,14 +35,32 @@ public class TipSystemView implements IView, IDestroyable {
             this.model = model;
 
             PowerTip tip = new PowerTip();
-            tip.header = model.tipHeaderText.get();
-            tip.body = model.tipBodyText.get() + " NL " + model.tipAdditionalLocalBodyText;
             localPowerTips.add(tip);
 
             PowerTip tip2 = new PowerTip();
+            slayTheRelicsPowerTips.add(tip2);
+
+            updateTips();
+
+            model.tipHeaderText.addOnChangedSubscriber(this::updateTips);
+            model.tipBodyText.addOnChangedSubscriber(this::updateTips);
+            model.tipAdditionalLocalBodyText.addOnChangedSubscriber(this::updateTips);
+        }
+
+        public void onDestroy() {
+            model.tipHeaderText.removeOnChangedSubscriber(this::updateTips);
+            model.tipBodyText.removeOnChangedSubscriber(this::updateTips);
+            model.tipAdditionalLocalBodyText.removeOnChangedSubscriber(this::updateTips);
+        }
+
+        private void updateTips() {
+            PowerTip tip = localPowerTips.get(0);
+            tip.header = model.tipHeaderText.get();
+            tip.body = model.tipBodyText.get() + " NL " + model.tipAdditionalLocalBodyText;
+
+            PowerTip tip2 = getSlayTheRelicsPowerTips().get(0);
             tip2.header = model.tipHeaderText.get();
             tip2.body = model.tipBodyText.get();
-            slayTheRelicsPowerTips.add(tip2);
         }
 
         public TipDataModel getModel() { return model; }
@@ -90,7 +108,12 @@ public class TipSystemView implements IView, IDestroyable {
     }
 
     private void removeView(TipDataModel tipDataModel) {
-        views.removeIf(view -> view.model == tipDataModel);
+        for(TipView tipView : views) {
+            if(tipView.getModel() == tipDataModel)
+                tipView.onDestroy();
+        }
+
+        views.removeIf(view -> view.getModel() == tipDataModel);
     }
 
     public void update() {
