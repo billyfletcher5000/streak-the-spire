@@ -1,11 +1,20 @@
+
+<p align="center">
+    <img width="504" height="82" alt="Animated image of the win streak panel, showing numbers increasing." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/score-increase.gif" />
+</p>
+
 # Streak The Spire
 
-<img align="right" width="120" alt="Animated image of a series of Slay the Spire character heads next to a score representing their current win streak" src="https://i.imgur.com/zSvVX47.png" />
+<img align="right" width="94" height="280" alt="Animated image of a series of Slay the Spire character heads next to a score representing their current win streak" src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/side-bar-idle.gif" />
+<p>
 Streak The Spire is a mod for the popular deckbuilding roguelike, Slay The Spire. It adds automatic (and accurate!) streak calculation based upon your run history, with effects when you increase or lose your streaks, on a per character and rotating basis. It even has animated character icons using the existing animations from the game!
-
+</p>
+<p>
 It is highly configurable, allowing you to drag and resize the display and put it anywhere you want, with a number of different background options (including no background at all), as well as customise the criteria used to determine if a given run counts to your streaks.
-
+</p>
+<p>
 It also provides helpful tooltips with more information on your historical play, including your best win streak of all time, the dates your streaks occurred and your win rate, all calculated depending on the criteria you select. It even integrates with Slay The Relics (+ Reborn)!
+</p>
 
 ## Installation
 
@@ -37,7 +46,7 @@ You will also see a small button next to the panel, which allows you to cycle
 though all the available border styles.
 
 <p align="center">
-    <img width="400" height="300" alt="Animated image of the win streak panel moving, resizing and changing its border style" src="https://i.imgur.com/zSvVX47.png" />
+    <img width="480" height="391" alt="Animated image of the win streak panel moving, resizing and changing its border style" src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/resize-border-change.gif" />
 </p>
 
 ### Mods Menu Configuration
@@ -52,7 +61,12 @@ To change your streak criteria, as well as what 'layer' the panel sits on:
 Each option should have a tooltip that explains what it does in detail, simply hover over an option for more information.
 
 <p align="center">
-    <img width="400" height="300" alt="Static image of the mod's configuration panel, showing many options. The Config button is marked." src="https://i.imgur.com/zSvVX47.png" />
+    <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/mod-menu-config-button.png">
+    <img width="250" height="215" alt="Static image of the general Mods page. The Streak The Spire entry and Config button are marked." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/mod-menu-config-button-thumbnail.png" hspace=10 />
+    </a>
+    <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu.png">
+    <img width="415" height="215" alt="Static image of the mod's configuration panel, showing many options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-thumbnail.png" hspace=10 />
+    </a>
 </p>
 
 ## Known Issues
