@@ -71,7 +71,6 @@ Each option should have a tooltip that explains what it does in detail, simply h
 
 ## Known Issues
 
-- Rotating streaks don't properly check rotation has occurred, only continuous wins regardless of character
 - Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
 - Localization only supports english and may have issues with other languages
 
