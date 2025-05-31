@@ -48,12 +48,9 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
         textStartingScale = scoreText.getLocalScale();
         Vector2 largerScale = textStartingScale.cpy().scl(scaleMultiplier);
 
-        StreakTheSpire.logInfo("LightScoreDecrease: start");
-
         TweenCallback setNewScoreCallback = new TweenCallback(TweenCallback.Events.START) {
             public void onEvent(int t, BaseTween<?> source) {
                 scoreText.setText(String.valueOf(newScore));
-                StreakTheSpire.logInfo("LightScoreDecrease: setText");
             }
         };
 
@@ -98,7 +95,6 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
             sequence.addCallback(new TweenCallback(TweenCallback.Events.END) {
                 @Override
                 public void onEvent(int type, BaseTween<?> source) {
-                    StreakTheSpire.logInfo("LightScoreDecrease: revert maskColor");
                     visualElement.setMaskColor(prevVisualElementMaskColor);
                     checkCompletion();
                 }
@@ -134,7 +130,6 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
             .push(tweenEngine.call( new TweenCallback(TweenCallback.Events.START) {
                 public void onEvent(int t, BaseTween<?> source) {
                     scoreText.setText(String.valueOf(newScore));
-                    StreakTheSpire.logInfo("LightScoreDecrease: setText");
                 }
             }))
             .push(tweenEngine.to(scoreText, UIElement.TweenTypes.SCALE_XY, duration * 0.5f).target(textStartingScale.x, textStartingScale.y).ease(TweenEquations.Bounce_In))
@@ -154,7 +149,6 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
                 return;
         }
 
-        StreakTheSpire.logInfo("LightScoreDecrease: complete");
         completeCeremony();
     }
 

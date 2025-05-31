@@ -1,7 +1,6 @@
 package StreakTheSpire.Utils;
 
 import com.badlogic.gdx.graphics.Color;
-import easel.utils.colors.EaselColors;
 
 public enum ColorEnum {
     RED("cc6464"),
@@ -16,7 +15,12 @@ public enum ColorEnum {
 
     ColorEnum(String mainColorHex) {
         this.mainColor = Color.valueOf(mainColorHex);
-        this.dimmedColor = EaselColors.darken(mainColor, 0.25f);
+        Color c = mainColor.cpy();
+        c.r -= 0.25f;
+        c.g -= 0.25f;
+        c.b -= 0.25f;
+        c.clamp();
+        this.dimmedColor = c;
     }
 
     public Color get() { return mainColor; }

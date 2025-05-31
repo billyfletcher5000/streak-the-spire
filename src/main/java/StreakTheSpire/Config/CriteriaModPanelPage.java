@@ -27,6 +27,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         if(isInitialised)
             return;
 
+        final float NumCheckboxenPerLine = 3.0f;
+
         UIStrings uiStrings = StreakTheSpire.get().getConfigUIStrings();
         StreakCriteriaModel criteriaModel = StreakTheSpire.get().getStreakCriteriaModel();
 
@@ -70,16 +72,28 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
             addElement(element);
 
         elementPosition.y -= ConfigModPanel.LineHeight;
-        IUIElement trackRotatingButton = createBooleanPropElement(
+        IUIElement trackContinuousButton = createBooleanPropElement(
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.trackContinuous,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackRotatingLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackContinuousLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
-        addElement(trackRotatingButton);
+        addElement(trackContinuousButton);
 
+        elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
+        IUIElement enforceRotatingButton = createBooleanPropElement(
+                elementPosition.x,
+                elementPosition.y,
+                criteriaModel.enforceRotating,
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.EnforceRotatingLabel),
+                modPanel,
+                (val) -> recalculateStreaks()
+        );
+        addElement(enforceRotatingButton);
+
+        elementPosition.x = ConfigModPanel.PageTopLeft.x;
         elementPosition.y -= ConfigModPanel.TitleLineHeight;
         FixedModLabel allowTitle = new FixedModLabel(
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowTitle),
@@ -90,8 +104,6 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 (label) -> {}
         );
         addElement(allowTitle);
-
-        final float NumCheckboxenPerLine = 3.0f;
 
         elementPosition.y -= ConfigModPanel.LineHeight;
         IUIElement allowCustomSeedsButton = createBooleanPropElement(

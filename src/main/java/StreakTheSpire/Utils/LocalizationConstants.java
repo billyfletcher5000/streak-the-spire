@@ -7,7 +7,8 @@ public class LocalizationConstants {
         public static final String CriteriaSettingsTitle = "criteria_settings_title";
         public static final String RequireHeartKillLabel = "require_heart_kill_label";
         public static final String RequiredAscensionLevelLabel = "required_ascension_level_label";
-        public static final String TrackRotatingLabel = "track_rotating_label";
+        public static final String TrackContinuousLabel = "track_continuous_label";
+        public static final String EnforceRotatingLabel = "enforce_rotating_label";
         public static final String AllowTitle = "allow_title";
         public static final String AllowCustomSeedsLabel = "allow_custom_seeds_label";
         public static final String AllowDailiesLabel = "allow_dailies_label";

@@ -50,7 +50,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     //region Static Data
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
-    public static final LoggingLevel loggingLevel = LoggingLevel.DEBUG;
+    public static final LoggingLevel loggingLevel = LoggingLevel.INFO;
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(PropertyTypeAdapters.PropertyTypeAdapter.FACTORY).create();
 
@@ -612,13 +612,13 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     public static void logDebug(String message) {
         if(loggingLevel.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-            logger.debug(message);
+            logger.info(message);
         }
     }
 
     public static void logDebug(String message, Object... params) {
         if(loggingLevel.ordinal() >= LoggingLevel.DEBUG.ordinal()) {
-            logger.debug(message, params);
+            logger.info(message, params);
         }
     }
 

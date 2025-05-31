@@ -17,11 +17,12 @@ import static StreakTheSpire.StreakTheSpire.gson;
 public class PlayerStreakStoreController {
     private PlayerStreakStoreModel model;
 
-    private interface DisqualifyingCondition { boolean test(RunDataSubset data, StreakCriteriaModel criteria); }
+    private interface DisqualifyingCondition { boolean test(RunDataSubset data, ArrayList<RunDataSubset> currentStreakData, StreakCriteriaModel criteria); }
     private static LinkedHashMap<DisqualifyingCondition, String> disqualifyingConditions = createDisqualifyingConditions();
 
-    private interface LosingCondition { boolean test(RunDataSubset data, StreakCriteriaModel criteria); }
+    private interface LosingCondition { boolean test(RunDataSubset data, ArrayList<RunDataSubset> currentStreakData, StreakCriteriaModel criteria); }
     private static LinkedHashMap<LosingCondition, String> losingConditions = createLosingConditions();
+    private static LinkedHashMap<LosingCondition, String> secondaryLosingConditions = new LinkedHashMap<>();
 
     public PlayerStreakStoreController(PlayerStreakStoreModel model) {
         this.model = model;
@@ -128,23 +129,49 @@ public class PlayerStreakStoreController {
             // I'm presuming done this way because of some shortcoming in deserialising long ints in java appropriately?
             runDataToProcess.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
+            ArrayList<RunDataSubset> currentWinStreak = new ArrayList<>();
+
             for (RunDataSubset data : runDataToProcess) {
                 if(!data.character_chosen.equals(playerClass)) {
                     StreakTheSpire.logError("{}: character_chosen \"{}\" differs from player class: {}", data.filename, data.character_chosen, playerClass);
                     continue;
                 }
 
-                if(processRunData(criteria, data, streakModel, playerClass) && criteria.trackContinuous.get())
+                ProcessResult result = processRunData(criteria, data, currentWinStreak, streakModel, playerClass);
+                if(result != ProcessResult.Disqualified && criteria.trackContinuous.get()) {
                     allCharacterSubsets.add(data);
+
+                    if(result == ProcessResult.StreakIncreased)
+                        currentWinStreak.add(0, data);
+                    else if(result == ProcessResult.StreakReset)
+                        currentWinStreak.clear();
+                }
             }
         }
 
         if(criteria.trackContinuous.get()) {
+            boolean addedRotatingCondition = false;
+            DisqualifyingCondition uniqueCharacterCondition = PlayerStreakStoreController::isUniqueCharacterInRotation;
+            if(criteria.enforceRotating.get()) {
+                disqualifyingConditions.put(uniqueCharacterCondition, "was_not_rotating_streak");
+                addedRotatingCondition = true;
+            }
+
             // Now process rotating streaks
             allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
+            ArrayList<RunDataSubset> currentWinStreak = new ArrayList<>();
             for(RunDataSubset data : allCharacterSubsets) {
-                processRunData(criteria, data, model.rotatingPlayerStreakModel.get(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
+                ProcessResult result = processRunData(criteria, data, currentWinStreak, model.rotatingPlayerStreakModel.get(), PlayerStreakStoreModel.RotatingPlayerIdentifier);
+                if(result == ProcessResult.StreakIncreased) {
+                    currentWinStreak.add(0, data);
+                } else if(result == ProcessResult.StreakReset) {
+                    currentWinStreak.clear();
+                }
+            }
+
+            if(addedRotatingCondition) {
+                disqualifyingConditions.remove(uniqueCharacterCondition);
             }
         }
     }
@@ -155,37 +182,57 @@ public class PlayerStreakStoreController {
         model.rotatingPlayerStreakModel.set(rotatingModel);
     }
 
+    private static enum ProcessResult {
+        StreakIncreased,
+        StreakReset,
+        Disqualified,
+        Undefined
+    }
+
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
-    private static boolean processRunData(StreakCriteriaModel criteria, RunDataSubset data, PlayerStreakModel streakModel, String identifier) {
+    private static ProcessResult processRunData(StreakCriteriaModel criteria, RunDataSubset data, ArrayList<RunDataSubset> previousSuccessData, PlayerStreakModel streakModel, String identifier) {
         String currentStreakTimestamp = streakModel.highestStreakTimestamp.get();
         if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
             StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
-            return false;
+            return ProcessResult.Disqualified;
         }
 
         int streakCount = streakModel.currentStreak.get();
 
+        ProcessResult processResult = ProcessResult.Undefined;
         boolean disqualified = false;
         for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
             DisqualifyingCondition condition = entry.getKey();
             String reason = entry.getValue();
 
             StreakTheSpire.logDebug("{} {}: Testing disqualifying condition: {}", data.filename, identifier, reason);
-            if(condition.test(data, criteria)) {
-                disqualified = true;
+            if(condition.test(data, previousSuccessData, criteria)) {
+                processResult = ProcessResult.Disqualified;
                 StreakTheSpire.logDebug("{} {}: Disqualified due to: {}", data.filename, identifier, reason);
                 break;
             }
         }
 
-        if(!disqualified) {
+        if(processResult != ProcessResult.Disqualified) {
             boolean failed = false;
             for (Map.Entry<LosingCondition, String> entry : losingConditions.entrySet()) {
                 LosingCondition condition = entry.getKey();
                 String reason = entry.getValue();
 
                 StreakTheSpire.logDebug("{} {}: Testing losing condition: {}", data.filename, identifier, reason);
-                if (condition.test(data, criteria)) {
+                if (condition.test(data, previousSuccessData, criteria)) {
+                    failed = true;
+                    StreakTheSpire.logDebug("{} {}: Lost due to: {}", data.filename, identifier, reason);
+                    break;
+                }
+            }
+
+            for (Map.Entry<LosingCondition, String> entry : secondaryLosingConditions.entrySet()) {
+                LosingCondition condition = entry.getKey();
+                String reason = entry.getValue();
+
+                StreakTheSpire.logDebug("{} {}: Testing secondary losing condition: {}", data.filename, identifier, reason);
+                if (condition.test(data, previousSuccessData, criteria)) {
                     failed = true;
                     StreakTheSpire.logDebug("{} {}: Lost due to: {}", data.filename, identifier, reason);
                     break;
@@ -195,10 +242,12 @@ public class PlayerStreakStoreController {
             if (failed) {
                 streakCount = 0;
                 streakModel.totalValidLosses.set(streakModel.totalValidLosses.get() + 1);
+                processResult = ProcessResult.StreakReset;
             }
             else {
                 streakCount++;
                 streakModel.totalValidWins.set(streakModel.totalValidWins.get() + 1);
+                processResult = ProcessResult.StreakIncreased;
             }
 
             streakModel.currentStreak.set(streakCount);
@@ -211,7 +260,7 @@ public class PlayerStreakStoreController {
         }
 
         streakModel.processedFilenames.add(data.filename);
-        return !disqualified;
+        return processResult;
     }
 
     public String createStreakDebugReport() {
@@ -242,13 +291,13 @@ public class PlayerStreakStoreController {
     private static LinkedHashMap<DisqualifyingCondition, String> createDisqualifyingConditions() {
         LinkedHashMap<DisqualifyingCondition, String> disqualifyingConditions = new LinkedHashMap<>();
 
-        disqualifyingConditions.put(((data, criteria) -> (!data.is_ascension_mode && criteria.requiredAscensionLevel.get() > 0)), "not_ascension");
-        disqualifyingConditions.put(((data, criteria) -> (data.ascension_level < criteria.requiredAscensionLevel.get())), "ascension_level_too_low");
-        disqualifyingConditions.put(((data, criteria) -> (data.chose_seed && criteria.allowCustomSeeds.get() == false)), "chose_seed");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_daily && criteria.allowDailies.get() == false)), "is_daily");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_trial && criteria.allowDemo.get() == false)), "is_demo");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_prod && criteria.allowBeta.get() == false)), "is_beta");
-        disqualifyingConditions.put(((data, criteria) -> (data.is_endless && criteria.allowEndless.get() == false)), "is_endless");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (!data.is_ascension_mode && criteria.requiredAscensionLevel.get() > 0)), "not_ascension");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (data.ascension_level < criteria.requiredAscensionLevel.get())), "ascension_level_too_low");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (data.chose_seed && criteria.allowCustomSeeds.get() == false)), "chose_seed");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (data.is_daily && criteria.allowDailies.get() == false)), "is_daily");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (data.is_trial && criteria.allowDemo.get() == false)), "is_demo");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (data.is_prod && criteria.allowBeta.get() == false)), "is_beta");
+        disqualifyingConditions.put(((data, previousData, criteria) -> (data.is_endless && criteria.allowEndless.get() == false)), "is_endless");
 
         return disqualifyingConditions;
     }
@@ -256,10 +305,22 @@ public class PlayerStreakStoreController {
     private static LinkedHashMap<LosingCondition, String> createLosingConditions() {
         LinkedHashMap<LosingCondition, String> losingConditions = new LinkedHashMap<>();
 
-        losingConditions.put(((data, criteria) -> !data.victory), "victory_failed");
-        losingConditions.put(((data, criteria) ->
+        losingConditions.put(((data, previousData, criteria) -> !data.victory), "victory_failed");
+        losingConditions.put(((data, previousData, criteria) ->
                 (data.floor_reached < StreakCriteriaModel.HeartKillFloorReached && criteria.requireHeartKill.get() == true)), "did_not_kill_heart");
 
         return losingConditions;
+    }
+
+    private static boolean isUniqueCharacterInRotation(RunDataSubset data, ArrayList<RunDataSubset> currentStreakData, StreakCriteriaModel criteria) {
+        int numTrackedCharacterClasses = criteria.trackedCharacterClasses.size();
+
+        for(int i = 0; i < currentStreakData.size() && i < numTrackedCharacterClasses; i++) {
+            if(data.victory && data.character_chosen.equals(currentStreakData.get(i).character_chosen)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

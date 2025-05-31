@@ -103,8 +103,8 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         String output = "";
 
         String dateTimeFormat = tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeFormat);
-        String currentStreakAchievedDateTime = StreakTheSpire.get().getDateTimeString(model.currentStreakTimestamp.get(), dateTimeFormat);
-        String highestStreakAchievedDateTime = StreakTheSpire.get().getDateTimeString(model.highestStreakTimestamp.get(), dateTimeFormat);
+        String currentStreakAchievedDateTime = model.currentStreakTimestamp.get() != null ? StreakTheSpire.get().getDateTimeString(model.currentStreakTimestamp.get(), dateTimeFormat) : "";
+        String highestStreakAchievedDateTime = model.highestStreakTimestamp.get() != null ? StreakTheSpire.get().getDateTimeString(model.highestStreakTimestamp.get(), dateTimeFormat) : "";
 
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.CurrentStreakText) + model.currentStreak.get() + " NL ";
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeAchievedText) + currentStreakAchievedDateTime + " NL ";
