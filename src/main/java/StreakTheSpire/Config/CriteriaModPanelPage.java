@@ -7,6 +7,7 @@ import StreakTheSpire.Models.StreakCriteriaModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.FixedModLabel;
 import StreakTheSpire.Utils.FixedModLabeledToggleButton;
+import StreakTheSpire.Utils.LocalizationConstants;
 import basemod.IUIElement;
 import basemod.ModPanel;
 import com.badlogic.gdx.math.Vector2;
@@ -31,7 +32,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
 
         Vector2 elementPosition = ConfigModPanel.PageTopLeft.cpy();
 
-        FixedModLabel title = new FixedModLabel(uiStrings.TEXT_DICT.get("criteria_settings_title"),
+        FixedModLabel title = new FixedModLabel(
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.CriteriaSettingsTitle),
                 elementPosition.x,
                 elementPosition.y,
                 modPanel,
@@ -45,7 +47,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.requireHeartKill,
-                uiStrings.TEXT_DICT.get("require_heart_kill_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequireHeartKillLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -60,7 +62,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 criteriaModel.requiredAscensionLevel,
                 0,
                 20,
-                uiStrings.TEXT_DICT.get("required_ascension_level_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequiredAscensionLevelLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -72,14 +74,15 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.trackRotating,
-                uiStrings.TEXT_DICT.get("track_rotating_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackRotatingLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
         addElement(trackRotatingButton);
 
         elementPosition.y -= ConfigModPanel.TitleLineHeight;
-        FixedModLabel allowTitle = new FixedModLabel(uiStrings.TEXT_DICT.get("allow_title"),
+        FixedModLabel allowTitle = new FixedModLabel(
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowTitle),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,
@@ -95,7 +98,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowCustomSeeds,
-                uiStrings.TEXT_DICT.get("allow_custom_seeds_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowCustomSeedsLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -106,7 +109,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowDailies,
-                uiStrings.TEXT_DICT.get("allow_dailies_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDailiesLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -117,7 +120,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowDailies,
-                uiStrings.TEXT_DICT.get("allow_endless_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowEndlessLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -129,7 +132,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowBeta,
-                uiStrings.TEXT_DICT.get("allow_beta_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowBetaLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -140,7 +143,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowDemo,
-                uiStrings.TEXT_DICT.get("allow_demo_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDemoLabel),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -149,7 +152,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         // TODO: Move this to DisplayPreferencesModPanelPage if we run out of space, also implementing paging properly
         elementPosition.x = ConfigModPanel.PageTopLeft.x;
         elementPosition.y -= ConfigModPanel.TitleLineHeight;
-        FixedModLabel displayPreferencesTitle = new FixedModLabel(uiStrings.TEXT_DICT.get("display_preferences_title"),
+        FixedModLabel displayPreferencesTitle = new FixedModLabel(
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.DisplayPreferencesTitle),
                 elementPosition.x,
                 elementPosition.y,
                 modPanel,
@@ -158,7 +162,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         addElement(displayPreferencesTitle);
 
         elementPosition.y -= ConfigModPanel.TitleLineHeight;
-        FixedModLabel renderLayerTitle = new FixedModLabel(uiStrings.TEXT_DICT.get("render_layer_title"),
+        FixedModLabel renderLayerTitle = new FixedModLabel(
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTitle),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,
@@ -171,7 +176,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
 
         elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabeledToggleButton button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get("render_layer_pre_room_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerPreRoomLabel),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -189,7 +194,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get("render_layer_top_panel_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTopPanelLabel),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -207,7 +212,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get("render_layer_above_most_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveMostLabel),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -225,7 +230,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x += (ConfigModPanel.PageDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get("render_layer_above_all_label"),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveAllLabel),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -243,7 +248,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x = ConfigModPanel.PageTopLeft.x;
         elementPosition.y = ConfigModPanel.PageTopLeft.y - ConfigModPanel.PageDimensions.y + 20f;
-        FixedModLabel defaultNoteLabel = new FixedModLabel(uiStrings.TEXT_DICT.get("default_note_label"),
+        FixedModLabel defaultNoteLabel = new FixedModLabel(uiStrings.TEXT_DICT.get(LocalizationConstants.Config.DefaultNoteLabel),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,

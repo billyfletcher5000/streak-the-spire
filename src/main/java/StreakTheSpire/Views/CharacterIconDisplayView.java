@@ -4,7 +4,6 @@ import StreakTheSpire.Models.CharacterIconDisplayModel;
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.UIImageElement;
-import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,8 +19,8 @@ public class CharacterIconDisplayView extends UIImageElement implements IView {
     }
 
     @Override
-    public void close() {
-        super.close();
+    protected void elementDestroy() {
+        super.elementDestroy();
 
         if(this.model != null)
             this.model.iconTexture.removeOnChangedSubscriber(this::onTextureChanged);

@@ -19,5 +19,20 @@
       "render_layer_above_all_label" : "Above All",
       "default_note_label" : "* Default"
     }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title" : "Streak Information",
+      "date_time_format" : "M/d/yyyy",
+      "current_streak_text" : "Current Streak: ",
+      "highest_streak_text" : "Highest Streak: ",
+      "date_time_achieved_text" : "Date: ",
+      "total_wins_text" : "Total Wins: ",
+      "total_losses_text" : "Total Losses: ",
+      "win_rate_text" : "Win Rate: ",
+      "edit_mode_instruction_text" : "#yHold #yAlt #yto #yEdit #yDisplay",
+      "change_border_style_title" : "Change Border Style",
+      "change_border_style_body_text" : "Cycles through different border style options.\nOFF will only show when ALT is held down."
+    }
   }
 }

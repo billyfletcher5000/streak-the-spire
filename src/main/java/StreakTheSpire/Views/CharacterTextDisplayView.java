@@ -4,7 +4,6 @@ import StreakTheSpire.Models.CharacterTextDisplayModel;
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.UITextElement;
-import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 
@@ -21,8 +20,8 @@ public class CharacterTextDisplayView extends UITextElement implements IView {
     }
 
     @Override
-    public void close() {
-        super.close();
+    protected void elementDestroy() {
+        super.elementDestroy();
 
         if(model != null)
             model.displayText.removeOnChangedSubscriber(this::onTextChanged);

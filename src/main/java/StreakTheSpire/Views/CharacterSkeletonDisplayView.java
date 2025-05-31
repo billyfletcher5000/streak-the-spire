@@ -62,8 +62,8 @@ public class CharacterSkeletonDisplayView extends UIScaleBoxElement implements I
     }
 
     @Override
-    public void close() {
-        super.close();
+    protected void elementDestroy() {
+        super.elementDestroy();
         if(animStateListener != null) {
             skeletonAnimation.getAnimationState().removeListener(animStateListener);
         }

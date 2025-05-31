@@ -5,7 +5,6 @@ import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.Layout.UIExpandBoxElement;
 import StreakTheSpire.UI.Layout.UIGridLayoutGroup;
 import StreakTheSpire.UI.UIElement;
-import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.core.Settings;
 
@@ -62,8 +61,8 @@ public class PlayerStreakStoreAttachedPreferencesDisplay extends UIElement imple
     }
 
     @Override
-    public void close() {
-        super.close();
+    protected void elementDestroy() {
+        super.elementDestroy();
 
         GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
         gsm.editModeActive.removeOnChangedSubscriber(this::onEditModeChanged);

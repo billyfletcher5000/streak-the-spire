@@ -224,13 +224,13 @@ public class UIElement implements TweenAccessor<UIElement>, IDestroyable {
         LifetimeManager.EnqueueDestroy(this);
     }
 
-    public void close() {
+    protected void elementDestroy() {
         hideDebugDimensionsDisplay(false);
     }
 
     // There's probably better ways of doing this involving inheritance or something but this is meant to emulate C++'s friend/C#'s internal
     public void onDestroy() {
-        close();
+        elementDestroy();
         if(parent.get() != null)
             parent.get().removeChild(this);
     }

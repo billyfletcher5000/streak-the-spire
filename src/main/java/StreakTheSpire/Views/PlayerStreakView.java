@@ -3,16 +3,27 @@ package StreakTheSpire.Views;
 import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.IScoreChangeCeremony;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
+import StreakTheSpire.Controllers.TipSystemController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.Layout.UIHorizontalLayoutGroup;
 import StreakTheSpire.UI.UIElement;
+import StreakTheSpire.UI.UIElementHitbox;
 import StreakTheSpire.UI.UISDFTextElement;
 import StreakTheSpire.UI.UITextElement;
+import StreakTheSpire.Utils.LocalizationConstants;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
+import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.Hitbox;
+import com.megacrit.cardcrawl.localization.UIStrings;
+import com.megacrit.cardcrawl.metrics.Metrics;
+import com.megacrit.cardcrawl.screens.stats.RunData;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
 
@@ -20,12 +31,31 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     private IView characterDisplayView = null;
     private UITextElement scoreDisplayElement = null;
     private int lastProcessedScore = -1;
+    private TipDataModel tipDataModel = null;
+    private UIElementHitbox tipHitbox = null;
 
     private IScoreChangeCeremony scoreChangeCeremony = null;
 
     public PlayerStreakModel getModel() { return model; }
     public IView getCharacterDisplayView() { return characterDisplayView; }
     public UITextElement getScoreDisplayElement() { return scoreDisplayElement; }
+
+    @Override
+    public void setDimensions(Vector2 dimensions) {
+        super.setDimensions(dimensions);
+        if(tipDataModel != null) {
+            Vector2 processedDimensions = getDimensions();
+            tipHitbox.setLocalSize(processedDimensions);
+        }
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if(tipDataModel != null) {
+            tipDataModel.isActive.set(isVisible());
+        }
+    }
 
     public PlayerStreakView(PlayerStreakModel model) {
         this.model = model;
@@ -55,16 +85,52 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         addChild(scoreDisplayElement);
 
         model.currentStreak.addOnChangedSubscriber(this::onStreakChanged);
+
+        Vector2 dimensions = getDimensions();
+        tipHitbox = new UIElementHitbox(0f, 0f, dimensions.x, dimensions.y);
+        TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();
+        TipSystemController tipSystemController = new TipSystemController(tipSystemModel);
+
+        UIStrings tipUIStrings = StreakTheSpire.get().getTipUIStrings();
+        String headerText = tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.TipHeaderTitle);
+        String bodyText = getTipBodyText(tipUIStrings, model);
+        String additionalLocalText = tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.EditModeInstructionText);
+
+        tipDataModel = tipSystemController.createTipDataModel(isVisible(), tipHitbox, headerText, bodyText, additionalLocalText);
+    }
+
+    private String getTipBodyText(UIStrings tipUIStrings, PlayerStreakModel model) {
+        String output = "";
+
+        String dateTimeFormat = tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeFormat);
+        String currentStreakAchievedDateTime = StreakTheSpire.get().getDateTimeString(model.currentStreakTimestamp.get(), dateTimeFormat);
+        String highestStreakAchievedDateTime = StreakTheSpire.get().getDateTimeString(model.highestStreakTimestamp.get(), dateTimeFormat);
+
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.CurrentStreakText) + model.currentStreak.get() + " NL ";
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeAchievedText) + currentStreakAchievedDateTime + " NL ";
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.HighestStreakText) + model.highestStreak.get() + " NL ";
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeAchievedText) + highestStreakAchievedDateTime + " NL ";
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.TotalWinsText) + model.totalValidWins.get() + " NL ";
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.TotalLossesText) + model.totalValidLosses.get() + " NL ";
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.WinRateText) + ((float)model.totalValidWins.get() / (float)model.totalValidLosses.get());
+
+        return output;
     }
 
     @Override
-    public void close() {
-        super.close();
+    protected void elementDestroy() {
+        super.elementDestroy();
         model.currentStreak.removeOnChangedSubscriber(this::onStreakChanged);
 
         if(scoreChangeCeremony != null) {
             scoreChangeCeremony.forceEnd();
             scoreChangeCeremony = null;
+        }
+
+        if(tipDataModel != null) {
+            TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();
+            TipSystemController tipSystemController = new TipSystemController(tipSystemModel);
+            tipSystemController.destroyTipDataModel(tipDataModel);
         }
     }
 
@@ -103,8 +169,13 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     @Override
     protected void elementUpdate(float deltaTime) {
         super.elementUpdate(deltaTime);
+
         if(scoreChangeCeremony != null) {
             scoreChangeCeremony.update(deltaTime);
+        }
+
+        if(tipHitbox != null) {
+            tipHitbox.update(getLocalToWorldTransform());
         }
     }
 

@@ -11,16 +11,12 @@ import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
-import StreakTheSpire.Utils.FontCache;
+import StreakTheSpire.Utils.*;
 import StreakTheSpire.Utils.Lifetime.LifetimeManager;
-import StreakTheSpire.Utils.LoggingLevel;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyTypeAdapters;
-import StreakTheSpire.Utils.StreakTheSpireTextureDatabase;
-import StreakTheSpire.Utils.TextureCache;
 import StreakTheSpire.Views.*;
 import basemod.BaseMod;
-import basemod.ModPanel;
 import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -34,18 +30,24 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.Hitbox;
+import com.megacrit.cardcrawl.helpers.PowerTip;
 import com.megacrit.cardcrawl.localization.UIStrings;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @SpireInitializer
 public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, PostRenderSubscriber, PreRoomRenderSubscriber, AddAudioSubscriber {
 
+    //region Static Data
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
     public static final LoggingLevel loggingLevel = LoggingLevel.DEBUG;
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
@@ -57,7 +59,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public static final String modAuthorName = "billyfletcher5000";
     public static final String modDescription = "A Slay The Spire mod to automatically track your streaks, both individual and rotating, with each character.";
 
-    private static final String ConfigUIStringsID = "Config";
     private static String prefixLocalizationID(String localizationID) { return modID + ":" + localizationID; }
 
     private static StreakTheSpire instance;
@@ -68,28 +69,18 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private static SpireConfig modSpireConfig = null;
 
     public static SpireConfig getConfig() { return modSpireConfig; }
-    // ~Config
+    //endregion
 
-    public static void initialize() {
-        new StreakTheSpire();
-
-        logInfo("Initializing StreakTheSpire!");
-        try {
-            logInfo("Creating SpireConfig!");
-            modSpireConfig = new SpireConfig(modName, configFileName);
-        } catch (Exception e) {
-            logError("Initialize exception:" + e.getMessage());
-        }
-    }
-
-    private TextureCache textureCache = new TextureCache();
-    private FontCache fontCache = new FontCache();
+    //region Instance data
+    private final TextureCache textureCache = new TextureCache();
+    private final FontCache fontCache = new FontCache();
     private TweenEngine tweenEngine;
     private UIElement rootUIElement;
     private UIElement debugRootUIElement;
     private CursorOverride cursorOverride;
     private ConfigModPanel settingsPanel;
     private boolean trueVictoryCutsceneActive = false;
+    private TipSystemView tipSystemView;
 
     private final HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
 
@@ -100,9 +91,10 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
     private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
     private Property<BorderStyleSetModel> borderStyleSetModel;
+    private Property<TipSystemModel> tipSystemModel;
+    //endregion
 
-    private boolean showDebug = false;
-
+    //region Public data access
     public TextureCache getTextureCache() { return textureCache; }
     public FontCache getFontCache() { return fontCache; }
     public TweenEngine getTweenEngine() { return tweenEngine; }
@@ -114,8 +106,24 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
     public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
+    public TipSystemModel getTipSystemModel() { return tipSystemModel.get(); }
 
-    public UIStrings getConfigUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(ConfigUIStringsID)); }
+    public UIStrings getConfigUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(LocalizationConstants.Config.ID)); }
+    public UIStrings getTipUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(LocalizationConstants.StreakTips.ID));  }
+    //endregion
+
+    //region Base Initialisation
+    public static void initialize() {
+        new StreakTheSpire();
+
+        logInfo("Initializing StreakTheSpire!");
+        try {
+            logInfo("Creating SpireConfig!");
+            modSpireConfig = new SpireConfig(modName, configFileName);
+        } catch (Exception e) {
+            logError("Initialize exception:" + e.getMessage());
+        }
+    }
 
     public StreakTheSpire() {
         BaseMod.subscribe(this);
@@ -139,6 +147,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseCeremonyModels();
         initialiseStreakDataModel();
         initialiseBorderStyleModels();
+        initialiseTipSystemModel();
 
         loadConfig();
 
@@ -157,21 +166,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         initialiseUI();
         createViews();
+        createTipSystemView();
 
         createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
+    //endregion
 
-    private void initialiseUI() {
-        rootUIElement = new UIElement();
-        rootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
-
-        debugRootUIElement = new UIElement();
-        debugRootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
-
-        cursorOverride = new CursorOverride(gameStateModel.get().editModeActive);
-    }
-
+    //region Configuration
     public void saveConfig() {
         for(Map.Entry<Property<? extends IConfigDataModel>, String> entry : configDataModelToConfigID.entrySet()) {
             entry.getKey().get().beforeSaveToConfig(modSpireConfig);
@@ -217,12 +219,26 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         }
     }
 
+    protected <T extends IConfigDataModel> void registerConfigModel(Property<T> dataModel) {
+        if(dataModel == null || dataModel.get() == null)
+            return;
+
+        IConfigDataModel configModel = dataModel.get();
+        String configID = configModel.getConfigID();
+        if(configDataModelToConfigID.containsValue(configID))
+            throw new IllegalArgumentException("ConfigID \"" + configID + "\" is already registered!");
+
+        configDataModelToConfigID.put(dataModel, configID);
+    }
+
     private void createModPanel() {
         settingsPanel = new ConfigModPanel();
 
         settingsPanel.addPage(new CriteriaModPanelPage());
     }
+    //endregion
 
+    //region StS Hook Responses
     @Override
     public void receivePreRoomRender(SpriteBatch spriteBatch) {
         if(!gameStateModel.get().previewModeActive.get() &&  !trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.PreRoom)
@@ -266,6 +282,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         debugRootUIElement.update(getDeltaTime());
 
+        tipSystemView.update();
+
         LifetimeManager.ProcessDestroyed();
     }
 
@@ -286,7 +304,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public void notifyTrueVictoryCutsceneEnd() {
         trueVictoryCutsceneActive = false;
     }
+    //endregion
 
+    //region View & Ceremony Class Registration
     private void registerViewFactories() {
         ViewFactoryManager.get().registerViewFactory(PlayerStreakStoreModel.class, PlayerStreakStoreView.FACTORY);
         ViewFactoryManager.get().registerViewFactory(PlayerStreakModel.class, PlayerStreakView.FACTORY);
@@ -300,19 +320,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CeremonyManager.get().registerScoreChangeCeremony(LightFlourishScoreIncreaseCeremony.class);
         CeremonyManager.get().registerScoreChangeCeremony(LightFlourishScoreDecreaseCeremony.class);
     }
+    //endregion
 
-    protected <T extends IConfigDataModel> void registerConfigModel(Property<T> dataModel) {
-        if(dataModel == null || dataModel.get() == null)
-            return;
-
-        IConfigDataModel configModel = dataModel.get();
-        String configID = configModel.getConfigID();
-        if(configDataModelToConfigID.values().contains(configID))
-            throw new IllegalArgumentException("ConfigID \"" + configID + "\" is already registered!");
-
-        configDataModelToConfigID.put(dataModel, configID);
-    }
-
+    //region Text & Localisation
     private void initialiseLocalisation() {
         String langKey = Settings.language.toString().toLowerCase();
 
@@ -332,7 +342,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
                 "StreakTheSpire/fonts/Kreon_Bold_SDF_Numbers.png",
                 textureCache);
     }
+    //endregion
 
+    //region Data Initialisation
     private void initialisePreferenceModels() {
         displayPreferencesModel = new Property<>(new DisplayPreferencesModel());
         registerConfigModel(displayPreferencesModel);
@@ -342,6 +354,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         gameStateModel = new Property<>(new GameStateModel());
 
         gameStateModel.get().gameMode.set(CardCrawlGame.mode);
+    }
+
+    protected void initialiseTipSystemModel() {
+        tipSystemModel = new Property<>(new TipSystemModel());
+    }
+
+    protected void createTipSystemView() {
+        tipSystemView = new TipSystemView(tipSystemModel.get());
     }
 
     protected void initialiseStreakDataModel() {
@@ -508,6 +528,18 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         displayPreferencesModel.get().borderStyle.set(tipBoxStyle.identifier.get());
     }
+    //endregion
+
+    //region Views & UI
+    private void initialiseUI() {
+        rootUIElement = new UIElement();
+        rootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
+
+        debugRootUIElement = new UIElement();
+        debugRootUIElement.setLocalScale(new Vector2(Settings.scale, Settings.scale));
+
+        cursorOverride = new CursorOverride(gameStateModel.get().editModeActive);
+    }
 
     private void createViews() {
         PlayerStreakStoreView streakStoreView = createView(streakStoreDataModel.get());
@@ -529,7 +561,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
         return (TView) view;
     }
+    //endregion
 
+    //region Debugging
     public UIDebugDimensionsDisplay createDebugDimensionsDisplay(UIElement uiElement) {
         UIDebugDimensionsDisplay display = new UIDebugDimensionsDisplay(uiElement);
         debugRootUIElement.addChild(display);
@@ -540,7 +574,9 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         debugRootUIElement.removeChild(debugDisplay);
         debugDisplay.destroy(true);
     }
+    //endregion
 
+    //region Logging
     public static void logError(String message) {
         logger.error(message);
     }
@@ -596,4 +632,26 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             logger.trace(message, params);
         }
     }
+    //endregion
+
+    //region Tip & Slay The Relics Support
+    public String getDateTimeString(String timestamp, String formatString) {
+        SimpleDateFormat dateFormat;
+        if (Settings.language == Settings.GameLanguage.JPN) {
+            dateFormat = new SimpleDateFormat(formatString, Locale.JAPAN);
+        } else {
+            dateFormat = new SimpleDateFormat(formatString);
+        }
+
+        return dateFormat.format(Long.parseLong(timestamp) * 1000L);
+    }
+
+    public static ArrayList<Hitbox> slayTheRelicsHitboxes = new ArrayList<>();
+    public static ArrayList<ArrayList<PowerTip>> slayTheRelicsPowerTips = new ArrayList<>();
+
+    public static void clearSlayTheRelicsData() {
+        slayTheRelicsHitboxes.clear();
+        slayTheRelicsPowerTips.clear();
+    }
+    //endregion
 }
