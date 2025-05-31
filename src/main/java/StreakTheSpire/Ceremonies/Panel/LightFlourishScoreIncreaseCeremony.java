@@ -15,6 +15,7 @@ public class LightFlourishScoreIncreaseCeremony extends IScoreChangeCeremony {
 
     private Timeline sequence = null;
     private UITextElement scoreText = null;
+    private Vector2 startingScale = null;
     private int newScore = 0;
 
     @Override
@@ -29,7 +30,7 @@ public class LightFlourishScoreIncreaseCeremony extends IScoreChangeCeremony {
 
         TweenEngine tweenEngine = StreakTheSpire.get().getTweenEngine();
 
-        Vector2 startingScale = scoreText.getLocalScale();
+        startingScale = scoreText.getLocalScale();
         Vector2 largerScale = startingScale.cpy().scl(scaleMultiplier);
 
         TweenCallback setNewScoreCallback = new TweenCallback(TweenCallback.Events.START) {
@@ -56,8 +57,17 @@ public class LightFlourishScoreIncreaseCeremony extends IScoreChangeCeremony {
     public void forceEnd() {
         super.forceEnd();
 
-        scoreText.setText(String.valueOf(newScore));
-        sequence.cancel();
+        if(scoreText != null) {
+            scoreText.setText(String.valueOf(newScore));
+
+            if(startingScale != null)
+                scoreText.setLocalScale(startingScale);
+        }
+
+        if(sequence != null) {
+            sequence.cancel();
+        }
+
         completeCeremony();
     }
 

@@ -28,7 +28,7 @@ public abstract class ICeremony {
         }
     }
 
-    public CeremonyCompleteSubscriber addOnChangedSubscriber(CeremonyCompleteSubscriber subscriber) {
+    public CeremonyCompleteSubscriber addOnCompleteSubscriber(CeremonyCompleteSubscriber subscriber) {
         if (onCompleteSubscribers == null)
             onCompleteSubscribers = new HashSet<>();
 
@@ -36,7 +36,7 @@ public abstract class ICeremony {
         return subscriber;
     }
 
-    public void removeOnChangedSubscriber(CeremonyCompleteSubscriber subscriber) {
+    public void removeOnCompleteSubscriber(CeremonyCompleteSubscriber subscriber) {
         if(onCompleteSubscribers != null)
             onCompleteSubscribers.removeIf(element -> element == null || element == subscriber);
     }

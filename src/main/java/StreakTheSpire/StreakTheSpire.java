@@ -4,6 +4,8 @@ import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreDecreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreIncreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.SimpleTextScoreChangeCeremony;
+import StreakTheSpire.Config.ConfigModPanel;
+import StreakTheSpire.Config.CriteriaModPanelPage;
 import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
@@ -23,7 +25,6 @@ import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -33,6 +34,7 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.localization.UIStrings;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,11 +51,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(PropertyTypeAdapters.PropertyTypeAdapter.FACTORY).create();
 
-    public static final String modId = "streak_the_spire";
+    public static final String modID = "streak_the_spire";
     public static final String modName = "StreakTheSpire";
     public static final String modDisplayName = "Streak The Spire";
     public static final String modAuthorName = "billyfletcher5000";
     public static final String modDescription = "A Slay The Spire mod to automatically track your streaks, both individual and rotating, with each character.";
+
+    private static final String ConfigUIStringsID = "Config";
+    private static String prefixLocalizationID(String localizationID) { return modID + ":" + localizationID; }
 
     private static StreakTheSpire instance;
     public static StreakTheSpire get() { return instance; }
@@ -83,7 +88,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private UIElement rootUIElement;
     private UIElement debugRootUIElement;
     private CursorOverride cursorOverride;
-    private ModPanel settingsPanel;
+    private ConfigModPanel settingsPanel;
     private boolean trueVictoryCutsceneActive = false;
 
     private final HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
@@ -110,6 +115,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
     public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
 
+    public UIStrings getConfigUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(ConfigUIStringsID)); }
+
     public StreakTheSpire() {
         BaseMod.subscribe(this);
         instance = this;
@@ -123,6 +130,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         tweenEngine = TweenEngine.build();
 
         StreakTheSpireTextureDatabase.loadAll();
+        initialiseLocalisation();
         initialiseFonts();
 
         initialisePreferenceModels();
@@ -133,8 +141,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseBorderStyleModels();
 
         loadConfig();
-
-        displayPreferencesModel.get().renderLayer.set(DisplayPreferencesModel.RenderLayer.Default);
 
         PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
 
@@ -152,23 +158,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialiseUI();
         createViews();
 
-        Texture tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_highlighted.png");
-        UIElement elem = new UIImageElement(new Vector2(500f, 500f), tex);
-        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_border.png");
-        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
-        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_1.png");
-        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
-        rootUIElement.addChild(elem);
-
-        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_normal.png");
-        elem = new UIImageElement(new Vector2(550f, 500f), tex);
-        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_border.png");
-        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
-        tex = textureCache.getTexture("StreakTheSpire/textures/ui/button_overlay_off.png");
-        elem.addChild(new UIImageElement(new Vector2(0f, 0f), tex));
-        rootUIElement.addChild(elem);
-
-        settingsPanel = createModPanel();
+        createModPanel();
         BaseMod.registerModBadge(StreakTheSpireTextureDatabase.MOD_ICON.getTexture(), modDisplayName, modAuthorName, modDescription, settingsPanel);
     }
 
@@ -227,32 +217,32 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         }
     }
 
-    private ModPanel createModPanel() {
-        ModPanel panel = new ModPanel();
+    private void createModPanel() {
+        settingsPanel = new ConfigModPanel();
 
-        return panel;
+        settingsPanel.addPage(new CriteriaModPanelPage());
     }
 
     @Override
     public void receivePreRoomRender(SpriteBatch spriteBatch) {
-        if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.PreRoom)
+        if(!gameStateModel.get().previewModeActive.get() &&  !trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.PreRoom)
             performRender(spriteBatch);
     }
 
     public void receiveTopPanelRender(SpriteBatch spriteBatch) {
-        if(trueVictoryCutsceneActive || displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.TopPanel)
+        if(!gameStateModel.get().previewModeActive.get() && (trueVictoryCutsceneActive || displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.TopPanel))
             performRender(spriteBatch);
     }
 
     @Override
     public void receiveRender(SpriteBatch spriteBatch) {
-        if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.Default)
+        if(gameStateModel.get().previewModeActive.get() || (!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveMost))
             performRender(spriteBatch);
     }
 
     @Override
     public void receivePostRender(SpriteBatch spriteBatch) {
-        if(!trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveAll)
+        if (!gameStateModel.get().previewModeActive.get() && !trueVictoryCutsceneActive && displayPreferencesModel.get().renderLayer.get() == DisplayPreferencesModel.RenderLayer.AboveAll)
             performRender(spriteBatch);
 
         cursorOverride.render(spriteBatch);
@@ -268,34 +258,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public void receivePostUpdate() {
         gameStateModel.get().gameMode.set(CardCrawlGame.mode);
         gameStateModel.get().editModeActive.set(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
-
-        //region Debug inputs
-        if(Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) {
-            PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
-            PlayerStreakModel defectModel = controller.getStreakModel("DEFECT");
-            defectModel.currentStreak.set(defectModel.currentStreak.get() + 1);
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
-            PlayerStreakStoreController controller = new PlayerStreakStoreController(streakStoreDataModel.get());
-            PlayerStreakModel defectModel = controller.getStreakModel("DEFECT");
-            defectModel.currentStreak.set(0);
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_1)) {
-            displayPreferencesModel.get().borderStyle.set("Invisible");
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_2)) {
-            displayPreferencesModel.get().borderStyle.set("TipBox");
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_3)) {
-            displayPreferencesModel.get().borderStyle.set("TopBar");
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
-            showDebug = !showDebug;
-            if(showDebug)
-                rootUIElement.showDebugDimensionsDisplay(true);
-            else
-                rootUIElement.hideDebugDimensionsDisplay(true);
-        }
-        //endregion
+        gameStateModel.get().previewModeActive.set(settingsPanel.isUp);
 
         rootUIElement.update(getDeltaTime());
 
@@ -348,6 +311,19 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
             throw new IllegalArgumentException("ConfigID \"" + configID + "\" is already registered!");
 
         configDataModelToConfigID.put(dataModel, configID);
+    }
+
+    private void initialiseLocalisation() {
+        String langKey = Settings.language.toString().toLowerCase();
+
+        if (!Gdx.files.internal("StreakTheSpire/localization/" + langKey + "/").exists()) {
+            langKey = "eng";
+        }
+
+        String filepath = "StreakTheSpire/localization/" + langKey + "/UIStrings.json";
+        if (Gdx.files.internal(filepath).exists()) {
+            BaseMod.loadCustomStringsFile(UIStrings.class, filepath);
+        }
     }
 
     private void initialiseFonts() {

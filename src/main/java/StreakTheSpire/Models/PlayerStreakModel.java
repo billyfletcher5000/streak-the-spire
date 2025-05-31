@@ -14,4 +14,14 @@ public class PlayerStreakModel implements IModel {
     public Property<Integer> totalValidLosses = new Property<>(0);
 
     public PlayerStreakModel() {}
+
+    public void reset() {
+        highestStreak.set(0);
+        highestStreakTimestamp.set(null);
+        currentStreak.set(0);
+        currentStreakTimestamp.set(null);
+        processedFilenames.clear();
+        totalValidWins.set(0);
+        totalValidLosses.set(0);
+    }
 }

@@ -36,9 +36,21 @@ public class PlayerStreakStoreController {
         // This is heavily based on RunHistoryScreen.refreshData to preserve some of the odd legacy bugfixes around files and whatnot
 
         if(recalculateAll) {
-            model.playerToStreak.clear();
-            if(criteria.trackRotating.get())
-                createRotatingModel();
+            for (PlayerStreakModel streakModel : model.playerToStreak) {
+                streakModel.reset();
+            }
+
+            if(criteria.trackRotating.get()) {
+                if(model.rotatingPlayerStreakModel.get() != null) {
+                    model.rotatingPlayerStreakModel.get().reset();
+                }
+                else {
+                    createRotatingModel();
+                }
+            }
+            else {
+                model.rotatingPlayerStreakModel.set(null);
+            }
         }
         else if (model.rotatingPlayerStreakModel.get() == null && criteria.trackRotating.get()) {
             createRotatingModel();

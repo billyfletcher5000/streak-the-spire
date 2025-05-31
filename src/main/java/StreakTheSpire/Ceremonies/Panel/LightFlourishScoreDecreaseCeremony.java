@@ -26,6 +26,7 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
     // not be surprised if this very common use case was never tested as it's not present in their examples.
     private final ArrayList<Timeline> sequences = new ArrayList<>();
     private UITextElement scoreText = null;
+    private Vector2 textStartingScale = null;
     private UIVisualElement visualElement = null;
     private int newScore = 0;
 
@@ -44,8 +45,8 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
 
         TweenEngine tweenEngine = StreakTheSpire.get().getTweenEngine();
 
-        Vector2 startingScale = scoreText.getLocalScale();
-        Vector2 largerScale = startingScale.cpy().scl(scaleMultiplier);
+        textStartingScale = scoreText.getLocalScale();
+        Vector2 largerScale = textStartingScale.cpy().scl(scaleMultiplier);
 
         StreakTheSpire.logInfo("LightScoreDecrease: start");
 
@@ -136,7 +137,7 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
                     StreakTheSpire.logInfo("LightScoreDecrease: setText");
                 }
             }))
-            .push(tweenEngine.to(scoreText, UIElement.TweenTypes.SCALE_XY, duration * 0.5f).target(startingScale.x, startingScale.y).ease(TweenEquations.Bounce_In))
+            .push(tweenEngine.to(scoreText, UIElement.TweenTypes.SCALE_XY, duration * 0.5f).target(textStartingScale.x, textStartingScale.y).ease(TweenEquations.Bounce_In))
             .addCallback(new TweenCallback(TweenCallback.Events.END) {
                 public void onEvent(int t, BaseTween<?> source) {
                     checkCompletion();
@@ -170,8 +171,11 @@ public class LightFlourishScoreDecreaseCeremony extends IScoreChangeCeremony {
         if(visualElement != null)
             visualElement.setMaskColor(prevVisualElementMaskColor);
 
-        if(scoreText != null)
+        if(scoreText != null) {
             scoreText.setMaskColor(prevTextMaskColor);
+            if(textStartingScale != null)
+                scoreText.setLocalScale(textStartingScale);
+        }
 
         completeCeremony();
     }

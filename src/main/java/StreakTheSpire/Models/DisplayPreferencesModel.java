@@ -15,15 +15,14 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
 
     public enum RenderLayer {
         PreRoom,
-        Room,
         TopPanel,
-        Default,
+        AboveMost,
         AboveAll
     }
 
     public Property<CharacterStyle> characterStyle = new Property<>(CharacterStyle.AnimatedIcon);
     public Property<String> borderStyle = new Property<>(null);
-    public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.Default);
+    public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.TopPanel);
     public Property<String> fontIdentifier = new Property<>("Kreon_SDF_Outline_Shadow");
     public PropertyList<String> characterOrder = new PropertyList<>(
             AbstractPlayer.PlayerClass.IRONCLAD.toString(),

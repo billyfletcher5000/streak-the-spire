@@ -1,6 +1,7 @@
 package StreakTheSpire.Views;
 
 import StreakTheSpire.Controllers.BorderStyleSetController;
+import StreakTheSpire.Controllers.PlayerStreakStoreController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.UI.*;
@@ -11,10 +12,14 @@ import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.core.Settings;
 
+import java.util.ArrayList;
+
 public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
     private final PlayerStreakStoreModel streakStoreModel;
     private UIGridLayoutGroup gridLayoutGroup = null;
+
+    private PlayerStreakView rotatingStreakView = null;
 
     @Override
     public void setDimensions(Vector2 dimensions) {
@@ -55,7 +60,8 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         gridLayoutGroup = new UIGridLayoutGroup();
         addChild(gridLayoutGroup);
 
-        PlayerStreakModel[] sortedStreakModels = streakStoreModel.playerToStreak.stream().sorted((a, b) -> {
+        PlayerStreakModel[] sortedStreakModels = streakStoreModel.playerToStreak.stream()
+                .sorted((a, b) -> {
             int indexA = preferences.characterOrder.indexOf(a.identifier.get());
             int indexB = preferences.characterOrder.indexOf(b.identifier.get());
             indexA = indexA == -1 ? preferences.characterOrder.indexOf(DisplayPreferencesModel.CharacterWildcard) : indexA;
@@ -69,11 +75,54 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         }
 
         if(streakStoreModel.rotatingPlayerStreakModel.get() != null) {
-            UIElement element = createStreakModelDisplay(streakStoreModel.rotatingPlayerStreakModel.get());
-            gridLayoutGroup.addChild(element);
+            rotatingStreakView = createStreakModelDisplay(streakStoreModel.rotatingPlayerStreakModel.get());
+            gridLayoutGroup.addChild(rotatingStreakView);
         }
 
+        streakStoreModel.rotatingPlayerStreakModel.addOnChangedSubscriber(this::onRotatingStreakModelChanged);
+        streakStoreModel.playerToStreak.addOnItemAddedSubscriber(this::onPlayerStreakModelAdded);
+        streakStoreModel.playerToStreak.addOnItemRemovedSubscriber(this::onPlayerStreakModelRemoved);
+
         gridLayoutGroup.setDimensions(getDimensions());
+    }
+
+    private void onRotatingStreakModelChanged() {
+        if(streakStoreModel == null)
+            return;
+
+        if(streakStoreModel.rotatingPlayerStreakModel.get() != null) {
+            if(rotatingStreakView != null) {
+                if(rotatingStreakView.getModel() == streakStoreModel.rotatingPlayerStreakModel.get())
+                    return;
+
+                rotatingStreakView.destroy(true);
+                rotatingStreakView = null;
+            }
+
+            rotatingStreakView = createStreakModelDisplay(streakStoreModel.rotatingPlayerStreakModel.get());
+            gridLayoutGroup.addChild(rotatingStreakView);
+        }
+        else if(rotatingStreakView != null) {
+            rotatingStreakView.destroy(true);
+            rotatingStreakView = null;
+        }
+    }
+
+    private void onPlayerStreakModelAdded(Object item) {
+        PlayerStreakModel streakModel = (PlayerStreakModel) item;
+        PlayerStreakView streakView = createStreakModelDisplay(streakModel);
+        gridLayoutGroup.addChild(streakView);
+    }
+
+    private void onPlayerStreakModelRemoved(Object item) {
+        PlayerStreakModel streakModel = (PlayerStreakModel) item;
+        for(UIElement element : gridLayoutGroup.getChildren()) {
+            if(element instanceof PlayerStreakView) {
+                PlayerStreakView streakView = (PlayerStreakView) element;
+                if(streakView.getModel() == streakModel)
+                    streakView.destroy();
+            }
+        }
     }
 
     private void ensureOnScreen() {
@@ -118,7 +167,7 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         gsm.editModeActive.removeOnChangedSubscriber(this::onEditModeChanged);
     }
 
-    private UIElement createStreakModelDisplay(PlayerStreakModel streakModel) {
+    private PlayerStreakView createStreakModelDisplay(PlayerStreakModel streakModel) {
         return ViewFactoryManager.get().createView(streakModel);
     }
 
@@ -136,6 +185,12 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
     }
 
     private void updateBorder() {
+        if(streakStoreModel != null) {
+            streakStoreModel.rotatingPlayerStreakModel.removeOnChangedSubscriber(this::onRotatingStreakModelChanged);
+            streakStoreModel.playerToStreak.removeOnItemAddedSubscriber(this::onPlayerStreakModelAdded);
+            streakStoreModel.playerToStreak.removeOnItemRemovedSubscriber(this::onPlayerStreakModelRemoved);
+        }
+
         DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
         BorderStyleSetModel borderStyles = StreakTheSpire.get().getBorderStyles();
         BorderStyleSetController borderStyleSetController = new BorderStyleSetController(borderStyles);

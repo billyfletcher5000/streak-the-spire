@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-import com.megacrit.cardcrawl.helpers.FontHelper;
 
 public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
 
@@ -62,9 +61,18 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     public void close() {
         super.close();
         model.currentStreak.removeOnChangedSubscriber(this::onStreakChanged);
+
+        if(scoreChangeCeremony != null) {
+            scoreChangeCeremony.forceEnd();
+            scoreChangeCeremony = null;
+        }
     }
 
     private void onStreakChanged() {
+        if(scoreChangeCeremony != null) {
+            scoreChangeCeremony.forceEnd();
+        }
+
         CeremonyPreferencesModel preferences = StreakTheSpire.get().getCeremonyPreferences();
         int newScore = model.currentStreak.get();
         if(lastProcessedScore == newScore) {
@@ -79,7 +87,7 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         Class<? extends IScoreChangeCeremony> scoreCeremonyClass = CeremonyManager.get().getScoreChangeCeremonyClass(ceremonyClassName);
         try {
             scoreChangeCeremony = scoreCeremonyClass.newInstance();
-            scoreChangeCeremony.addOnChangedSubscriber(this::cleanUpCeremony);
+            scoreChangeCeremony.addOnCompleteSubscriber(this::cleanUpCeremony);
             scoreChangeCeremony.start(model.currentStreak.get(), this);
         }
         catch (Exception e) {
@@ -88,7 +96,7 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     }
 
     private void cleanUpCeremony() {
-        scoreChangeCeremony.removeOnChangedSubscriber(this::cleanUpCeremony);
+        scoreChangeCeremony.removeOnCompleteSubscriber(this::cleanUpCeremony);
         scoreChangeCeremony = null;
     }
 
