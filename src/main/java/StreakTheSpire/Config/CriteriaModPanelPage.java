@@ -73,7 +73,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         IUIElement trackRotatingButton = createBooleanPropElement(
                 elementPosition.x,
                 elementPosition.y,
-                criteriaModel.trackRotating,
+                criteriaModel.trackContinuous,
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackRotatingLabel),
                 modPanel,
                 (val) -> recalculateStreaks()

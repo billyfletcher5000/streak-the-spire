@@ -29,12 +29,4 @@ public class TipSystemController {
     public void destroyTipDataModel(TipDataModel tipDataModel) {
         model.tipData.remove(tipDataModel);
     }
-
-    public void addAreaToAvoid(Rectangle tipAvoidanceRectangle) {
-        model.areasToAvoid.add(tipAvoidanceRectangle);
-    }
-
-    public void removeAreaFromAvoid(Rectangle tipAvoidanceRectangle) {
-        model.areasToAvoid.remove(tipAvoidanceRectangle);
-    }
 }

@@ -2,6 +2,7 @@ package StreakTheSpire.UI;
 
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.Properties.Property;
+import StreakTheSpire.Utils.SkeletonModifier;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;

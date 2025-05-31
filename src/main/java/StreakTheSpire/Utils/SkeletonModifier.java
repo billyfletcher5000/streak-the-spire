@@ -1,4 +1,4 @@
-package StreakTheSpire.UI;
+package StreakTheSpire.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

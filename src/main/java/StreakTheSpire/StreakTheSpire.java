@@ -21,6 +21,7 @@ import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -45,7 +46,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @SpireInitializer
-public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, PostRenderSubscriber, PreRoomRenderSubscriber, AddAudioSubscriber {
+public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubscriber, RenderSubscriber, PostRenderSubscriber, PreRoomRenderSubscriber {
 
     //region Static Data
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
@@ -81,6 +82,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private ConfigModPanel settingsPanel;
     private boolean trueVictoryCutsceneActive = false;
     private TipSystemView tipSystemView;
+    private boolean uiDidRenderThisFrame = false;
 
     private final HashMap<Property<? extends IConfigDataModel>, String> configDataModelToConfigID = new HashMap<>();
 
@@ -99,6 +101,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public FontCache getFontCache() { return fontCache; }
     public TweenEngine getTweenEngine() { return tweenEngine; }
     public CursorOverride getCursorOverride() { return cursorOverride; }
+    public boolean didUIRenderThisFrame() { return uiDidRenderThisFrame; }
     public GameStateModel getGameStateModel() { return gameStateModel.get(); }
     public StreakCriteriaModel getStreakCriteriaModel() { return streakCriteriaModel.get(); }
     public DisplayPreferencesModel getDisplayPreferencesModel() { return displayPreferencesModel.get(); }
@@ -267,6 +270,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private void performRender(SpriteBatch spriteBatch) {
         rootUIElement.render(spriteBatch);
         debugRootUIElement.render(spriteBatch);
+        uiDidRenderThisFrame = true;
     }
 
 
@@ -285,11 +289,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         tipSystemView.update();
 
         LifetimeManager.ProcessDestroyed();
-    }
 
-    @Override
-    public void receiveAddAudio() {
-        //BaseMod.addAudio("AUDIO_ID", "StreakTheSpire/AUDIO_WAV.wav");
+        uiDidRenderThisFrame = false;
     }
 
     public void notifyRunEnd() {

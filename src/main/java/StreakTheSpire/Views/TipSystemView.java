@@ -1,5 +1,6 @@
 package StreakTheSpire.Views;
 
+import StreakTheSpire.Models.GameStateModel;
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.Models.TipDataModel;
 import StreakTheSpire.Models.TipSystemModel;
@@ -20,15 +21,10 @@ import java.util.Map;
 
 public class TipSystemView implements IView, IDestroyable {
 
-    private enum DisplayQuadrant {
-        BottomRight,
-        TopRight,
-        BottomLeft,
-        TopLeft,
-    }
-
-    HashMap<DisplayQuadrant, Rectangle> quadrantToArea = new HashMap<>();
-    HashMap<DisplayQuadrant, Vector2> quadrantToTipBoxPosition = new HashMap<>();
+    // Copied from AbstractCreature.java, then adjusted
+    protected static final float TIP_X_THRESHOLD = 1564.0F * Settings.scale;
+    protected static final float TIP_OFFSET_R_X = 4.0F * Settings.scale;
+    protected static final float TIP_OFFSET_L_X = -320.0F * Settings.scale;
 
     private static class TipView {
         private final TipDataModel model;
@@ -60,8 +56,6 @@ public class TipSystemView implements IView, IDestroyable {
 
     public TipSystemView(TipSystemModel model) {
         this.model = model;
-
-        buildQuadrantMap();
 
         model.tipData.addOnItemAddedSubscriber(this::onTipDataAdded);
         model.tipData.addOnItemRemovedSubscriber(this::onTipDataRemoved);
@@ -103,66 +97,36 @@ public class TipSystemView implements IView, IDestroyable {
         StreakTheSpire.clearSlayTheRelicsData();
 
         boolean hasRenderedATip = false;
+        boolean didRenderUIThisFrame = StreakTheSpire.get().didUIRenderThisFrame();
+        GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
 
         for (TipView view : views) {
-            if(view.getModel().isActive.get() && view.getHitbox().hovered && !hasRenderedATip) {
-                DisplayQuadrant quadrant = getBestQuadrant();
-                //Vector2 position = quadrantToTipBoxPosition.get(quadrant);
-                Vector2 position = new Vector2(InputHelper.mX, InputHelper.mY);
-                TipHelper.queuePowerTips(position.x, position.y, view.getLocalPowerTips());
-                hasRenderedATip = true;
-            }
+            if(didRenderUIThisFrame
+                    && view.getModel().isActive.get()
+                    && (!gsm.editModeActive.get() || (gsm.editModeActive.get() && view.getModel().showDuringEditMode.get()))) {
+                Hitbox hitbox = view.getHitbox();
+                if (hitbox.hovered && !hasRenderedATip) {
+                    ArrayList<PowerTip> tips = view.getLocalPowerTips();
 
-            StreakTheSpire.slayTheRelicsHitboxes.add(view.getHitbox());
-            StreakTheSpire.slayTheRelicsPowerTips.add(view.getSlayTheRelicsPowerTips());
-        }
-    }
+                    float x = 0f;
+                    float y = 0f;
+                    if (hitbox.cX + hitbox.width / 2.0F < TIP_X_THRESHOLD) {
+                        x = hitbox.cX + hitbox.width / 2.0F + TIP_OFFSET_R_X;
+                        y = hitbox.cY + TipHelper.calculateToAvoidOffscreen(tips, hitbox.cY);
+                    } else {
+                        x = hitbox.cX - hitbox.width / 2.0F + TIP_OFFSET_L_X;
+                        y = hitbox.cY + TipHelper.calculateToAvoidOffscreen(tips, hitbox.cY);
+                    }
+                    
+                    TipHelper.queuePowerTips(x, y, tips);
+                    hasRenderedATip = true;
+                }
 
-    private DisplayQuadrant getBestQuadrant() {
-        HashMap<DisplayQuadrant, Float> quadrantToCumulativeCoverage = new HashMap<>();
-
-        for(Rectangle avoidArea : model.areasToAvoid) {
-            for(Map.Entry<DisplayQuadrant, Rectangle> quadrantToAreaEntry : quadrantToArea.entrySet()) {
-                Rectangle quadrantArea = quadrantToAreaEntry.getValue();
-                DisplayQuadrant displayQuadrant = quadrantToAreaEntry.getKey();
-
-                float prevCoverage = quadrantToCumulativeCoverage.getOrDefault(displayQuadrant, 0f);
-                float xCoverage = Math.min(quadrantArea.x + quadrantArea.width, avoidArea.x + avoidArea.width) - Math.max(quadrantArea.x, avoidArea.x);
-                float yCoverage = Math.min(quadrantArea.y + quadrantArea.height, avoidArea.y + avoidArea.height) - Math.max(quadrantArea.y, avoidArea.y);
-
-                quadrantToCumulativeCoverage.put(displayQuadrant, prevCoverage + (xCoverage * yCoverage));
+                StreakTheSpire.slayTheRelicsHitboxes.add(view.getHitbox());
+                StreakTheSpire.slayTheRelicsPowerTips.add(view.getSlayTheRelicsPowerTips());
             }
         }
-
-        DisplayQuadrant result = DisplayQuadrant.BottomRight;
-        float highestCoverage = 0f;
-        for(Map.Entry<DisplayQuadrant, Float> entry : quadrantToCumulativeCoverage.entrySet()) {
-            if(entry.getValue() > highestCoverage) {
-                highestCoverage = entry.getValue();
-                result = entry.getKey();
-            }
-        }
-
-        return result;
     }
-
-    private void buildQuadrantMap() {
-        float screenWidth = Settings.WIDTH;
-        float screenHeight = Settings.HEIGHT;
-        float halfScreenWidth = screenWidth / 2.0f;
-        float halfScreenHeight = screenHeight / 2.0f;
-
-        quadrantToArea.put(DisplayQuadrant.TopLeft, new Rectangle(0, halfScreenHeight, halfScreenWidth, halfScreenHeight));
-        quadrantToArea.put(DisplayQuadrant.BottomLeft, new Rectangle(0, 0, halfScreenWidth, halfScreenHeight));
-        quadrantToArea.put(DisplayQuadrant.TopRight, new Rectangle(halfScreenWidth, halfScreenHeight, halfScreenWidth, halfScreenHeight));
-        quadrantToArea.put(DisplayQuadrant.BottomRight, new Rectangle(halfScreenWidth, 0, halfScreenWidth, halfScreenHeight));
-
-        quadrantToTipBoxPosition.put(DisplayQuadrant.TopLeft, new Vector2(20.0f * Settings.xScale, screenHeight - (200.0f * Settings.yScale)));
-        quadrantToTipBoxPosition.put(DisplayQuadrant.BottomLeft, new Vector2( 20.0f * Settings.xScale, 240.0f * Settings.yScale));
-        quadrantToTipBoxPosition.put(DisplayQuadrant.TopRight, new Vector2(screenWidth - (340.0f * Settings.xScale), screenHeight - (200.0f * Settings.yScale)));
-        quadrantToTipBoxPosition.put(DisplayQuadrant.BottomRight, new Vector2(screenWidth - (340.0f * Settings.xScale), 240.0f * Settings.yScale));
-    }
-
 
     public static final IViewFactory FACTORY = new IViewFactory() {
         @Override

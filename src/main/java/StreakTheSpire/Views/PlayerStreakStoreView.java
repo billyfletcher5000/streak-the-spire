@@ -19,7 +19,6 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
     private UIGridLayoutGroup gridLayoutGroup = null;
 
     private PlayerStreakView rotatingStreakView = null;
-    private Rectangle tipAvoidanceRectangle;
 
     @Override
     public void setDimensions(Vector2 dimensions) {
@@ -34,12 +33,6 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
         setLocalPosition(panelModel.position.get());
         setLocalScale(model.panelModel.get().scale.get());
-
-        tipAvoidanceRectangle = new Rectangle();
-        updateTipAvoidance();
-        TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();
-        TipSystemController tipSystemController = new TipSystemController(tipSystemModel);
-        tipSystemController.addAreaToAvoid(tipAvoidanceRectangle);
 
         DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
         preferences.borderStyle.addOnChangedSubscriber(this::updateBorder);
@@ -171,18 +164,6 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
 
         GameStateModel gsm = StreakTheSpire.get().getGameStateModel();
         gsm.editModeActive.removeOnChangedSubscriber(this::onEditModeChanged);
-
-        if(tipAvoidanceRectangle != null) {
-            TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();
-            TipSystemController tipSystemController = new TipSystemController(tipSystemModel);
-            tipSystemController.removeAreaFromAvoid(tipAvoidanceRectangle);
-        }
-    }
-
-    @Override
-    protected void elementUpdate(float deltaTime) {
-        super.elementUpdate(deltaTime);
-        updateTipAvoidance();
     }
 
     private PlayerStreakView createStreakModelDisplay(PlayerStreakModel streakModel) {
@@ -280,20 +261,6 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         diagonalBottomRightOverride.texture = texture;
         diagonalBottomRightOverride.rotation = -45.0f;
         setCursorOverrideDiagonalBottomRight(diagonalBottomRightOverride);
-    }
-
-    private void updateTipAvoidance() {
-        Affine2 localToWorld = getLocalToWorldTransform();
-        Vector2 position = getLocalPosition();
-        Vector2 dimensions = getDimensions().scl(0.5f);
-
-        Vector2 bottomLeft = new Vector2(position.x - dimensions.x, position.y - dimensions.y);
-        Vector2 topRight = new Vector2(position.x + dimensions.x, position.y + dimensions.y);
-
-        tipAvoidanceRectangle.x = bottomLeft.x;
-        tipAvoidanceRectangle.y = bottomLeft.y;
-        tipAvoidanceRectangle.width = topRight.x - bottomLeft.x;
-        tipAvoidanceRectangle.height = topRight.y - bottomLeft.y;
     }
 
     public static final IViewFactory FACTORY = new IViewFactory() {

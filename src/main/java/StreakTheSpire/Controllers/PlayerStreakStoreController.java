@@ -8,7 +8,6 @@ import StreakTheSpire.StreakTheSpire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.JsonSyntaxException;
-import com.megacrit.cardcrawl.core.CardCrawlGame;
 
 import java.io.File;
 import java.util.*;
@@ -40,7 +39,7 @@ public class PlayerStreakStoreController {
                 streakModel.reset();
             }
 
-            if(criteria.trackRotating.get()) {
+            if(criteria.trackContinuous.get()) {
                 if(model.rotatingPlayerStreakModel.get() != null) {
                     model.rotatingPlayerStreakModel.get().reset();
                 }
@@ -52,7 +51,7 @@ public class PlayerStreakStoreController {
                 model.rotatingPlayerStreakModel.set(null);
             }
         }
-        else if (model.rotatingPlayerStreakModel.get() == null && criteria.trackRotating.get()) {
+        else if (model.rotatingPlayerStreakModel.get() == null && criteria.trackContinuous.get()) {
             createRotatingModel();
         }
 
@@ -135,12 +134,12 @@ public class PlayerStreakStoreController {
                     continue;
                 }
 
-                if(processRunData(criteria, data, streakModel, playerClass) && criteria.trackRotating.get())
+                if(processRunData(criteria, data, streakModel, playerClass) && criteria.trackContinuous.get())
                     allCharacterSubsets.add(data);
             }
         }
 
-        if(criteria.trackRotating.get()) {
+        if(criteria.trackContinuous.get()) {
             // Now process rotating streaks
             allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 

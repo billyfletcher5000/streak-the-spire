@@ -3,7 +3,7 @@ package StreakTheSpire.Views;
 import StreakTheSpire.Models.CharacterSkeletonDisplayModel;
 import StreakTheSpire.Models.IModel;
 import StreakTheSpire.StreakTheSpire;
-import StreakTheSpire.UI.SkeletonModifier;
+import StreakTheSpire.Utils.SkeletonModifier;
 import StreakTheSpire.UI.Layout.UIScaleBoxElement;
 import StreakTheSpire.UI.UISpineAnimationElement;
 import com.esotericsoftware.spine.Animation;

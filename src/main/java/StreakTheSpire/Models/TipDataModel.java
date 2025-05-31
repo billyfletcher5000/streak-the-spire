@@ -6,6 +6,7 @@ import com.megacrit.cardcrawl.helpers.Hitbox;
 public class TipDataModel {
 
     public Property<Boolean> isActive = new Property<>(true);
+    public Property<Boolean> showDuringEditMode = new Property<>(false);
     public Property<Hitbox> triggerHitbox = new Property<>(new Hitbox(0,0,0,0));
     public Property<String> tipHeaderText = new Property<>("");
     public Property<String> tipBodyText = new Property<>("");

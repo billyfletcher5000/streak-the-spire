@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class TipSystemModel {
     public PropertyLinkedHashSet<TipDataModel> tipData = new PropertyLinkedHashSet<>();
-    public PropertyList<Rectangle> areasToAvoid = new PropertyList<>();
 
     public TipSystemModel() {}
 }
