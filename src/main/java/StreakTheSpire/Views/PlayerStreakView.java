@@ -33,6 +33,7 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     private int lastProcessedScore = -1;
     private TipDataModel tipDataModel = null;
     private UIElementHitbox tipHitbox = null;
+    private boolean tipBodyTextDirty = false;
 
     private IScoreChangeCeremony scoreChangeCeremony = null;
 
@@ -96,7 +97,18 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         String bodyText = getTipBodyText(tipUIStrings, model);
         String additionalLocalText = tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.EditModeInstructionText);
 
+        model.currentStreak.addOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.currentStreakTimestamp.addOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.highestStreak.addOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.highestStreakTimestamp.addOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.totalValidWins.addOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.totalValidLosses.addOnChangedSubscriber(this::markTipBodyTextDirty);
+
         tipDataModel = tipSystemController.createTipDataModel(isVisible(), tipHitbox, headerText, bodyText, additionalLocalText);
+    }
+
+    private void markTipBodyTextDirty() {
+        tipBodyTextDirty = true;
     }
 
     private void updateTipBodyText() {
@@ -132,6 +144,13 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
             scoreChangeCeremony = null;
         }
 
+        model.currentStreak.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.currentStreakTimestamp.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.highestStreak.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.highestStreakTimestamp.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.totalValidWins.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+        model.totalValidLosses.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+
         if(tipDataModel != null) {
             TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();
             TipSystemController tipSystemController = new TipSystemController(tipSystemModel);
@@ -140,8 +159,6 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
     }
 
     private void onStreakChanged() {
-        updateTipBodyText();
-
         if(scoreChangeCeremony != null) {
             scoreChangeCeremony.forceEnd();
         }
@@ -179,6 +196,11 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
 
         if(scoreChangeCeremony != null) {
             scoreChangeCeremony.update(deltaTime);
+        }
+
+        if(tipBodyTextDirty) {
+            updateTipBodyText();
+            tipBodyTextDirty = false;
         }
 
         if(tipHitbox != null) {

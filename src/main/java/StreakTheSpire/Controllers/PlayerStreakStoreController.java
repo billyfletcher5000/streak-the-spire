@@ -36,7 +36,7 @@ public class PlayerStreakStoreController {
     public void calculateStreakData(StreakCriteriaModel criteria, boolean recalculateAll) {
         // This is heavily based on RunHistoryScreen.refreshData to preserve some of the odd legacy bugfixes around files and whatnot
 
-        HashMap<PlayerStreakModel, Property<Integer>> temporaryStreakCountMap = new HashMap<>();
+        HashMap<PlayerStreakModel, PlayerStreakModel> temporaryStreakDuplicateMap = new HashMap<>();
 
         if(recalculateAll) {
             for (PlayerStreakModel streakModel : model.playerToStreak) {
@@ -133,11 +133,11 @@ public class PlayerStreakStoreController {
 
             ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
 
-            if(!temporaryStreakCountMap.containsKey(streakModel)) {
-                temporaryStreakCountMap.put(streakModel, new Property<>(streakModel.currentStreak.get()));
+            if(!temporaryStreakDuplicateMap.containsKey(streakModel)) {
+                temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
             }
 
-            Property<Integer> tempCurrentStreakProperty = temporaryStreakCountMap.get(streakModel);
+            PlayerStreakModel streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
 
             for (RunDataSubset data : runDataToProcess) {
                 if(!data.character_chosen.equals(playerClass)) {
@@ -145,7 +145,7 @@ public class PlayerStreakStoreController {
                     continue;
                 }
 
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, tempCurrentStreakProperty, streakModel, playerClass);
+                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, playerClass);
                 if(result != ProcessResult.Disqualified && criteria.trackContinuous.get()) {
                     allCharacterSubsets.add(data);
 
@@ -171,15 +171,14 @@ public class PlayerStreakStoreController {
             PlayerStreakModel streakModel = model.rotatingPlayerStreakModel.get();
             ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
 
-            if(!temporaryStreakCountMap.containsKey(streakModel)) {
-                temporaryStreakCountMap.put(streakModel, new Property<>(streakModel.currentStreak.get()));
+            if(!temporaryStreakDuplicateMap.containsKey(streakModel)) {
+                temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
             }
 
-            Property<Integer> tempCurrentStreakProperty = temporaryStreakCountMap.get(streakModel);
-
+            PlayerStreakModel streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
 
             for(RunDataSubset data : allCharacterSubsets) {
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, tempCurrentStreakProperty, streakModel, PlayerStreakStoreModel.RotatingPlayerIdentifier);
+                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, PlayerStreakStoreModel.RotatingPlayerIdentifier);
                 if(result == ProcessResult.StreakIncreased) {
                     currentStreakCharacterIDs.add(0, data.character_chosen);
                 } else if(result == ProcessResult.StreakReset) {
@@ -192,8 +191,8 @@ public class PlayerStreakStoreController {
             }
         }
 
-        for(Map.Entry<PlayerStreakModel, Property<Integer>> entry : temporaryStreakCountMap.entrySet()) {
-            entry.getKey().currentStreak.set(entry.getValue().get());
+        for(Map.Entry<PlayerStreakModel, PlayerStreakModel> entry : temporaryStreakDuplicateMap.entrySet()) {
+            entry.getKey().set(entry.getValue());
         }
     }
 
@@ -211,14 +210,14 @@ public class PlayerStreakStoreController {
     }
 
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
-    private static ProcessResult processRunData(StreakCriteriaModel criteria, RunDataSubset data, ArrayList<String> currentStreakCharacterIDs, Property<Integer> currentStreakProp, PlayerStreakModel streakModel, String identifier) {
+    private static ProcessResult processRunData(StreakCriteriaModel criteria, RunDataSubset data, ArrayList<String> currentStreakCharacterIDs, PlayerStreakModel streakModel, String identifier) {
         String currentStreakTimestamp = streakModel.highestStreakTimestamp.get();
         if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
             StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
             return ProcessResult.Disqualified;
         }
 
-        int streakCount = currentStreakProp.get();
+        int streakCount = streakModel.currentStreak.get();
 
         ProcessResult processResult = ProcessResult.Undefined;
         boolean disqualified = false;
@@ -259,7 +258,7 @@ public class PlayerStreakStoreController {
                 processResult = ProcessResult.StreakIncreased;
             }
 
-            currentStreakProp.set(streakCount);
+            streakModel.currentStreak.set(streakCount);
             streakModel.currentStreakTimestamp.set(data.timestamp);
 
             if (streakModel.highestStreak.get() < streakCount) {
@@ -283,15 +282,15 @@ public class PlayerStreakStoreController {
 
         for(PlayerStreakModel playerStreakModel : playerStreakModels)
         {
-            report.append("Character: " + playerStreakModel.identifier.get() + "\n");
-            report.append("\tHighest Streak: " + playerStreakModel.highestStreak.get() + "\n");
-            report.append("\tCurrent Streak: " + playerStreakModel.currentStreak.get() + "\n");
-            report.append("\tHighest Streak Timestamp: " + playerStreakModel.highestStreakTimestamp.get() + "\n");
-            report.append("\tCurrent Streak Timestamp: " + playerStreakModel.currentStreakTimestamp.get() + "\n");
-            report.append("\tTotal Wins: " + playerStreakModel.totalValidWins.get() + "\n");
-            report.append("\tTotal Losses: " + playerStreakModel.totalValidLosses.get() + "\n");
-            report.append("\tWin Rate: " + (float)playerStreakModel.totalValidWins.get() / (float)playerStreakModel.totalValidLosses.get() + "\n");
-            report.append("\tProcessed Filenames: " + String.join(", ", playerStreakModel.processedFilenames) + "\n");
+            report.append("Character: ").append(playerStreakModel.identifier.get()).append("\n");
+            report.append("\tHighest Streak: ").append(playerStreakModel.highestStreak.get()).append("\n");
+            report.append("\tCurrent Streak: ").append(playerStreakModel.currentStreak.get()).append("\n");
+            report.append("\tHighest Streak Timestamp: ").append(playerStreakModel.highestStreakTimestamp.get()).append("\n");
+            report.append("\tCurrent Streak Timestamp: ").append(playerStreakModel.currentStreakTimestamp.get()).append("\n");
+            report.append("\tTotal Wins: ").append(playerStreakModel.totalValidWins.get()).append("\n");
+            report.append("\tTotal Losses: ").append(playerStreakModel.totalValidLosses.get()).append("\n");
+            report.append("\tWin Rate: ").append((float) playerStreakModel.totalValidWins.get() / (float) playerStreakModel.totalValidLosses.get()).append("\n");
+            report.append("\tProcessed Filenames: ").append(String.join(", ", playerStreakModel.processedFilenames)).append("\n");
         }
 
         return report.toString();

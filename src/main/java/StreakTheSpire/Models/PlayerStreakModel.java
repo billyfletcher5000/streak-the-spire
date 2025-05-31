@@ -27,4 +27,32 @@ public class PlayerStreakModel implements IModel {
         totalValidWins.set(0);
         totalValidLosses.set(0);
     }
+
+    public PlayerStreakModel cpy() {
+        PlayerStreakModel cpy = new PlayerStreakModel();
+        cpy.identifier.set(identifier.get());
+        cpy.highestStreak.set(this.highestStreak.get());
+        cpy.highestStreakTimestamp.set(this.highestStreakTimestamp.get());
+        cpy.currentStreak.set(this.currentStreak.get());
+        cpy.currentStreakTimestamp.set(this.currentStreakTimestamp.get());
+        cpy.currentStreakCharacterIDs.addAll(this.currentStreakCharacterIDs);
+        cpy.processedFilenames.addAll(this.processedFilenames);
+        cpy.totalValidWins.set(this.totalValidWins.get());
+        cpy.totalValidLosses.set(this.totalValidLosses.get());
+        return cpy;
+    }
+
+    public void set(PlayerStreakModel other) {
+        this.identifier.set(other.identifier.get());
+        this.highestStreak.set(other.highestStreak.get());
+        this.highestStreakTimestamp.set(other.highestStreakTimestamp.get());
+        this.currentStreak.set(other.currentStreak.get());
+        this.currentStreakTimestamp.set(other.currentStreakTimestamp.get());
+        this.currentStreakCharacterIDs.clear();
+        this.currentStreakCharacterIDs.addAll(other.currentStreakCharacterIDs);
+        this.processedFilenames.clear();
+        this.processedFilenames.addAll(other.processedFilenames);
+        this.totalValidWins.set(other.totalValidWins.get());
+        this.totalValidLosses.set(other.totalValidLosses.get());
+    }
 }
