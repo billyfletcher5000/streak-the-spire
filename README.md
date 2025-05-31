@@ -30,8 +30,9 @@ Installing can be down in one of two ways:
 1. Download the latest StreakTheSpire.JAR from the Releases page
 2. Copy StreakTheSpire.JAR to your Slay the Spire install directory's "mods" folder
 3. Run the game with mods enabled
-4. Select "Streak the Spire" from the list in Mod Loader
-5. Hit Play!
+4. Select "BaseMod" from the list in Mod Loader if it isn't already selected
+5. Select "Streak the Spire" from the list in Mod Loader
+6. Hit Play!
 
 ## Configuring Streak the Spire
 
