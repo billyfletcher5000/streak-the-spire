@@ -34,7 +34,7 @@ It also provides helpful tooltips with more information on your historical play,
 Installing can be down in one of two ways:
 
 ### [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3491494231)
-1. Download from the Steam Workshop (Link here when uploaded)
+1. Subscribe and download from the Steam Workshop
 2. Run the game with mods enabled
 3. Select "Streak the Spire" from the list in Mod Loader
 4. Hit Play!
