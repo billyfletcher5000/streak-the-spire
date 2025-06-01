@@ -16,6 +16,17 @@ It is highly configurable, allowing you to drag and resize the display and put i
 It also provides helpful tooltips with more information on your historical play, including your best win streak of all time, the dates your streaks occurred and your win rate, all calculated depending on the criteria you select. It even integrates with Slay The Relics (+ Reborn)!
 </p>
 
+## Supported Languages
+> :warning: Apart from English, these are autotranslated, please suggest fixes to them at any time! :warning:
+
+| Languages                                  |                                            |                                            |                                            |
+|--------------------------------------------|--------------------------------------------|--------------------------------------------|--------------------------------------------|
+| English                                    | Nederlands (Dutch) | Français (French) | Deutsch (German) |
+| Italiano (Italian)                         | 日本語 (Japanese) | 한국어 (Korean) | Polski (Polish) |
+| Português do Brasil (Brazilian Portuguese) | Русский (Russian) | 简体中文 (Simplified Chinese) | 繁體中文 (Traditional Chinese) |
+| Español (Spanish)                          | ไทย (Thai) | Türkçe (Turkish) | Українська (Ukrainian) |
+| Tiếng Việt (Vietnamese)                    | Esperanto |
+
 ## Installation
 
 Installing can be down in one of two ways:
@@ -73,12 +84,11 @@ Each option should have a tooltip that explains what it does in detail, simply h
 ## Known Issues
 
 - Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
-- Localization only supports english and may have issues with other languages
 - Cannot resize/move panel on the mod config screen
+- Localization is auto-translated and is likely full of errors!
 
 ## Planned Updates
 
-- Full localization support
 - Additional, configurable effects for streak increase/resets
 - Specific number and first time ever reached effects
 - Ability to add in historical, untracked streaks, in case you don't have your full run history

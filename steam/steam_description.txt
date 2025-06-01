@@ -9,6 +9,42 @@ It also provides helpful tooltips with more information on your historical play,
 
 [url=https://github.com/billyfletcher5000/streak-the-spire]Github[/url]
 
+[h2]Supported Languages[/h2]
+[b]Note: Apart from English, these are autotranslated, please suggest fixes to them at any time![/b]
+
+[table]
+ [tr]
+  [th]English[/th]
+  [th]Nederlands (Dutch)[/th]
+  [th]Français (French)[/th]
+  [th]Deutsch (German)[/th]
+ [/tr]
+ [tr]
+  [th]Italiano (Italian)[/th]
+  [th]日本語 (Japanese)[/th]
+  [th]한국어 (Korean)[/th]
+  [th]Polski (Polish)[/th]
+ [/tr]
+ [tr]
+  [th]Português do Brasil (Brazilian Portuguese)[/th]
+  [th]Русский (Russian)[/th]
+  [th]简体中文 (Simplified Chinese)[/th]
+  [th]繁體中文 (Traditional Chinese)[/th]
+ [/tr]
+ [tr]
+  [th]Español (Spanish)[/th]
+  [th]ไทย (Thai)[/th]
+  [th]Türkçe (Turkish)[/th]
+  [th]Українська (Ukrainian)[/th]
+ [/tr]
+ [tr]
+  [th]Tiếng Việt (Vietnamese)[/th]
+  [th]Esperanto[/th]
+  [th][/th]
+  [th][/th]
+ [/tr]
+[/table]
+
 [h2]Configuring Streak the Spire[/h2]
 Configuration of the mod happens in one of two ways:
 
@@ -36,13 +72,13 @@ Each option should have a tooltip that explains what it does in detail, simply h
 [h2]Known Issues[/h2]
 [list]
 [*] Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
-[*] Localization only supports english and may have issues with other languages
 [*] Cannot resize/move panel on the mod config screen
+[*] Localization is auto-translated and is likely full of errors!
 [/list]
 
 [h2]Planned Updates[/h2]
 [list]
-[*] Full localization support
+
 [*] Additional, configurable effects for streak increase/resets
 [*] Specific number and first time ever reached effects
 [*] Ability to add in historical, untracked streaks, in case you don't have your full run history
