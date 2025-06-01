@@ -82,6 +82,7 @@ Each option should have a tooltip that explains what it does in detail, simply h
 - Specific number and first time ever reached effects
 - Ability to add in historical, untracked streaks, in case you don't have your full run history
 - Static image and text displays for characters
+- Custom character support
 
 ## Development Instructions
 
