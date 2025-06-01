@@ -5,6 +5,8 @@
 
 # Streak The Spire
 
+[Now available on Steam Workshop!](https://steamcommunity.com/sharedfiles/filedetails/?id=3491494231)
+
 <img align="right" width="94" height="280" alt="Animated image of a series of Slay the Spire character heads next to a score representing their current win streak" src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/side-bar-idle.gif" />
 <p>
 Streak The Spire is a mod for the popular deckbuilding roguelike, Slay The Spire. It adds automatic (and accurate!) streak calculation based upon your run history, with effects when you increase or lose your streaks, on a per character and rotating basis. It even has animated character icons using the existing animations from the game!
@@ -31,7 +33,7 @@ It also provides helpful tooltips with more information on your historical play,
 
 Installing can be down in one of two ways:
 
-### Steam Workshop
+### [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3491494231)
 1. Download from the Steam Workshop (Link here when uploaded)
 2. Run the game with mods enabled
 3. Select "Streak the Spire" from the list in Mod Loader
