@@ -37,6 +37,7 @@ Each option should have a tooltip that explains what it does in detail, simply h
 [list]
 [*] Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
 [*] Localization only supports english and may have issues with other languages
+[*] Cannot resize/move panel on the mod config screen
 [/list]
 
 [h2]Planned Updates[/h2]
@@ -50,7 +51,7 @@ Each option should have a tooltip that explains what it does in detail, simply h
 [/list]
 
 [h2]Reporting Issues & Suggestions[/h2]
-If you run into any issues, reply here or use the Issues system on the Github page, I will endeavour to fix them as soon as possible.
+If you run into any issues, reply here or use the Issues system on the [url=https://github.com/billyfletcher5000/streak-the-spire]Github[/url]page, I will endeavour to fix them as soon as possible.
 
 If you have any suggestions, please reply here and I'll try and incorporate as many as make sense/are possible!
 

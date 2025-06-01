@@ -74,6 +74,7 @@ Each option should have a tooltip that explains what it does in detail, simply h
 
 - Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
 - Localization only supports english and may have issues with other languages
+- Cannot resize/move panel on the mod config screen
 
 ## Planned Updates
 
