@@ -1,0 +1,62 @@
+[img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/score-increase.gif[/img]
+
+[h1]Streak The Spire[/h1]
+Streak The Spire is a mod that adds automatic (and accurate!) streak calculation based upon your run history, with effects when you increase or lose your streaks, on a per character and rotating basis. It even has animated character icons using the existing animations from the game!
+
+It is highly configurable, allowing you to drag and resize the display and put it anywhere you want, with a number of different background options (including no background at all), as well as customise the criteria used to determine if a given run counts to your streaks.
+
+It also provides helpful tooltips with more information on your historical play, including your best win streak of all time, the dates your streaks occurred and your win rate, all calculated depending on the criteria you select. It even integrates with Slay The Relics (+ Reborn)!
+
+[url=https://github.com/billyfletcher5000/streak-the-spire]Github[/url]
+
+[h2]Configuring Streak the Spire[/h2]
+Configuration of the mod happens in one of two ways:
+
+[h3]Panel Configuration[/h3]
+To move, resize or change the background of the panel simply hold down `ALT`
+on your keyboard and your mouse will be able to resize and move the panel.
+
+You will also see a small button next to the panel, which allows you to cycle
+though all the available border styles.
+
+[img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/resize-border-change.gif[/img]
+
+[h3]Mods Menu Configuration[/h3]
+To change your streak criteria, as well as what 'layer' the panel sits on:
+[olist]
+[*] Go to the Main Menu of Slay the Spire
+[*] Select "Mods"
+[*] Select "Streak the Spire" from the list on the left
+[*] Click the "Config" button in the bottom left area of the screen
+[/olist]
+Each option should have a tooltip that explains what it does in detail, simply hover over an option for more information.
+
+[url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/mod-menu-config-button.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/mod-menu-config-button-thumbnail.png[/img][/url][url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-thumbnail.png[/img][/url]
+
+[h2]Known Issues[/h2]
+[list]
+[*] Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
+[*] Localization only supports english and may have issues with other languages
+[/list]
+
+[h2]Planned Updates[/h2]
+[list]
+[*] Full localization support
+[*] Additional, configurable effects for streak increase/resets
+[*] Specific number and first time ever reached effects
+[*] Ability to add in historical, untracked streaks, in case you don't have your full run history
+[*] Static image and text displays for characters
+[*] Custom character support
+[/list]
+
+[h2]Reporting Issues & Suggestions[/h2]
+If you run into any issues, reply here or use the Issues system on the Github page, I will endeavour to fix them as soon as possible.
+
+If you have any suggestions, please reply here and I'll try and incorporate as many as make sense/are possible!
+
+[h2]Thanks[/h2]
+Thanks to kiooeht for BaseMod & ModTheSpire, as well as the StS Modding Discord community for all their help.
+
+And thank you, for trying this mod, happy streaking!
+
+[img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/side-bar-idle.gif[/img]
