@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Criterios de Racha",
+      "require_heart_kill_label": "¿Requiere Matar el Corazón?",
+      "require_heart_kill_tooltip": "Cada partida debe haber matado el corazón en el acto El Final",
+      "required_ascension_level_label": "Nivel de Ascensión Requerido",
+      "required_ascension_level_tooltip": "El nivel de Ascensión requerido para que una partida cuente",
+      "track_continuous_label": "Seguimiento Continuo",
+      "track_continuous_tooltip": "Sigue las victorias consecutivas independientemente del personaje jugado como un icono separado",
+      "enforce_rotating_label": "Forzar Rotación",
+      "enforce_rotating_tooltip": "Fuerza que la visualización Continua solo cuente las partidas en las que cada personaje seguido debe ser jugado antes de que una segunda victoria con un personaje cuente",
+      "allow_title": "Tipos de Partida Permitidos",
+      "allow_custom_seeds_label": "Semilla Personalizada",
+      "allow_custom_seeds_tooltip": "Se incluirán las partidas que hayan establecido una semilla personalizada",
+      "allow_dailies_label": "Diaria",
+      "allow_dailies_tooltip": "Se incluirán las partidas que participen en un desafío diario",
+      "allow_endless_label": "Infinita",
+      "allow_endless_tooltip": "Se incluirán las partidas que participen en un modo infinito",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Se incluirán las partidas que se jugaron con una versión beta de Slay the Spire",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Se incluirán las partidas que se jugaron con una versión demo de Slay the Spire",
+      "display_preferences_title": "Preferencias de Visualización",
+      "render_layer_title": "Capa de Renderizado",
+      "render_layer_pre_room_label": "Pre-Sala",
+      "render_layer_pre_room_tooltip": "Muestra el panel de racha detrás de los personajes, enemigos y la interfaz de usuario, pero delante del fondo",
+      "render_layer_top_panel_label": "Panel Superior*",
+      "render_layer_top_panel_tooltip": "Muestra el panel de racha en la misma capa que la barra superior del juego, no aparecerá en los menús, predeterminado",
+      "render_layer_above_most_label": "Por Encima de la Mayoría",
+      "render_layer_above_most_tooltip": "Muestra el panel de racha por delante de la mayoría de las cosas, pero no del cursor del ratón o de los desvanecimientos a pantalla completa",
+      "render_layer_above_all_label": "Por Encima de Todo",
+      "render_layer_above_all_tooltip": "Muestra el panel de racha por delante de todo lo que pueda",
+      "default_note_label": "* Predeterminado"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Información de Racha",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Racha Actual: ",
+      "highest_streak_text": "Racha Más Alta: ",
+      "date_time_achieved_text": "Logrado: ",
+      "total_wins_text": "Total de Victorias: ",
+      "total_losses_text": "Total de Derrotas: ",
+      "win_rate_text": "Tasa de Victorias: ",
+      "edit_mode_instruction_text": "#yMantén #yAlt #ypara #yEditar #yVisualización",
+      "change_border_style_title": "Cambiar Estilo de Borde",
+      "change_border_style_body_text": "Cambia entre diferentes opciones de estilo de borde.\nAPAGADO solo se mostrará cuando se mantenga ALT."
+    }
+  }
+}

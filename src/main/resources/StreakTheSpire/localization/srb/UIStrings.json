@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Kriterijumi niza pobeda",
+      "require_heart_kill_label": "Zahteva ubistvo Srca?",
+      "require_heart_kill_tooltip": "Svako trčanje mora da je ubilo srce u aktu 'Kraj'",
+      "required_ascension_level_label": "Potreban nivo uspona",
+      "required_ascension_level_tooltip": "Potreban nivo uspona da bi se trčanje računalo",
+      "track_continuous_label": "Prati neprekidno",
+      "track_continuous_tooltip": "Prati uzastopne pobede bez obzira na to koji je lik igran kao zasebna ikona",
+      "enforce_rotating_label": "Nametni rotaciju",
+      "enforce_rotating_tooltip": "Nametne da se neprekidni prikaz računa samo kada se svaki praćeni lik mora odigrati pre nego što se druga pobeda sa likom računa",
+      "allow_title": "Dozvoljeni tipovi trčanja",
+      "allow_custom_seeds_label": "Prilagođeno seme",
+      "allow_custom_seeds_tooltip": "Trčanja koja su postavila prilagođeno seme biće uključena",
+      "allow_dailies_label": "Dnevno",
+      "allow_dailies_tooltip": "Trčanja koja su deo dnevnog izazova biće uključena",
+      "allow_endless_label": "Beskonačno",
+      "allow_endless_tooltip": "Trčanja koja su deo beskonačnog moda biće uključena",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Trčanja koja su igrana sa beta verzijom igre Slay the Spire biće uključena",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Trčanja koja su igrana sa demo verzijom igre Slay the Spire biće uključena",
+      "display_preferences_title": "Preferencije prikaza",
+      "render_layer_title": "Sloj rendera",
+      "render_layer_pre_room_label": "Pre sobe",
+      "render_layer_pre_room_tooltip": "Prikazuje panel niza pobeda iza likova, neprijatelja i korisničkog interfejsa, ali ispred pozadine",
+      "render_layer_top_panel_label": "Gornji panel*",
+      "render_layer_top_panel_tooltip": "Prikazuje panel niza pobeda na istom sloju kao i gornja traka igre, neće se pojavljivati u menijima, podrazumevano",
+      "render_layer_above_most_label": "Iznad većine",
+      "render_layer_above_most_tooltip": "Prikazuje panel niza pobeda ispred većine stvari, ali ne ispred kursora miša ili potpunog zatamnjenja ekrana",
+      "render_layer_above_all_label": "Iznad svega",
+      "render_layer_above_all_tooltip": "Prikazuje panel niza pobeda ispred svega što može",
+      "default_note_label": "* Podrazumevano"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Informacije o nizu pobeda",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Trenutni niz: ",
+      "highest_streak_text": "Najviši niz: ",
+      "date_time_achieved_text": "Ostvareno: ",
+      "total_wins_text": "Ukupno pobeda: ",
+      "total_losses_text": "Ukupno poraza: ",
+      "win_rate_text": "Stopa pobeda: ",
+      "edit_mode_instruction_text": "#yDržite #yAlt #yza #yUređivanje #yPrikaza",
+      "change_border_style_title": "Promeni stil ivice",
+      "change_border_style_body_text": "Kruži kroz različite opcije stila ivice.\nISKLJUČENO će se prikazivati samo kada se drži ALT."
+    }
+  }
+}

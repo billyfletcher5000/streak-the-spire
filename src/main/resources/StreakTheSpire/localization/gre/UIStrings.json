@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Κριτήρια σερί",
+      "require_heart_kill_label": "Απαιτείται θανάτωση καρδιάς;",
+      "require_heart_kill_tooltip": "Κάθε τρέξιμο πρέπει να έχει σκοτώσει την καρδιά στην πράξη 'Το Τέλος'",
+      "required_ascension_level_label": "Απαιτούμενο επίπεδο ανάβασης",
+      "required_ascension_level_tooltip": "Το απαιτούμενο επίπεδο ανάβασης για να μετράει ένα τρέξιμο",
+      "track_continuous_label": "Συνεχής παρακολούθηση",
+      "track_continuous_tooltip": "Παρακολουθεί διαδοχικές νίκες ανεξάρτητα από τον χαρακτήρα που παίχτηκε ως ξεχωριστό εικονίδιο",
+      "enforce_rotating_label": "Επιβολή περιστροφής",
+      "enforce_rotating_tooltip": "Επιβάλλει ότι η Συνεχής εμφάνιση μετράει μόνο τα τρεξίματα όπου κάθε παρακολουθούμενος χαρακτήρας πρέπει να έχει παιχτεί πριν μετρήσει μια δεύτερη νίκη με έναν χαρακτήρα",
+      "allow_title": "Επιτρεπόμενοι τύποι τρεξίματος",
+      "allow_custom_seeds_label": "Προσαρμοσμένη αρχική τιμή",
+      "allow_custom_seeds_tooltip": "Τα τρεξίματα που έχουν ορίσει μια προσαρμοσμένη αρχική τιμή θα συμπεριληφθούν",
+      "allow_dailies_label": "Καθημερινό",
+      "allow_dailies_tooltip": "Τα τρεξίματα που λαμβάνουν χώρα κατά τη διάρκεια μιας καθημερινής πρόκλησης θα συμπεριληφθούν",
+      "allow_endless_label": "Ατελείωτο",
+      "allow_endless_tooltip": "Τα τρεξίματα που λαμβάνουν χώρα σε μια ατελείωτη λειτουργία θα συμπεριληφθούν",
+      "allow_beta_label": "Βήτα",
+      "allow_beta_tooltip": "Τα τρεξίματα που παίχτηκαν με μια βήτα έκδοση του Slay the Spire θα συμπεριληφθούν",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Τα τρεξίματα που παίχτηκαν με μια έκδοση demo του Slay the Spire θα συμπεριληφθούν",
+      "display_preferences_title": "Προτιμήσεις εμφάνισης",
+      "render_layer_title": "Επίπεδο απόδοσης",
+      "render_layer_pre_room_label": "Προ-δωμάτιο",
+      "render_layer_pre_room_tooltip": "Εμφανίζει τον πίνακα σερί πίσω από τους χαρακτήρες, τον εχθρό και το UI αλλά μπροστά από το φόντο",
+      "render_layer_top_panel_label": "Πάνω πίνακας*",
+      "render_layer_top_panel_tooltip": "Εμφανίζει τον πίνακα σερί στο ίδιο επίπεδο με την επάνω μπάρα του παιχνιδιού, δεν θα εμφανίζεται στα μενού, προεπιλογή",
+      "render_layer_above_most_label": "Πάνω από τα περισσότερα",
+      "render_layer_above_most_tooltip": "Εμφανίζει τον πίνακα σερί μπροστά από τα περισσότερα πράγματα, αλλά όχι τον κέρσορα του ποντικιού ή τις πλήρεις οθόνες που σβήνουν",
+      "render_layer_above_all_label": "Πάνω από όλα",
+      "render_layer_above_all_tooltip": "Εμφανίζει τον πίνακα σερί μπροστά από οτιδήποτε μπορεί",
+      "default_note_label": "* Προεπιλογή"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Πληροφορίες σερί",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Τρέχον σερί: ",
+      "highest_streak_text": "Υψηλότερο σερί: ",
+      "date_time_achieved_text": "Επιτεύχθηκε: ",
+      "total_wins_text": "Σύνολο νικών: ",
+      "total_losses_text": "Σύνολο ηττών: ",
+      "win_rate_text": "Ποσοστό νικών: ",
+      "edit_mode_instruction_text": "#yΚρατήστε #yAlt #yγια #yΕπεξεργασία #yΟθόνης",
+      "change_border_style_title": "Αλλαγή στυλ περιγράμματος",
+      "change_border_style_body_text": "Κυκλώνει μέσα από διαφορετικές επιλογές στυλ περιγράμματος.\nΗ ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ θα εμφανίζεται μόνο όταν πατημένο το ALT."
+    }
+  }
+}

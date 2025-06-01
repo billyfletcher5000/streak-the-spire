@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Streak Criteria",
+      "require_heart_kill_label": "Hartdood Vereist?",
+      "require_heart_kill_tooltip": "Elke run moet het hart in de Eind-act hebben gedood",
+      "required_ascension_level_label": "Vereist Ascensieniveau",
+      "required_ascension_level_tooltip": "Het vereiste Ascensieniveau om een run te laten meetellen",
+      "track_continuous_label": "Continu Bijhouden",
+      "track_continuous_tooltip": "Houdt opeenvolgende overwinningen bij, ongeacht welk personage is gespeeld, als een apart pictogram",
+      "enforce_rotating_label": "Rotatie Afdwingen",
+      "enforce_rotating_tooltip": "Dwingt af dat de Continue weergave alleen runs telt waarbij elk bijgehouden personage moet zijn gespeeld voordat een tweede overwinning met een personage telt",
+      "allow_title": "Toegestane Run Types",
+      "allow_custom_seeds_label": "Aangepaste Seed",
+      "allow_custom_seeds_tooltip": "Runs met een aangepaste seed worden opgenomen",
+      "allow_dailies_label": "Dagelijks",
+      "allow_dailies_tooltip": "Runs die deel uitmaken van een dagelijkse uitdaging worden opgenomen",
+      "allow_endless_label": "Eindeloos",
+      "allow_endless_tooltip": "Runs die deel uitmaken van een eindeloze modus worden opgenomen",
+      "allow_beta_label": "Bèta",
+      "allow_beta_tooltip": "Runs die zijn gespeeld met een bètaversie van Slay the Spire worden opgenomen",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Runs die zijn gespeeld met een demoversie van Slay the Spire worden opgenomen",
+      "display_preferences_title": "Weergavevoorkeuren",
+      "render_layer_title": "Renderlaag",
+      "render_layer_pre_room_label": "Voor de Kamer",
+      "render_layer_pre_room_tooltip": "Toont het streak-paneel achter personages, vijanden en UI, maar voor de achtergrond",
+      "render_layer_top_panel_label": "Bovenpaneel*",
+      "render_layer_top_panel_tooltip": "Toont het streak-paneel op dezelfde laag als de bovenste balk van het spel, verschijnt niet in menu's, standaard",
+      "render_layer_above_most_label": "Boven Meeste",
+      "render_layer_above_most_tooltip": "Toont het streak-paneel voor de meeste dingen, maar niet de muiscursor of full-screen fades",
+      "render_layer_above_all_label": "Boven Alles",
+      "render_layer_above_all_tooltip": "Toont het streak-paneel voor alles wat het kan",
+      "default_note_label": "* Standaard"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Streak Informatie",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Huidige Streak: ",
+      "highest_streak_text": "Hoogste Streak: ",
+      "date_time_achieved_text": "Bereikt: ",
+      "total_wins_text": "Totaal Aantal Overwinningen: ",
+      "total_losses_text": "Totaal Aantal Verliezen: ",
+      "win_rate_text": "Winstpercentage: ",
+      "edit_mode_instruction_text": "#yHoud #yAlt #yingedrukt #yom #yWeergave #yte #yBewerken",
+      "change_border_style_title": "Randstijl Wijzigen",
+      "change_border_style_body_text": "Fietst door verschillende randstijlopties.\nUIT wordt alleen weergegeven wanneer ALT ingedrukt wordt gehouden."
+    }
+  }
+}

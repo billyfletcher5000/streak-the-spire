@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Kriterioj de Serio",
+      "require_heart_kill_label": "Ĉu necesas Koro-Mortigo?",
+      "require_heart_kill_tooltip": "Ĉiu kuro devas esti mortiginta la koron en la Ago 'La Fino'",
+      "required_ascension_level_label": "Postulata Ascenda Nivelo",
+      "required_ascension_level_tooltip": "La postulata Ascenda nivelo por ke kuro estu kalkulata",
+      "track_continuous_label": "Spuri Kontinuajn",
+      "track_continuous_tooltip": "Spuras sinsekvajn venkojn sendepende de la ludita rolulo kiel aparta ikono",
+      "enforce_rotating_label": "Devigi Rotacion",
+      "enforce_rotating_tooltip": "Devigas ke la Kontinua montro kalkulas nur kurojn kie ĉiu spurita rolulo devas esti ludita antaŭ ol dua venko kun rolulo kalkulas",
+      "allow_title": "Permesitaj Kuro-Tipoj",
+      "allow_custom_seeds_label": "Propra Semo",
+      "allow_custom_seeds_tooltip": "Kuroj kiuj fiksis propran semon estos inkluzivitaj",
+      "allow_dailies_label": "Ĉiutaga",
+      "allow_dailies_tooltip": "Kuroj kiuj partoprenas dum ĉiutaga defio estos inkluzivitaj",
+      "allow_endless_label": "Senfina",
+      "allow_endless_tooltip": "Kuroj kiuj partoprenas en senfina reĝimo estos inkluzivitaj",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Kuroj kiuj estis luditaj kun beta versio de Slay the Spire estos inkluzivitaj",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Kuroj kiuj estis luditaj kun demo versio de Slay the Spire estos inkluzivitaj",
+      "display_preferences_title": "Montraj Preferoj",
+      "render_layer_title": "Bildiga Tavolo",
+      "render_layer_pre_room_label": "Antaŭ Ĉambro",
+      "render_layer_pre_room_tooltip": "Montras la serion-panelon malantaŭ roluloj, malamikoj kaj UI sed antaŭ la fono",
+      "render_layer_top_panel_label": "Supra Panelo*",
+      "render_layer_top_panel_tooltip": "Montras la serion-panelon sur la sama tavolo kiel la supra trinkejo de la ludo, ne aperos en menuoj, defaŭlte",
+      "render_layer_above_most_label": "Super la Plej Multaj",
+      "render_layer_above_most_tooltip": "Montras la serion-panelon antaŭ la plej multaj aferoj, sed ne la muskurson aŭ tutekranajn svanadojn",
+      "render_layer_above_all_label": "Super Ĉio",
+      "render_layer_above_all_tooltip": "Montras la serion-panelon antaŭ ĉio kio eblas",
+      "default_note_label": "* Defaŭlte"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Serio-Informoj",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Aktuala Serio: ",
+      "highest_streak_text": "Plej Alta Serio: ",
+      "date_time_achieved_text": "Atingita: ",
+      "total_wins_text": "Totalaj Venkoj: ",
+      "total_losses_text": "Totalaj Malvenkoj: ",
+      "win_rate_text": "Venka Procento: ",
+      "edit_mode_instruction_text": "#yTenu #yAlt #ypor #yRedakti #yMontron",
+      "change_border_style_title": "Ŝanĝi Randan Stilon",
+      "change_border_style_body_text": "Cikloj tra malsamaj randostilaj opcioj.\nMALŜALTITA montriĝos nur kiam ALT estas premata."
+    }
+  }
+}

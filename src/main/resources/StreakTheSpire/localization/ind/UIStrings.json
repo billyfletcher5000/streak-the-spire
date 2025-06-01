@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Kriteria Streak",
+      "require_heart_kill_label": "Perlu Pembunuhan Jantung?",
+      "require_heart_kill_tooltip": "Setiap lari harus telah membunuh jantung di babak Akhir",
+      "required_ascension_level_label": "Tingkat Ascension yang Diperlukan",
+      "required_ascension_level_tooltip": "Tingkat Ascension yang diperlukan agar sebuah lari dihitung",
+      "track_continuous_label": "Lacak Berkelanjutan",
+      "track_continuous_tooltip": "Melacak kemenangan berturut-turut terlepas dari karakter yang dimainkan sebagai ikon terpisah",
+      "enforce_rotating_label": "Terapkan Rotasi",
+      "enforce_rotating_tooltip": "Memaksa tampilan Berkelanjutan hanya menghitung lari di mana setiap karakter yang dilacak harus dimainkan sebelum kemenangan kedua dengan karakter dihitung",
+      "allow_title": "Jenis Lari yang Diizinkan",
+      "allow_custom_seeds_label": "Benih Kustom",
+      "allow_custom_seeds_tooltip": "Lari yang telah menetapkan benih kustom akan disertakan",
+      "allow_dailies_label": "Harian",
+      "allow_dailies_tooltip": "Lari yang ikut serta selama tantangan harian akan disertakan",
+      "allow_endless_label": "Tanpa Akhir",
+      "allow_endless_tooltip": "Lari yang ikut serta dalam mode tanpa akhir akan disertakan",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Lari yang dimainkan dengan versi beta Slay the Spire akan disertakan",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Lari yang dimainkan dengan versi demo Slay the Spire akan disertakan",
+      "display_preferences_title": "Preferensi Tampilan",
+      "render_layer_title": "Lapisan Render",
+      "render_layer_pre_room_label": "Pra-Ruangan",
+      "render_layer_pre_room_tooltip": "Menampilkan panel streak di belakang karakter, musuh, dan UI tetapi di depan latar belakang",
+      "render_layer_top_panel_label": "Panel Atas*",
+      "render_layer_top_panel_tooltip": "Menampilkan panel streak pada lapisan yang sama dengan bilah atas game, tidak akan muncul di menu, default",
+      "render_layer_above_most_label": "Di Atas Sebagian Besar",
+      "render_layer_above_most_tooltip": "Menampilkan panel streak di depan sebagian besar hal, tetapi tidak kursor mouse atau fade layar penuh",
+      "render_layer_above_all_label": "Di Atas Segalanya",
+      "render_layer_above_all_tooltip": "Menampilkan panel streak di depan segala sesuatu yang bisa",
+      "default_note_label": "* Default"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Informasi Streak",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Streak Saat Ini: ",
+      "highest_streak_text": "Streak Tertinggi: ",
+      "date_time_achieved_text": "Dicapai: ",
+      "total_wins_text": "Total Kemenangan: ",
+      "total_losses_text": "Total Kekalahan: ",
+      "win_rate_text": "Tingkat Kemenangan: ",
+      "edit_mode_instruction_text": "#yTahan #yAlt #yuntuk #yEdit #yTampilan",
+      "change_border_style_title": "Ubah Gaya Batas",
+      "change_border_style_body_text": "Menggulir melalui berbagai opsi gaya batas.\nMATI hanya akan ditampilkan saat ALT ditahan."
+    }
+  }
+}

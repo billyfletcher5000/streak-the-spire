@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "เกณฑ์สตรีค",
+      "require_heart_kill_label": "ต้องฆ่าหัวใจหรือไม่?",
+      "require_heart_kill_tooltip": "แต่ละการวิ่งต้องฆ่าหัวใจใน Act สุดท้าย",
+      "required_ascension_level_label": "ระดับการขึ้นสวรรค์ที่ต้องการ",
+      "required_ascension_level_tooltip": "ระดับการขึ้นสวรรค์ที่ต้องการสำหรับการวิ่งที่นับ",
+      "track_continuous_label": "ติดตามต่อเนื่อง",
+      "track_continuous_tooltip": "ติดตามการชนะติดต่อกันโดยไม่คำนึงถึงตัวละครที่เล่นเป็นไอคอนแยกต่างหาก",
+      "enforce_rotating_label": "บังคับการหมุนเวียน",
+      "enforce_rotating_tooltip": "บังคับให้การแสดงผลต่อเนื่องนับเฉพาะการวิ่งที่ตัวละครที่ติดตามแต่ละตัวต้องถูกเล่นก่อนที่การชนะครั้งที่สองด้วยตัวละครนั้นจะนับ",
+      "allow_title": "ประเภทการวิ่งที่อนุญาต",
+      "allow_custom_seeds_label": "Seed ที่กำหนดเอง",
+      "allow_custom_seeds_tooltip": "การวิ่งที่ตั้งค่า seed ที่กำหนดเองจะรวมอยู่ด้วย",
+      "allow_dailies_label": "รายวัน",
+      "allow_dailies_tooltip": "การวิ่งที่เข้าร่วมในช่วงความท้าทายรายวันจะรวมอยู่ด้วย",
+      "allow_endless_label": "ไม่สิ้นสุด",
+      "allow_endless_tooltip": "การวิ่งที่เข้าร่วมในโหมดไม่สิ้นสุดจะรวมอยู่ด้วย",
+      "allow_beta_label": "เบต้า",
+      "allow_beta_tooltip": "การวิ่งที่เล่นด้วยเวอร์ชันเบต้าของ Slay the Spire จะรวมอยู่ด้วย",
+      "allow_demo_label": "เดโม",
+      "allow_demo_tooltip": "การวิ่งที่เล่นด้วยเวอร์ชันเดโมของ Slay the Spire จะรวมอยู่ด้วย",
+      "display_preferences_title": "การตั้งค่าการแสดงผล",
+      "render_layer_title": "เลเยอร์การเรนเดอร์",
+      "render_layer_pre_room_label": "ก่อนห้อง",
+      "render_layer_pre_room_tooltip": "แสดงแผงสตรีคหลังตัวละคร ศัตรู และ UI แต่หน้าพื้นหลัง",
+      "render_layer_top_panel_label": "แผงด้านบน*",
+      "render_layer_top_panel_tooltip": "แสดงแผงสตรีคบนเลเยอร์เดียวกับแถบด้านบนของเกม จะไม่ปรากฏในเมนู ค่าเริ่มต้น",
+      "render_layer_above_most_label": "อยู่เหนือส่วนใหญ่",
+      "render_layer_above_most_tooltip": "แสดงแผงสตรีคหน้าสิ่งส่วนใหญ่ แต่ไม่แสดงเคอร์เซอร์เมาส์หรือการจางหายเต็มหน้าจอ",
+      "render_layer_above_all_label": "อยู่เหนือทุกสิ่ง",
+      "render_layer_above_all_tooltip": "แสดงแผงสตรีคหน้าทุกสิ่งเท่าที่ทำได้",
+      "default_note_label": "* ค่าเริ่มต้น"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "ข้อมูลสตรีค",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "สตรีคปัจจุบัน: ",
+      "highest_streak_text": "สตรีคสูงสุด: ",
+      "date_time_achieved_text": "ทำสำเร็จเมื่อ: ",
+      "total_wins_text": "ชนะทั้งหมด: ",
+      "total_losses_text": "แพ้ทั้งหมด: ",
+      "win_rate_text": "อัตราการชนะ: ",
+      "edit_mode_instruction_text": "#yกด #yAlt #yค้างไว้ #yเพื่อ #yแก้ไข #yการแสดงผล",
+      "change_border_style_title": "เปลี่ยนสไตล์เส้นขอบ",
+      "change_border_style_body_text": "วนไปตามตัวเลือกสไตล์เส้นขอบต่างๆ\nปิดจะแสดงเมื่อกด ALT ค้างไว้เท่านั้น"
+    }
+  }
+}

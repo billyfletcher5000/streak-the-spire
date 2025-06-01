@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Streak-kriterier",
+      "require_heart_kill_label": "Krever Hjerte-drap?",
+      "require_heart_kill_tooltip": "Hver gjennomspilling må ha drept hjertet i 'Slutten'-akten",
+      "required_ascension_level_label": "Påkrevet Ascensjonsnivå",
+      "required_ascension_level_tooltip": "Det påkrevde Ascensjonsnivået for at en gjennomspilling skal telle",
+      "track_continuous_label": "Spor Kontinuerlig",
+      "track_continuous_tooltip": "Sporer seire på rad uansett hvilken karakter som ble spilt som et separat ikon",
+      "enforce_rotating_label": "Håndhev Rotering",
+      "enforce_rotating_tooltip": "Håndhever at den Kontinuerlige visningen kun teller gjennomspillinger der hver sporet karakter må spilles før en andre seier med en karakter teller",
+      "allow_title": "Tillatte Gjennomspillingstyper",
+      "allow_custom_seeds_label": "Egendefinert Seed",
+      "allow_custom_seeds_tooltip": "Gjennomspillinger som har satt en egendefinert seed vil bli inkludert",
+      "allow_dailies_label": "Daglig",
+      "allow_dailies_tooltip": "Gjennomspillinger som deltar under en daglig utfordring vil bli inkludert",
+      "allow_endless_label": "Uendelig",
+      "allow_endless_tooltip": "Gjennomspillinger som deltar i en uendelig modus vil bli inkludert",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Gjennomspillinger som ble spilt med en betaversjon av Slay the Spire vil bli inkludert",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Gjennomspillinger som ble spilt med en demoversjon av Slay the Spire vil bli inkludert",
+      "display_preferences_title": "Visningspreferanser",
+      "render_layer_title": "Gjengivelseslag",
+      "render_layer_pre_room_label": "Før rom",
+      "render_layer_pre_room_tooltip": "Viser streak-panelet bak karakterer, fiender og brukergrensesnittet, men foran bakgrunnen",
+      "render_layer_top_panel_label": "Topppanel*",
+      "render_layer_top_panel_tooltip": "Viser streak-panelet på samme lag som spillets topplinje, vises ikke i menyer, standard",
+      "render_layer_above_most_label": "Over det Meste",
+      "render_layer_above_most_tooltip": "Viser streak-panelet foran det meste, men ikke musepekeren eller fullskjermsfader",
+      "render_layer_above_all_label": "Over Alt",
+      "render_layer_above_all_tooltip": "Viser streak-panelet foran alt det kan",
+      "default_note_label": "* Standard"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Streak-informasjon",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Nåværende Streak: ",
+      "highest_streak_text": "Høyeste Streak: ",
+      "date_time_achieved_text": "Oppnådd: ",
+      "total_wins_text": "Totalt Antall Seire: ",
+      "total_losses_text": "Totalt Antall Tap: ",
+      "win_rate_text": "Seiersprosent: ",
+      "edit_mode_instruction_text": "#yHold #yAlt #yfor #yå #yRedigere #yVisning",
+      "change_border_style_title": "Endre Kantstil",
+      "change_border_style_body_text": "Bla gjennom forskjellige kantstilalternativer.\nAV vises kun når ALT holdes nede."
+    }
+  }
+}

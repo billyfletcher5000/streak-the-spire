@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Critérios de Sequência",
+      "require_heart_kill_label": "Exigir Morte do Coração?",
+      "require_heart_kill_tooltip": "Cada partida deve ter matado o coração no ato O Fim",
+      "required_ascension_level_label": "Nível de Ascensão Necessário",
+      "required_ascension_level_tooltip": "O nível de Ascensão necessário para uma partida contar",
+      "track_continuous_label": "Rastrear Contínuo",
+      "track_continuous_tooltip": "Rastreia vitórias consecutivas, independentemente do personagem jogado, como um ícone separado",
+      "enforce_rotating_label": "Forçar Rotação",
+      "enforce_rotating_tooltip": "Força a exibição Contínua a contar apenas as partidas onde cada personagem rastreado deve ser jogado antes que uma segunda vitória com um personagem conte",
+      "allow_title": "Tipos de Partida Permitidos",
+      "allow_custom_seeds_label": "Semente Personalizada",
+      "allow_custom_seeds_tooltip": "Partidas que definiram uma semente personalizada serão incluídas",
+      "allow_dailies_label": "Diário",
+      "allow_dailies_tooltip": "Partidas que participam de um desafio diário serão incluídas",
+      "allow_endless_label": "Infinito",
+      "allow_endless_tooltip": "Partidas que participam de um modo infinito serão incluídas",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Partidas que foram jogadas com uma versão beta do Slay the Spire serão incluídas",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Partidas que foram jogadas com uma versão demo do Slay the Spire serão incluídas",
+      "display_preferences_title": "Preferências de Exibição",
+      "render_layer_title": "Camada de Renderização",
+      "render_layer_pre_room_label": "Pré-Sala",
+      "render_layer_pre_room_tooltip": "Exibe o painel de sequência atrás dos personagens, inimigos e interface do usuário, mas na frente do plano de fundo",
+      "render_layer_top_panel_label": "Painel Superior*",
+      "render_layer_top_panel_tooltip": "Exibe o painel de sequência na mesma camada da barra superior do jogo, não aparecerá nos menus, padrão",
+      "render_layer_above_most_label": "Acima da Maioria",
+      "render_layer_above_most_tooltip": "Exibe o painel de sequência na frente da maioria das coisas, mas não do cursor do mouse ou de desvanecimentos em tela cheia",
+      "render_layer_above_all_label": "Acima de Tudo",
+      "render_layer_above_all_tooltip": "Exibe o painel de sequência na frente de tudo que puder",
+      "default_note_label": "* Padrão"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Informações da Sequência",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Sequência Atual: ",
+      "highest_streak_text": "Maior Sequência: ",
+      "date_time_achieved_text": "Conquistado em: ",
+      "total_wins_text": "Total de Vitórias: ",
+      "total_losses_text": "Total de Derrotas: ",
+      "win_rate_text": "Taxa de Vitória: ",
+      "edit_mode_instruction_text": "#yMantenha #yAlt #ypara #yEditar #ya #yExibição",
+      "change_border_style_title": "Mudar Estilo da Borda",
+      "change_border_style_body_text": "Cicla entre diferentes opções de estilo de borda.\nDESLIGADO só será exibido quando ALT for pressionado."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "連勝條件",
+      "require_heart_kill_label": "需要擊敗心臟嗎？",
+      "require_heart_kill_tooltip": "每次遊戲必須在結局中擊敗心臟",
+      "required_ascension_level_label": "所需進階等級",
+      "required_ascension_level_tooltip": "計入連勝所需的進階等級",
+      "track_continuous_label": "追蹤連續連勝",
+      "track_continuous_tooltip": "作為獨立圖標追蹤不分角色連續獲勝的次數",
+      "enforce_rotating_label": "強制輪替",
+      "enforce_rotating_tooltip": "強制連續顯示只計算每個追蹤角色都玩過一次後，同一角色第二次獲勝才計入",
+      "allow_title": "允許的遊戲類型",
+      "allow_custom_seeds_label": "自訂種子",
+      "allow_custom_seeds_tooltip": "包含設定了自訂種子的遊戲",
+      "allow_dailies_label": "每日挑戰",
+      "allow_dailies_tooltip": "包含在每日挑戰中進行的遊戲",
+      "allow_endless_label": "無盡模式",
+      "allow_endless_tooltip": "包含在無盡模式中進行的遊戲",
+      "allow_beta_label": "Beta版",
+      "allow_beta_tooltip": "包含使用Slay the Spire Beta版本進行的遊戲",
+      "allow_demo_label": "演示版",
+      "allow_demo_tooltip": "包含使用Slay the Spire演示版本進行的遊戲",
+      "display_preferences_title": "顯示偏好",
+      "render_layer_title": "渲染層",
+      "render_layer_pre_room_label": "房間前",
+      "render_layer_pre_room_tooltip": "將連勝面板顯示在角色、敵人及UI後面，但在背景前面",
+      "render_layer_top_panel_label": "頂部面板*",
+      "render_layer_top_panel_tooltip": "將連勝面板顯示在與遊戲頂部欄相同的層上，不會在選單中顯示，預設",
+      "render_layer_above_most_label": "在大部分之上",
+      "render_layer_above_most_tooltip": "將連勝面板顯示在大部分事物前面，但不在滑鼠游標或全螢幕淡出前面",
+      "render_layer_above_all_label": "在所有之上",
+      "render_layer_above_all_tooltip": "將連勝面板顯示在所有它能顯示的事物前面",
+      "default_note_label": "* 預設"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "連勝資訊",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "當前連勝：",
+      "highest_streak_text": "最高連勝：",
+      "date_time_achieved_text": "達成時間：",
+      "total_wins_text": "總勝利：",
+      "total_losses_text": "總失敗：",
+      "win_rate_text": "勝率：",
+      "edit_mode_instruction_text": "#y按住 #yAlt #y以 #y編輯 #y顯示",
+      "change_border_style_title": "更改邊框樣式",
+      "change_border_style_body_text": "循環切換不同的邊框樣式選項。\n關閉時僅在按住ALT時顯示。"
+    }
+  }
+}

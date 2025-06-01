@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Criteri della Serie",
+      "require_heart_kill_label": "Richiede Uccisione del Cuore?",
+      "require_heart_kill_tooltip": "Ogni corsa deve aver ucciso il cuore nell'atto Il Finale",
+      "required_ascension_level_label": "Livello Ascensione Richiesto",
+      "required_ascension_level_tooltip": "Il livello di Ascensione richiesto affinché una corsa conti",
+      "track_continuous_label": "Traccia Continua",
+      "track_continuous_tooltip": "Traccia le vittorie consecutive indipendentemente dal personaggio giocato come un'icona separata",
+      "enforce_rotating_label": "Applica Rotazione",
+      "enforce_rotating_tooltip": "Forza la visualizzazione Continua a contare le corse solo quando ogni personaggio tracciato deve essere giocato prima che una seconda vittoria con un personaggio conti",
+      "allow_title": "Tipi di Corsa Consentiti",
+      "allow_custom_seeds_label": "Seme Personalizzato",
+      "allow_custom_seeds_tooltip": "Le corse che hanno impostato un seme personalizzato saranno incluse",
+      "allow_dailies_label": "Giornaliera",
+      "allow_dailies_tooltip": "Le corse che partecipano a una sfida giornaliera saranno incluse",
+      "allow_endless_label": "Infinita",
+      "allow_endless_tooltip": "Le corse che partecipano a una modalità infinita saranno incluse",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Le corse giocate con una versione beta di Slay the Spire saranno incluse",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Le corse giocate con una versione demo di Slay the Spire saranno incluse",
+      "display_preferences_title": "Preferenze di Visualizzazione",
+      "render_layer_title": "Livello di Rendering",
+      "render_layer_pre_room_label": "Pre-Stanza",
+      "render_layer_pre_room_tooltip": "Visualizza il pannello della serie dietro i personaggi, i nemici e l'interfaccia utente, ma davanti allo sfondo",
+      "render_layer_top_panel_label": "Pannello Superiore*",
+      "render_layer_top_panel_tooltip": "Visualizza il pannello della serie sullo stesso livello della barra superiore del gioco, non apparirà nei menu, predefinito",
+      "render_layer_above_most_label": "Sopra la Maggior Parte",
+      "render_layer_above_most_tooltip": "Visualizza il pannello della serie davanti alla maggior parte delle cose, ma non il cursore del mouse o le sfumature a schermo intero",
+      "render_layer_above_all_label": "Sopra Tutto",
+      "render_layer_above_all_tooltip": "Visualizza il pannello della serie davanti a tutto ciò che può",
+      "default_note_label": "* Predefinito"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Informazioni sulla Serie",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Serie Attuale: ",
+      "highest_streak_text": "Serie Più Alta: ",
+      "date_time_achieved_text": "Conseguito il: ",
+      "total_wins_text": "Vittorie Totali: ",
+      "total_losses_text": "Sconfitte Totali: ",
+      "win_rate_text": "Tasso di Vittoria: ",
+      "edit_mode_instruction_text": "#yTieni #ypremuto #yAlt #yper #yModificare #yla #yVisualizzazione",
+      "change_border_style_title": "Cambia Stile del Bordo",
+      "change_border_style_body_text": "Scorre le diverse opzioni di stile del bordo.\nOFF verrà mostrato solo quando ALT è premuto."
+    }
+  }
+}

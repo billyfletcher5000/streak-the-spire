@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "連勝基準",
+      "require_heart_kill_label": "心臓を倒す必要がありますか？",
+      "require_heart_kill_tooltip": "各ランは、エンディングアクトで心臓を倒している必要があります",
+      "required_ascension_level_label": "必要なアセンションレベル",
+      "required_ascension_level_tooltip": "ランがカウントされるために必要なアセンションレベル",
+      "track_continuous_label": "連続追跡",
+      "track_continuous_tooltip": "プレイしたキャラクターに関係なく、連続勝利を別のアイコンとして追跡します",
+      "enforce_rotating_label": "ローテーションを強制",
+      "enforce_rotating_tooltip": "連続表示が、各追跡されたキャラクターがプレイされてから、そのキャラクターでの2回目の勝利がカウントされるように強制します",
+      "allow_title": "許可されたランの種類",
+      "allow_custom_seeds_label": "カスタムシード",
+      "allow_custom_seeds_tooltip": "カスタムシードを設定したランが含まれます",
+      "allow_dailies_label": "デイリー",
+      "allow_dailies_tooltip": "デイリーチャレンジ中に参加したランが含まれます",
+      "allow_endless_label": "エンドレス",
+      "allow_endless_tooltip": "エンドレスモードで参加したランが含まれます",
+      "allow_beta_label": "ベータ",
+      "allow_beta_tooltip": "Slay the Spireのベータ版でプレイされたランが含まれます",
+      "allow_demo_label": "デモ",
+      "allow_demo_tooltip": "Slay the Spireのデモ版でプレイされたランが含まれます",
+      "display_preferences_title": "表示設定",
+      "render_layer_title": "レンダーレイヤー",
+      "render_layer_pre_room_label": "部屋の前",
+      "render_layer_pre_room_tooltip": "連勝パネルをキャラクター、敵、UIの後ろ、背景の前に表示します",
+      "render_layer_top_panel_label": "トップパネル*",
+      "render_layer_top_panel_tooltip": "連勝パネルをゲームのトップバーと同じレイヤーに表示します。メニューには表示されません（デフォルト）",
+      "render_layer_above_most_label": "ほとんどの上に",
+      "render_layer_above_most_tooltip": "連勝パネルをマウスカーソルや全画面フェード以外のほとんどのものの前面に表示します",
+      "render_layer_above_all_label": "すべての上に",
+      "render_layer_above_all_tooltip": "連勝パネルを可能な限りすべてのものの前面に表示します",
+      "default_note_label": "* デフォルト"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "連勝情報",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "現在の連勝: ",
+      "highest_streak_text": "最高連勝: ",
+      "date_time_achieved_text": "達成: ",
+      "total_wins_text": "合計勝利数: ",
+      "total_losses_text": "合計敗北数: ",
+      "win_rate_text": "勝率: ",
+      "edit_mode_instruction_text": "#yAlt #yを #y押して #y表示を #y編集",
+      "change_border_style_title": "枠のスタイルを変更",
+      "change_border_style_body_text": "さまざまな枠のスタイルオプションを切り替えます。\nOFFはALTが押されている場合にのみ表示されます。"
+    }
+  }
+}

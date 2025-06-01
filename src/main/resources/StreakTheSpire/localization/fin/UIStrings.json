@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Putkikriteerit",
+      "require_heart_kill_label": "Vaatiiko sydämen tappamisen?",
+      "require_heart_kill_tooltip": "Jokaisen pelikerran on täytynyt tappaa sydän Loppu-aktissa",
+      "required_ascension_level_label": "Vaadittu nousutasotaso",
+      "required_ascension_level_tooltip": "Vaadittu nousutasotaso, jotta pelikerta lasketaan mukaan",
+      "track_continuous_label": "Jatkuva seuranta",
+      "track_continuous_tooltip": "Seuraa peräkkäisiä voittoja riippumatta pelatusta hahmosta erillisenä kuvakkeena",
+      "enforce_rotating_label": "Pakota kierto",
+      "enforce_rotating_tooltip": "Pakottaa jatkuvan näytön laskemaan vain pelikerrat, joissa jokainen seurattu hahmo on pelattava, ennen kuin toinen voitto hahmolla lasketaan",
+      "allow_title": "Sallitut pelikertatyypit",
+      "allow_custom_seeds_label": "Mukautettu siemen",
+      "allow_custom_seeds_tooltip": "Mukautetun siemenen asettaneet pelikerrat otetaan mukaan",
+      "allow_dailies_label": "Päivittäinen",
+      "allow_dailies_tooltip": "Päivittäisen haasteen aikana osallistuvat pelikerrat otetaan mukaan",
+      "allow_endless_label": "Loputon",
+      "allow_endless_tooltip": "Loputtomassa tilassa osallistuvat pelikerrat otetaan mukaan",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Slay the Spiren betaversiolla pelatut pelikerrat otetaan mukaan",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Slay the Spiren demoversiolla pelatut pelikerrat otetaan mukaan",
+      "display_preferences_title": "Näyttöasetukset",
+      "render_layer_title": "Renderointikerros",
+      "render_layer_pre_room_label": "Ennen huonetta",
+      "render_layer_pre_room_tooltip": "Näyttää putkipaneelin hahmojen, vihollisen ja käyttöliittymän takana, mutta taustan edessä",
+      "render_layer_top_panel_label": "Yläpaneeli*",
+      "render_layer_top_panel_tooltip": "Näyttää putkipaneelin samalla kerroksella kuin pelin yläpalkki, ei näy valikoissa, oletus",
+      "render_layer_above_most_label": "Useimpien yläpuolella",
+      "render_layer_above_most_tooltip": "Näyttää putkipaneelin useimpien asioiden edessä, mutta ei hiiren osoittimen tai koko näytön häivytysten edessä",
+      "render_layer_above_all_label": "Kaiken yläpuolella",
+      "render_layer_above_all_tooltip": "Näyttää putkipaneelin kaiken mahdollisen edessä",
+      "default_note_label": "* Oletus"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Putkitiedot",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Nykyinen putki: ",
+      "highest_streak_text": "Korkein putki: ",
+      "date_time_achieved_text": "Saavutettu: ",
+      "total_wins_text": "Voitot yhteensä: ",
+      "total_losses_text": "Tappiot yhteensä: ",
+      "win_rate_text": "Voittoprosentti: ",
+      "edit_mode_instruction_text": "#yPidä #yAlt #yalhaalla #ymuokataksesi #ynäyttöä",
+      "change_border_style_title": "Vaihda reunatyyliä",
+      "change_border_style_body_text": "Vaihtaa eri reunatyylivaihtoehtojen välillä.\nPOIS PÄÄLTÄ näkyy vain, kun ALT-näppäintä pidetään painettuna."
+    }
+  }
+}

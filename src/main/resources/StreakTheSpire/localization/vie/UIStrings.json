@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Tiêu Chí Chuỗi Thắng",
+      "require_heart_kill_label": "Yêu Cầu Giết Tim?",
+      "require_heart_kill_tooltip": "Mỗi lượt chạy phải giết được trái tim trong hành động Kết Thúc",
+      "required_ascension_level_label": "Cấp Độ Thăng Thiên Yêu Cầu",
+      "required_ascension_level_tooltip": "Cấp độ Thăng Thiên yêu cầu để một lượt chạy được tính",
+      "track_continuous_label": "Theo Dõi Liên Tục",
+      "track_continuous_tooltip": "Theo dõi các chiến thắng liên tiếp bất kể nhân vật nào được chơi như một biểu tượng riêng biệt",
+      "enforce_rotating_label": "Buộc Xoay Vòng",
+      "enforce_rotating_tooltip": "Buộc hiển thị Liên Tục chỉ tính các lượt chạy mà mỗi nhân vật được theo dõi phải được chơi trước khi một chiến thắng thứ hai với một nhân vật được tính",
+      "allow_title": "Các Loại Lượt Chạy Được Phép",
+      "allow_custom_seeds_label": "Hạt Giống Tùy Chỉnh",
+      "allow_custom_seeds_tooltip": "Các lượt chạy đã đặt hạt giống tùy chỉnh sẽ được bao gồm",
+      "allow_dailies_label": "Hàng Ngày",
+      "allow_dailies_tooltip": "Các lượt chạy tham gia trong thử thách hàng ngày sẽ được bao gồm",
+      "allow_endless_label": "Vô Tận",
+      "allow_endless_tooltip": "Các lượt chạy tham gia trong chế độ vô tận sẽ được bao gồm",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Các lượt chạy đã chơi với phiên bản beta của Slay the Spire sẽ được bao gồm",
+      "allow_demo_label": "Bản Thử Nghiệm",
+      "allow_demo_tooltip": "Các lượt chạy đã chơi với phiên bản thử nghiệm của Slay the Spire sẽ được bao gồm",
+      "display_preferences_title": "Tùy Chọn Hiển Thị",
+      "render_layer_title": "Lớp Kết Xuất",
+      "render_layer_pre_room_label": "Trước Phòng",
+      "render_layer_pre_room_tooltip": "Hiển thị bảng chuỗi thắng phía sau nhân vật, kẻ thù và giao diện người dùng nhưng phía trước nền",
+      "render_layer_top_panel_label": "Bảng Điều Khiển Trên Cùng*",
+      "render_layer_top_panel_tooltip": "Hiển thị bảng chuỗi thắng trên cùng lớp với thanh trên cùng của trò chơi, sẽ không xuất hiện trong menu, mặc định",
+      "render_layer_above_most_label": "Trên Hầu Hết",
+      "render_layer_above_most_tooltip": "Hiển thị bảng chuỗi thắng phía trước hầu hết mọi thứ, nhưng không phải con trỏ chuột hoặc màn hình mờ toàn màn hình",
+      "render_layer_above_all_label": "Trên Tất Cả",
+      "render_layer_above_all_tooltip": "Hiển thị bảng chuỗi thắng phía trước mọi thứ có thể",
+      "default_note_label": "* Mặc định"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Thông Tin Chuỗi Thắng",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Chuỗi Thắng Hiện Tại: ",
+      "highest_streak_text": "Chuỗi Thắng Cao Nhất: ",
+      "date_time_achieved_text": "Đạt Được: ",
+      "total_wins_text": "Tổng Số Thắng: ",
+      "total_losses_text": "Tổng Số Thua: ",
+      "win_rate_text": "Tỷ Lệ Thắng: ",
+      "edit_mode_instruction_text": "#yGiữ #yAlt #yđể #yChỉnh #ySửa #yHiển #yThị",
+      "change_border_style_title": "Thay Đổi Kiểu Viền",
+      "change_border_style_body_text": "Chuyển đổi qua các tùy chọn kiểu viền khác nhau.\nTẮT chỉ hiển thị khi giữ ALT."
+    }
+  }
+}

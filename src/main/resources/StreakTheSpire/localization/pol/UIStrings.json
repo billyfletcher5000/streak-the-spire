@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Kryteria Passy",
+      "require_heart_kill_label": "Wymagane zabicie Serca?",
+      "require_heart_kill_tooltip": "Każde przejście musi zabić serce w akcie Końca",
+      "required_ascension_level_label": "Wymagany Poziom Wniebowstąpienia",
+      "required_ascension_level_tooltip": "Wymagany poziom Wniebowstąpienia, aby przejście się liczyło",
+      "track_continuous_label": "Śledź Ciągłość",
+      "track_continuous_tooltip": "Śledzi kolejne zwycięstwa niezależnie od zagranej postaci jako osobna ikona",
+      "enforce_rotating_label": "Wymuś Rotację",
+      "enforce_rotating_tooltip": "Wymusza, aby wyświetlacz Ciągły liczył tylko przejścia, w których każda śledzona postać musi zostać zagrana, zanim drugie zwycięstwo z postacią się liczy",
+      "allow_title": "Dozwolone Typy Przejść",
+      "allow_custom_seeds_label": "Niestandardowy Seed",
+      "allow_custom_seeds_tooltip": "Przejścia, które ustawiły niestandardowy seed, zostaną uwzględnione",
+      "allow_dailies_label": "Codzienny",
+      "allow_dailies_tooltip": "Przejścia, które odbywają się podczas codziennego wyzwania, zostaną uwzględnione",
+      "allow_endless_label": "Niekończący się",
+      "allow_endless_tooltip": "Przejścia, które odbywają się w trybie niekończącym się, zostaną uwzględnione",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Przejścia, które zostały rozegrane w wersji beta Slay the Spire, zostaną uwzględnione",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Przejścia, które zostały rozegrane w wersji demo Slay the Spire, zostaną uwzględnione",
+      "display_preferences_title": "Preferencje Wyświetlania",
+      "render_layer_title": "Warstwa Renderowania",
+      "render_layer_pre_room_label": "Przed Pokojem",
+      "render_layer_pre_room_tooltip": "Wyświetla panel passy za postaciami, wrogami i interfejsem użytkownika, ale przed tłem",
+      "render_layer_top_panel_label": "Górny Panel*",
+      "render_layer_top_panel_tooltip": "Wyświetla panel passy na tej samej warstwie co górny pasek gry, nie będzie wyświetlany w menu, domyślnie",
+      "render_layer_above_most_label": "Nad Większością",
+      "render_layer_above_most_tooltip": "Wyświetla panel passy przed większością rzeczy, ale nie przed kursorem myszy ani pełnoekranowymi zanikami",
+      "render_layer_above_all_label": "Nad Wszystkim",
+      "render_layer_above_all_tooltip": "Wyświetla panel passy przed wszystkim, co może",
+      "default_note_label": "* Domyślnie"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Informacje o Passie",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Aktualna Passa: ",
+      "highest_streak_text": "Najwyższa Passa: ",
+      "date_time_achieved_text": "Osiągnięto: ",
+      "total_wins_text": "Całkowita Liczba Zwycięstw: ",
+      "total_losses_text": "Całkowita Liczba Porażek: ",
+      "win_rate_text": "Współczynnik Zwycięstw: ",
+      "edit_mode_instruction_text": "#yPrzytrzymaj #yAlt, #yaby #yEdytować #yWyświetlanie",
+      "change_border_style_title": "Zmień Styl Ramki",
+      "change_border_style_body_text": "Przełącza między różnymi opcjami stylu ramki.\nWYŁĄCZONE będzie wyświetlane tylko po przytrzymaniu ALT."
+    }
+  }
+}

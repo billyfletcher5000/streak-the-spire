@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Streak-Kriterien",
+      "require_heart_kill_label": "Herz-Kill erforderlich?",
+      "require_heart_kill_tooltip": "Jeder Lauf muss das Herz im Akt 'Das Ende' getötet haben",
+      "required_ascension_level_label": "Erforderliche Aufstiegsstufe",
+      "required_ascension_level_tooltip": "Die erforderliche Aufstiegsstufe, damit ein Lauf zählt",
+      "track_continuous_label": "Kontinuierlich verfolgen",
+      "track_continuous_tooltip": "Verfolgt aufeinanderfolgende Siege unabhängig vom gespielten Charakter als separates Symbol",
+      "enforce_rotating_label": "Rotation erzwingen",
+      "enforce_rotating_tooltip": "Erzwingt, dass die kontinuierliche Anzeige nur Läufe zählt, bei denen jeder verfolgte Charakter gespielt werden muss, bevor ein zweiter Sieg mit einem Charakter zählt",
+      "allow_title": "Erlaubte Lauftypen",
+      "allow_custom_seeds_label": "Benutzerdefinierter Seed",
+      "allow_custom_seeds_tooltip": "Läufe, die einen benutzerdefinierten Seed gesetzt haben, werden berücksichtigt",
+      "allow_dailies_label": "Täglich",
+      "allow_dailies_tooltip": "Läufe, die während einer täglichen Herausforderung stattfinden, werden berücksichtigt",
+      "allow_endless_label": "Endlos",
+      "allow_endless_tooltip": "Läufe, die im Endlos-Modus stattfinden, werden berücksichtigt",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Läufe, die mit einer Beta-Version von Slay the Spire gespielt wurden, werden berücksichtigt",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Läufe, die mit einer Demo-Version von Slay the Spire gespielt wurden, werden berücksichtigt",
+      "display_preferences_title": "Anzeige-Präferenzen",
+      "render_layer_title": "Renderschicht",
+      "render_layer_pre_room_label": "Vor-Raum",
+      "render_layer_pre_room_tooltip": "Zeigt das Streak-Panel hinter Charakteren, Gegnern und der Benutzeroberfläche, aber vor dem Hintergrund an",
+      "render_layer_top_panel_label": "Oberes Panel*",
+      "render_layer_top_panel_tooltip": "Zeigt das Streak-Panel auf derselben Ebene wie die obere Leiste des Spiels an, wird nicht in Menüs angezeigt, Standard",
+      "render_layer_above_most_label": "Über dem Meisten",
+      "render_layer_above_most_tooltip": "Zeigt das Streak-Panel vor den meisten Dingen an, aber nicht vor dem Mauszeiger oder Vollbild-Überblendungen",
+      "render_layer_above_all_label": "Über allem",
+      "render_layer_above_all_tooltip": "Zeigt das Streak-Panel vor allem an, was es kann",
+      "default_note_label": "* Standard"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Streak-Informationen",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Aktuelle Serie: ",
+      "highest_streak_text": "Höchste Serie: ",
+      "date_time_achieved_text": "Erreicht: ",
+      "total_wins_text": "Gesamtsiege: ",
+      "total_losses_text": "Gesamtverluste: ",
+      "win_rate_text": "Gewinnrate: ",
+      "edit_mode_instruction_text": "#yHalten #ySie #yAlt #yum #yAnzeige #yzu #ybearbeiten",
+      "change_border_style_title": "Rahmenstil ändern",
+      "change_border_style_body_text": "Wechselt durch verschiedene Rahmenstiloptionen.\nAUS wird nur angezeigt, wenn ALT gedrückt gehalten wird."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Критерии серии",
+      "require_heart_kill_label": "Требуется убийство Сердца?",
+      "require_heart_kill_tooltip": "Каждый забег должен был убить сердце в акте 'Конец'",
+      "required_ascension_level_label": "Требуемый уровень вознесения",
+      "required_ascension_level_tooltip": "Требуемый уровень вознесения для учета забега",
+      "track_continuous_label": "Отслеживать непрерывно",
+      "track_continuous_tooltip": "Отслеживает последовательные победы независимо от выбранного персонажа как отдельную иконку",
+      "enforce_rotating_label": "Принудительная ротация",
+      "enforce_rotating_tooltip": "Принуждает непрерывный показ учитывать забеги только тогда, когда каждый отслеживаемый персонаж должен быть сыгран до того, как вторая победа с персонажем будет засчитана",
+      "allow_title": "Разрешенные типы забегов",
+      "allow_custom_seeds_label": "Пользовательское зерно",
+      "allow_custom_seeds_tooltip": "Забеги, в которых было установлено пользовательское зерно, будут включены",
+      "allow_dailies_label": "Ежедневный",
+      "allow_dailies_tooltip": "Забеги, которые проводятся во время ежедневного испытания, будут включены",
+      "allow_endless_label": "Бесконечный",
+      "allow_endless_tooltip": "Забеги, которые проводятся в бесконечном режиме, будут включены",
+      "allow_beta_label": "Бета",
+      "allow_beta_tooltip": "Забеги, которые были сыграны с бета-версией Slay the Spire, будут включены",
+      "allow_demo_label": "Демо",
+      "allow_demo_tooltip": "Забеги, которые были сыграны с демо-версией Slay the Spire, будут включены",
+      "display_preferences_title": "Настройки отображения",
+      "render_layer_title": "Слой рендеринга",
+      "render_layer_pre_room_label": "Предварительная комната",
+      "render_layer_pre_room_tooltip": "Отображает панель серии за персонажами, врагами и пользовательским интерфейсом, но перед фоном",
+      "render_layer_top_panel_label": "Верхняя панель*",
+      "render_layer_top_panel_tooltip": "Отображает панель серии на том же слое, что и верхняя панель игры, не будет отображаться в меню, по умолчанию",
+      "render_layer_above_most_label": "Над большинством",
+      "render_layer_above_most_tooltip": "Отображает панель серии перед большинством вещей, но не перед курсором мыши или полноэкранными затемнениями",
+      "render_layer_above_all_label": "Над всем",
+      "render_layer_above_all_tooltip": "Отображает панель серии перед всем, что она может",
+      "default_note_label": "* По умолчанию"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Информация о серии",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Текущая серия: ",
+      "highest_streak_text": "Наивысшая серия: ",
+      "date_time_achieved_text": "Достигнуто: ",
+      "total_wins_text": "Всего побед: ",
+      "total_losses_text": "Всего поражений: ",
+      "win_rate_text": "Процент побед: ",
+      "edit_mode_instruction_text": "#yУдерживайте #yAlt #yдля #yРедактирования #yОтображения",
+      "change_border_style_title": "Изменить стиль рамки",
+      "change_border_style_body_text": "Переключает между различными вариантами стиля рамки.\nОТКЛ будет отображаться только при удержании ALT."
+    }
+  }
+}

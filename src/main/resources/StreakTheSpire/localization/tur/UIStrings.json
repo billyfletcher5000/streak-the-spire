@@ -1,0 +1,52 @@
+{
+  "streak_the_spire:Config": {
+    "TEXT_DICT": {
+      "criteria_settings_title": "Seri Kriterleri",
+      "require_heart_kill_label": "Kalp Öldürme Gerekli mi?",
+      "require_heart_kill_tooltip": "Her koşunun Son Perde'de kalbi öldürmesi gerekir",
+      "required_ascension_level_label": "Gerekli Yükseliş Seviyesi",
+      "required_ascension_level_tooltip": "Bir koşunun sayılması için gerekli Yükseliş seviyesi",
+      "track_continuous_label": "Sürekli Takip Et",
+      "track_continuous_tooltip": "Oynanan karaktere bakılmaksızın arka arkaya gelen zaferleri ayrı bir simge olarak takip eder",
+      "enforce_rotating_label": "Döndürmeyi Zorla",
+      "enforce_rotating_tooltip": "Sürekli gösterimin, takip edilen her karakterin, bir karakterle ikinci bir zafer sayılmadan önce oynanmasını zorunlu kılar",
+      "allow_title": "İzin Verilen Koşu Türleri",
+      "allow_custom_seeds_label": "Özel Tohum",
+      "allow_custom_seeds_tooltip": "Özel tohum ayarlanmış koşular dahil edilecektir",
+      "allow_dailies_label": "Günlük",
+      "allow_dailies_tooltip": "Günlük bir mücadele sırasında yapılan koşular dahil edilecektir",
+      "allow_endless_label": "Sonsuz",
+      "allow_endless_tooltip": "Sonsuz modda yapılan koşular dahil edilecektir",
+      "allow_beta_label": "Beta",
+      "allow_beta_tooltip": "Slay the Spire'ın beta sürümüyle oynanan koşular dahil edilecektir",
+      "allow_demo_label": "Demo",
+      "allow_demo_tooltip": "Slay the Spire'ın demo sürümüyle oynanan koşular dahil edilecektir",
+      "display_preferences_title": "Ekran Tercihleri",
+      "render_layer_title": "Render Katmanı",
+      "render_layer_pre_room_label": "Oda Öncesi",
+      "render_layer_pre_room_tooltip": "Seri panelini karakterlerin, düşmanların ve kullanıcı arayüzünün arkasında, ancak arka planın önünde görüntüler",
+      "render_layer_top_panel_label": "Üst Panel*",
+      "render_layer_top_panel_tooltip": "Seri panelini oyunun üst çubuğuyla aynı katmanda görüntüler, menülerde görünmez, varsayılan",
+      "render_layer_above_most_label": "Çoğunun Üzerinde",
+      "render_layer_above_most_tooltip": "Seri panelini çoğu şeyin önünde, ancak fare imleci veya tam ekran kararmaların önünde göstermez",
+      "render_layer_above_all_label": "Hepsinden Üstte",
+      "render_layer_above_all_tooltip": "Seri panelini mümkün olan her şeyin önünde görüntüler",
+      "default_note_label": "* Varsayılan"
+    }
+  },
+  "streak_the_spire:StreakTips": {
+    "TEXT_DICT": {
+      "tip_header_title": "Seri Bilgileri",
+      "date_time_format": "M/d/yyyy",
+      "current_streak_text": "Mevcut Seri: ",
+      "highest_streak_text": "En Yüksek Seri: ",
+      "date_time_achieved_text": "Başarıldı: ",
+      "total_wins_text": "Toplam Zafer: ",
+      "total_losses_text": "Toplam Yenilgi: ",
+      "win_rate_text": "Kazanma Oranı: ",
+      "edit_mode_instruction_text": "#yGörüntüyü #yDüzenlemek #yiçin #yAlt #ytuşunu #ybasılı #ytutun",
+      "change_border_style_title": "Kenarlık Stilini Değiştir",
+      "change_border_style_body_text": "Farklı kenarlık stili seçenekleri arasında geçiş yapar.\nKAPALI, yalnızca ALT basılı tutulduğunda gösterilecektir."
+    }
+  }
+}
