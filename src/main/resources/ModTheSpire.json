@@ -5,7 +5,7 @@
     "billyfletcher5000"
   ],
   "description": "A Slay The Spire mod to automatically track your streaks, both individual and rotating, with each character.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "sts_version": "12-22-2020",
   "mts_version": "3.18.2",
   "dependencies": [
