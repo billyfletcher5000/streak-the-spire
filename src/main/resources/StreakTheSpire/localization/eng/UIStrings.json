@@ -32,7 +32,9 @@
       "render_layer_above_all_label" : "Above All",
       "render_layer_above_all_tooltip" : "Displays the streak panel in front of everything it can",
       "default_note_label" : "* Default",
-      "characters_title" : "Characters"
+      "characters_title" : "Characters",
+      "track_characters_title" : "Track Characters",
+      "track_characters_tooltip" : "Whether or not to include this character in tracking and display"
     }
   },
   "streak_the_spire:StreakTips": {

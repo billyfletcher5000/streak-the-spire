@@ -35,6 +35,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.PowerTip;
+import com.megacrit.cardcrawl.localization.CharacterStrings;
 import com.megacrit.cardcrawl.localization.UIStrings;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
@@ -93,6 +94,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<DisplayPreferencesModel> displayPreferencesModel;
     private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
+    private Property<CharacterLocalisationSetModel> characterLocalisationSetModel;
     private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
     private Property<BorderStyleSetModel> borderStyleSetModel;
     private Property<TipSystemModel> tipSystemModel;
@@ -109,12 +111,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public DisplayPreferencesModel getDisplayPreferencesModel() { return displayPreferencesModel.get(); }
     public PlayerStreakStoreModel getStreakStoreDataModel() { return streakStoreDataModel.get(); }
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
+    public CharacterLocalisationSetModel getCharacterLocalisationSetModel() { return characterLocalisationSetModel.get(); }
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
     public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
     public TipSystemModel getTipSystemModel() { return tipSystemModel.get(); }
 
     public UIStrings getConfigUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(LocalizationConstants.Config.ID)); }
     public UIStrings getTipUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(LocalizationConstants.StreakTips.ID));  }
+    public CharacterStrings getCharacterStrings(String characterLocalisationID) { return CardCrawlGame.languagePack.getCharacterString(characterLocalisationID); }
     //endregion
 
     //region Base Initialisation
@@ -149,6 +153,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialisePreferenceModels();
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
+        initialiseCharacterLocalisationModels();
         initialiseCeremonyModels();
         initialiseStreakDataModel();
         initialiseBorderStyleModels();
@@ -240,8 +245,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         settingsPanel = new ConfigModPanel();
 
         settingsPanel.addPage(new CriteriaModPanelPage());
-        settingsPanel.addPage(new DisplayPreferencesModPanelPage());
         settingsPanel.addPage(new CharactersModPanelPage());
+        settingsPanel.addPage(new DisplayPreferencesModPanelPage());
     }
     //endregion
 
@@ -329,15 +334,22 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     //region Text & Localisation
     private void initialiseLocalisation() {
+        // Fallback
+        loadLocalisation("eng");
+
         String langKey = Settings.language.toString().toLowerCase();
+        loadLocalisation(langKey);
+    }
 
-        if (!Gdx.files.internal("StreakTheSpire/localization/" + langKey + "/").exists()) {
-            langKey = "eng";
-        }
-
+    private void loadLocalisation(String langKey) {
         String filepath = "StreakTheSpire/localization/" + langKey + "/UIStrings.json";
         if (Gdx.files.internal(filepath).exists()) {
             BaseMod.loadCustomStringsFile(UIStrings.class, filepath);
+        }
+
+        filepath = "StreakTheSpire/localization/" + langKey + "/characters.json";
+        if (Gdx.files.internal(filepath).exists()) {
+            BaseMod.loadCustomStringsFile(CharacterStrings.class, filepath);
         }
     }
 
@@ -494,6 +506,35 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         watcherTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
         watcherTextDisplayModel.displayText.set("Watcher");
         controller.addCharacterDisplayModel(watcherTextDisplayModel);
+    }
+
+    private void initialiseCharacterLocalisationModels() {
+        characterLocalisationSetModel = new Property<>(new CharacterLocalisationSetModel());
+
+        CharacterLocalisationModel ironcladLocalisationModel = new CharacterLocalisationModel();
+        ironcladLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
+        ironcladLocalisationModel.localisationID.set("Ironclad");
+        characterLocalisationSetModel.get().characterLocalisations.add(ironcladLocalisationModel);
+
+        CharacterLocalisationModel silentLocalisationModel = new CharacterLocalisationModel();
+        silentLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
+        silentLocalisationModel.localisationID.set("Silent");
+        characterLocalisationSetModel.get().characterLocalisations.add(silentLocalisationModel);
+
+        CharacterLocalisationModel defectLocalisationModel = new CharacterLocalisationModel();
+        defectLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
+        defectLocalisationModel.localisationID.set("Defect");
+        characterLocalisationSetModel.get().characterLocalisations.add(defectLocalisationModel);
+
+        CharacterLocalisationModel watcherLocalisationModel = new CharacterLocalisationModel();
+        watcherLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
+        watcherLocalisationModel.localisationID.set("Watcher");
+        characterLocalisationSetModel.get().characterLocalisations.add(watcherLocalisationModel);
+
+        CharacterLocalisationModel rotatingLocalisationModel = new CharacterLocalisationModel();
+        rotatingLocalisationModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        rotatingLocalisationModel.localisationID.set("Rotating");
+        characterLocalisationSetModel.get().characterLocalisations.add(rotatingLocalisationModel);
     }
 
     private void initialiseCeremonyModels() {

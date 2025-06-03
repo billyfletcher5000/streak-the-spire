@@ -20,7 +20,7 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
     private HashMap<DisplayPreferencesModel.RenderLayer, FixedModLabeledToggleButton> renderLayerToToggleButton = new HashMap<>();
 
     @Override
-    public String getTitleLocalizationID() { return "display_preferences_title"; }
+    public String getTitleLocalizationID() { return LocalizationConstants.Config.DisplayPreferencesTitle; }
 
     @Override
     public void initialise(ModPanel modPanel, Vector2 contentTopLeft, Vector2 contentDimensions) {

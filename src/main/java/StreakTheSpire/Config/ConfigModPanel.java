@@ -24,6 +24,7 @@ public class ConfigModPanel extends ModPanel {
     private ConfigModPanelPage currentPage = null;
     private ArrayList<ConfigModPanelPage> pages = new ArrayList<>();
     private HashMap<ConfigModPanelPage, ModLabeledButton> pageButtons = new HashMap<>();
+    private ConfigModPanelPage queuedNextPage = null;
 
     public ConfigModPanelPage getCurrentPage() { return currentPage; }
     public void setPageIndex(int pageIndex) {
@@ -36,9 +37,13 @@ public class ConfigModPanel extends ModPanel {
     }
 
     public void setPage(ConfigModPanelPage page) {
-        if(currentPage == page)
+        if (currentPage == page)
             return;
 
+        queuedNextPage = page;
+    }
+
+    private void updatePage() {
         if(currentPage != null) {
             ArrayList<IUIElement> elements = currentPage.getElements();
             this.getRenderElements().removeAll(elements);
@@ -50,7 +55,8 @@ public class ConfigModPanel extends ModPanel {
             }
         }
 
-        currentPage = page;
+        currentPage = queuedNextPage;
+        queuedNextPage = null;
 
         if(currentPage != null) {
             ArrayList<IUIElement> elements = currentPage.getElements();
@@ -75,6 +81,13 @@ public class ConfigModPanel extends ModPanel {
 
     public ConfigModPanel() {
         super();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if(queuedNextPage != null)
+            updatePage();
     }
 
     @Override

@@ -20,6 +20,12 @@ public class StreakCriteriaModel implements IModel, IConfigDataModel {
             AbstractPlayer.PlayerClass.DEFECT.toString(),
             AbstractPlayer.PlayerClass.WATCHER.toString()
     );
+    public PropertyList<String> trackableCharacterClasses = new PropertyList<>(
+            AbstractPlayer.PlayerClass.IRONCLAD.toString(),
+            AbstractPlayer.PlayerClass.THE_SILENT.toString(),
+            AbstractPlayer.PlayerClass.DEFECT.toString(),
+            AbstractPlayer.PlayerClass.WATCHER.toString()
+    );
     public Property<Boolean> trackContinuous = new Property<>(true);
     public Property<Boolean> enforceRotating = new Property<>(true);
 

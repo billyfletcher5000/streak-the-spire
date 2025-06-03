@@ -31,7 +31,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
     private HashMap<DisplayPreferencesModel.RenderLayer, FixedModLabeledToggleButton> renderLayerToToggleButton = new HashMap<>();
 
     @Override
-    public String getTitleLocalizationID() { return "criteria_settings_title"; }
+    public String getTitleLocalizationID() { return LocalizationConstants.Config.CriteriaSettingsTitle; }
 
     @Override
     public void initialise(ModPanel modPanel, Vector2 contentTopLeft, Vector2 contentDimensions) {
@@ -84,18 +84,6 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
             addElement(element);
 
         elementPosition.y -= ConfigModPanel.LineHeight;
-        IUIElement trackContinuousButton = createBooleanPropElement(
-                elementPosition.x,
-                elementPosition.y,
-                criteriaModel.trackContinuous,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackContinuousLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackContinuousTooltip),
-                modPanel,
-                (val) -> recalculateStreaks()
-        );
-        addElement(trackContinuousButton);
-
-        elementPosition.x += (contentDimensions.x / NumCheckboxenPerLine);
         IUIElement enforceRotatingButton = createBooleanPropElement(
                 elementPosition.x,
                 elementPosition.y,
