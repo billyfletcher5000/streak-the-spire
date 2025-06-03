@@ -32,6 +32,7 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
             CharacterWildcard,
             PlayerStreakStoreModel.RotatingPlayerIdentifier
     );
+    public Property<Boolean> suppressSaveNotification = new Property<>(false);
 
     public DisplayPreferencesModel() {}
 
