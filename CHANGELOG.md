@@ -6,3 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.1.0
 - Initial version
+
+## 0.2.0
+- Added localisation support (autotranslated) for all StS base game languages
+
+## 0.2.1
+- Fixed issue with hitbox size/locations for resizable panel
+- Fixed issue with cursor overrides changing when the mouse was being held when they shouldn't

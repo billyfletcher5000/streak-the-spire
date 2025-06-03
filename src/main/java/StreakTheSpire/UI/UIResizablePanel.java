@@ -172,17 +172,23 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
         moveHitbox = new UIElementHitbox(0f, 0f, cardinalWidth, cardinalHeight, this);
 
+        float halfHitboxSize = hitboxSize / 2.0f;
+        float leftSide = -halfDimensions.x + halfHitboxSize;
+        float rightSide = halfDimensions.x - halfHitboxSize;
+        float topSide = halfDimensions.y - halfHitboxSize;
+        float bottomSide = -halfDimensions.y + halfHitboxSize;
+
         // Cardinals
-        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, 0f, hitboxSize, cardinalHeight, this), DragDirectionFlags.LEFT);
-        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, 0f, hitboxSize, cardinalHeight, this), DragDirectionFlags.RIGHT);
-        hitboxToDragDirection.put(new UIElementHitbox(0, halfDimensions.y, cardinalWidth, hitboxSize, this), DragDirectionFlags.UP);
-        hitboxToDragDirection.put(new UIElementHitbox(0, -halfDimensions.y, cardinalWidth, hitboxSize, this), DragDirectionFlags.DOWN);
+        hitboxToDragDirection.put(new UIElementHitbox(leftSide, 0f, hitboxSize, cardinalHeight, this), DragDirectionFlags.LEFT);
+        hitboxToDragDirection.put(new UIElementHitbox(rightSide, 0f, hitboxSize, cardinalHeight, this), DragDirectionFlags.RIGHT);
+        hitboxToDragDirection.put(new UIElementHitbox(0, topSide, cardinalWidth, hitboxSize, this), DragDirectionFlags.UP);
+        hitboxToDragDirection.put(new UIElementHitbox(0, bottomSide, cardinalWidth, hitboxSize, this), DragDirectionFlags.DOWN);
 
         // Diagonals
-        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.LEFT | DragDirectionFlags.UP);
-        hitboxToDragDirection.put(new UIElementHitbox(-halfDimensions.x, -halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.LEFT | DragDirectionFlags.DOWN);
-        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.RIGHT | DragDirectionFlags.UP);
-        hitboxToDragDirection.put(new UIElementHitbox(halfDimensions.x, -halfDimensions.y, hitboxSize, hitboxSize, this), DragDirectionFlags.RIGHT | DragDirectionFlags.DOWN);
+        hitboxToDragDirection.put(new UIElementHitbox(leftSide, topSide, hitboxSize, hitboxSize, this), DragDirectionFlags.LEFT | DragDirectionFlags.UP);
+        hitboxToDragDirection.put(new UIElementHitbox(leftSide, bottomSide, hitboxSize, hitboxSize, this), DragDirectionFlags.LEFT | DragDirectionFlags.DOWN);
+        hitboxToDragDirection.put(new UIElementHitbox(rightSide, topSide, hitboxSize, hitboxSize, this), DragDirectionFlags.RIGHT | DragDirectionFlags.UP);
+        hitboxToDragDirection.put(new UIElementHitbox(rightSide, bottomSide, hitboxSize, hitboxSize, this), DragDirectionFlags.RIGHT | DragDirectionFlags.DOWN);
     }
 
     @Override
@@ -216,7 +222,8 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
             }
         }
 
-        StreakTheSpire.get().getCursorOverride().setData(cursorOverrideData);
+        if(currentHitbox == null || currentHitbox == hitbox)
+            StreakTheSpire.get().getCursorOverride().setData(cursorOverrideData);
     }
 
     @Override
@@ -288,7 +295,7 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
     protected void elementUpdate(float deltaTime) {
         super.elementUpdate(deltaTime);
 
-        if(currentHoverTarget != null && !currentHoverTarget.hovered) {
+        if(currentHoverTarget != null && !currentHoverTarget.hovered && currentHitbox == null) {
             currentHoverTarget = null;
             StreakTheSpire.get().getCursorOverride().setData(null);
         }
@@ -347,13 +354,19 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
 
     private void updateHitboxes(Affine2 worldTransform) {
         Vector2 baseSize = new Vector2(getDimensions());
-        float hitboxWidth = getHitboxSize();
-        baseSize.sub(new Vector2(hitboxWidth * 2, hitboxWidth * 2));
+        float hitboxSize = getHitboxSize();
+        baseSize.sub(new Vector2(hitboxSize * 2.0f, hitboxSize * 2.0f));
+
+        Vector2 halfDimensions = getDimensions().scl(0.5f);
+        float halfHitboxSize = hitboxSize / 2.0f;
+        float leftSide = -halfDimensions.x + halfHitboxSize;
+        float rightSide = halfDimensions.x - halfHitboxSize;
+        float topSide = halfDimensions.y - halfHitboxSize;
+        float bottomSide = -halfDimensions.y + halfHitboxSize;
 
         moveHitbox.setLocalSize(baseSize);
         moveHitbox.update(worldTransform);
 
-        Vector2 halfDimensions = getDimensions().scl(0.5f);
         for(Map.Entry<UIElementHitbox, Integer> entry : hitboxToDragDirection.entrySet()) {
             UIElementHitbox uiElementHitbox = entry.getKey();
             Integer dragDirection = entry.getValue();
@@ -362,21 +375,21 @@ public class UIResizablePanel extends UINineSliceElement implements HitboxListen
             Vector2 size = baseSize.cpy();
 
             if((dragDirection & DragDirectionFlags.LEFT) == DragDirectionFlags.LEFT) {
-                size.x = hitboxWidth;
-                localPosition.x = -halfDimensions.x;
+                size.x = hitboxSize;
+                localPosition.x = leftSide;
             }
             else if((dragDirection & DragDirectionFlags.RIGHT) == DragDirectionFlags.RIGHT) {
-                size.x = hitboxWidth;
-                localPosition.x = halfDimensions.x;
+                size.x = hitboxSize;
+                localPosition.x = rightSide;
             }
 
             if((dragDirection & DragDirectionFlags.UP) == DragDirectionFlags.UP) {
-                size.y = hitboxWidth;
-                localPosition.y = halfDimensions.y;
+                size.y = hitboxSize;
+                localPosition.y = topSide;
             }
             else if((dragDirection & DragDirectionFlags.DOWN) == DragDirectionFlags.DOWN) {
-                size.y = hitboxWidth;
-                localPosition.y = -halfDimensions.y;
+                size.y = hitboxSize;
+                localPosition.y = bottomSide;
             }
 
             uiElementHitbox.setLocalPosition(localPosition);
