@@ -4,8 +4,10 @@ import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreDecreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreIncreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.SimpleTextScoreChangeCeremony;
+import StreakTheSpire.Config.CharactersModPanelPage;
 import StreakTheSpire.Config.ConfigModPanel;
 import StreakTheSpire.Config.CriteriaModPanelPage;
+import StreakTheSpire.Config.DisplayPreferencesModPanelPage;
 import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
@@ -238,6 +240,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         settingsPanel = new ConfigModPanel();
 
         settingsPanel.addPage(new CriteriaModPanelPage());
+        settingsPanel.addPage(new DisplayPreferencesModPanelPage());
+        settingsPanel.addPage(new CharactersModPanelPage());
     }
     //endregion
 

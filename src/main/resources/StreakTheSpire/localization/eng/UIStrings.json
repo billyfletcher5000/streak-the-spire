@@ -31,7 +31,8 @@
       "render_layer_above_most_tooltip" : "Displays the streak panel in front of most things, but not the mouse cursor or full screen fades",
       "render_layer_above_all_label" : "Above All",
       "render_layer_above_all_tooltip" : "Displays the streak panel in front of everything it can",
-      "default_note_label" : "* Default"
+      "default_note_label" : "* Default",
+      "characters_title" : "Characters"
     }
   },
   "streak_the_spire:StreakTips": {
