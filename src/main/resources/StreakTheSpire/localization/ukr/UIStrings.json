@@ -31,7 +31,15 @@
       "render_layer_above_most_tooltip": "Відображає панель серії перед більшістю речей, але не перед курсором миші або повноекранними затемненнями",
       "render_layer_above_all_label": "Над усім",
       "render_layer_above_all_tooltip": "Відображає панель серії перед усім, що вона може",
-      "default_note_label": "* За замовчуванням"
+      "default_note_label": "* За замовчуванням",
+
+      "coloured_text_label": "Кольоровий текст",
+      "coloured_text_tooltip": "Відображає серії перемог у кольорах, характерних для персонажа",
+      "suppress_save_notification_label": "Придушити сповіщення про збереження",
+      "suppress_save_notification_tooltip": "Придушує сповіщення Гру збережено! у верхній панелі",
+      "characters_title": "Персонажі",
+      "track_characters_title": "Відстежувати персонажів",
+      "track_characters_tooltip": "Чи включати цього персонажа в відстеження та відображення"
     }
   },
   "streak_the_spire:StreakTips": {

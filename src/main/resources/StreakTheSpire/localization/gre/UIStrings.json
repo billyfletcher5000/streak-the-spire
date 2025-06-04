@@ -31,7 +31,15 @@
       "render_layer_above_most_tooltip": "Εμφανίζει τον πίνακα σερί μπροστά από τα περισσότερα πράγματα, αλλά όχι τον κέρσορα του ποντικιού ή τις πλήρεις οθόνες που σβήνουν",
       "render_layer_above_all_label": "Πάνω από όλα",
       "render_layer_above_all_tooltip": "Εμφανίζει τον πίνακα σερί μπροστά από οτιδήποτε μπορεί",
-      "default_note_label": "* Προεπιλογή"
+      "default_note_label": "* Προεπιλογή",
+
+      "coloured_text_label": "Έγχρωμο Κείμενο",
+      "coloured_text_tooltip": "Εμφανίζει τα σερί με χρώματα συγκεκριμένα για τον χαρακτήρα",
+      "suppress_save_notification_label": "Κατάργηση ειδοποίησης αποθήκευσης",
+      "suppress_save_notification_tooltip": "Καταργεί την ειδοποίηση Το παιχνίδι αποθηκεύτηκε! στην επάνω γραμμή",
+      "characters_title": "Χαρακτήρες",
+      "track_characters_title": "Παρακολούθηση Χαρακτήρων",
+      "track_characters_tooltip": "Εάν θα συμπεριληφθεί αυτός ο χαρακτήρας στην παρακολούθηση και την εμφάνιση"
     }
   },
   "streak_the_spire:StreakTips": {

@@ -26,6 +26,10 @@ public class LocalizationConstants {
         public static final String AllowDemoTooltip = "allow_demo_tooltip";
 
         public static final String DisplayPreferencesTitle = "display_preferences_title";
+        public static final String ColouredTextLabel = "coloured_text_label";
+        public static final String ColouredTextTooltip = "coloured_text_tooltip";
+        public static final String SuppressSaveNotificationLabel = "suppress_save_notification_label";
+        public static final String SuppressSaveNotificationTooltip = "suppress_save_notification_tooltip";
         public static final String RenderLayerTitle = "render_layer_title";
         public static final String RenderLayerPreRoomLabel = "render_layer_pre_room_label";
         public static final String RenderLayerPreRoomTooltip = "render_layer_pre_room_tooltip";
@@ -36,6 +40,10 @@ public class LocalizationConstants {
         public static final String RenderLayerAboveAllLabel = "render_layer_above_all_label";
         public static final String RenderLayerAboveAllTooltip = "render_layer_above_all_tooltip";
         public static final String DefaultNoteLabel = "default_note_label";
+
+        public static final String CharactersTitle = "characters_title";
+        public static final String TrackCharactersTitle = "track_characters_title";
+        public static final String TrackCharactersTooltip = "track_characters_tooltip";
     }
 
     public static class StreakTips {

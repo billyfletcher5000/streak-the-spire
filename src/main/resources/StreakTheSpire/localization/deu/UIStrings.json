@@ -31,7 +31,15 @@
       "render_layer_above_most_tooltip": "Zeigt das Streak-Panel vor den meisten Dingen an, aber nicht vor dem Mauszeiger oder Vollbild-Überblendungen",
       "render_layer_above_all_label": "Über allem",
       "render_layer_above_all_tooltip": "Zeigt das Streak-Panel vor allem an, was es kann",
-      "default_note_label": "* Standard"
+      "default_note_label": "* Standard",
+
+      "coloured_text_label": "Farbiger Text",
+      "coloured_text_tooltip": "Zeigt Streaks in charakterspezifischen Farben an",
+      "suppress_save_notification_label": "Benachrichtigung zum Speichern unterdrücken",
+      "suppress_save_notification_tooltip": "Unterdrückt die Benachrichtigung Spiel gespeichert! in der oberen Leiste",
+      "characters_title": "Charaktere",
+      "track_characters_title": "Charaktere verfolgen",
+      "track_characters_tooltip": "Ob dieser Charakter in die Verfolgung und Anzeige einbezogen werden soll"
     }
   },
   "streak_the_spire:StreakTips": {

@@ -15,4 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed issue with cursor overrides changing when the mouse was being held when they shouldn't
 
 ## 0.3.0
-- Added 'suppress save notification' option (NEEDS CONFIG, DO NOT RELEASE UNTIL CONFIG IS DONE THEN DELETE THIS LOUD COMMENT)
+- Configuration menu now has multiple tabs for easier navigation/more options in future
+- Added 'Characters' tab where characters (and Continuous/Rotating) can be toggled on/off individually 
+- Added 'suppress save notification' option as it can look bad over the top of certain panel positions
+- Added 'coloured streak counts' option that colours each streak number with a colour associated with the character
+

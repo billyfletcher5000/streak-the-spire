@@ -1,5 +1,6 @@
 package StreakTheSpire.Models;
 
+import StreakTheSpire.Data.RotatingConstants;
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyList;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -24,15 +25,8 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
     public Property<String> borderStyle = new Property<>(null);
     public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.TopPanel);
     public Property<String> fontIdentifier = new Property<>("Kreon_SDF_Outline_Shadow");
-    public PropertyList<String> characterOrder = new PropertyList<>(
-            AbstractPlayer.PlayerClass.IRONCLAD.toString(),
-            AbstractPlayer.PlayerClass.THE_SILENT.toString(),
-            AbstractPlayer.PlayerClass.DEFECT.toString(),
-            AbstractPlayer.PlayerClass.WATCHER.toString(),
-            CharacterWildcard,
-            PlayerStreakStoreModel.RotatingPlayerIdentifier
-    );
     public Property<Boolean> suppressSaveNotification = new Property<>(false);
+    public Property<Boolean> colouredStreakNumbers = new Property<>(false);
 
     public DisplayPreferencesModel() {}
 

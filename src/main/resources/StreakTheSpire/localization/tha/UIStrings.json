@@ -31,7 +31,15 @@
       "render_layer_above_most_tooltip": "แสดงแผงสตรีคหน้าสิ่งส่วนใหญ่ แต่ไม่แสดงเคอร์เซอร์เมาส์หรือการจางหายเต็มหน้าจอ",
       "render_layer_above_all_label": "อยู่เหนือทุกสิ่ง",
       "render_layer_above_all_tooltip": "แสดงแผงสตรีคหน้าทุกสิ่งเท่าที่ทำได้",
-      "default_note_label": "* ค่าเริ่มต้น"
+      "default_note_label": "* ค่าเริ่มต้น",
+
+      "coloured_text_label": "ข้อความสี",
+      "coloured_text_tooltip": "แสดงสตรีคในสีเฉพาะของตัวละคร",
+      "suppress_save_notification_label": "ระงับการแจ้งเตือนการบันทึก",
+      "suppress_save_notification_tooltip": "ระงับการแจ้งเตือน บันทึกเกมแล้ว! ที่แถบด้านบน",
+      "characters_title": "ตัวละคร",
+      "track_characters_title": "ติดตามตัวละคร",
+      "track_characters_tooltip": "ว่าจะรวมตัวละครนี้ในการติดตามและแสดงหรือไม่"
     }
   },
   "streak_the_spire:StreakTips": {

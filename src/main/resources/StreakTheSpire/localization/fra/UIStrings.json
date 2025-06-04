@@ -31,7 +31,15 @@
       "render_layer_above_most_tooltip": "Affiche le panneau de série devant la plupart des choses, mais pas le curseur de la souris ou les fondus plein écran",
       "render_layer_above_all_label": "Au-dessus de Tout",
       "render_layer_above_all_tooltip": "Affiche le panneau de série devant tout ce qu'il peut",
-      "default_note_label": "* Par défaut"
+      "default_note_label": "* Par défaut",
+
+      "coloured_text_label": "Texte coloré",
+      "coloured_text_tooltip": "Affiche les séries dans des couleurs spécifiques au personnage",
+      "suppress_save_notification_label": "Supprimer la notification de sauvegarde",
+      "suppress_save_notification_tooltip": "Supprime la notification Partie sauvegardée ! dans la barre supérieure",
+      "characters_title": "Personnages",
+      "track_characters_title": "Suivre les personnages",
+      "track_characters_tooltip": "Indique si ce personnage doit être inclus dans le suivi et l'affichage"
     }
   },
   "streak_the_spire:StreakTips": {

@@ -2,6 +2,7 @@ package StreakTheSpire.Views;
 
 import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.IScoreChangeCeremony;
+import StreakTheSpire.Controllers.CharacterCoreDataSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.TipSystemController;
 import StreakTheSpire.Models.*;
@@ -16,14 +17,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.localization.UIStrings;
-import com.megacrit.cardcrawl.metrics.Metrics;
-import com.megacrit.cardcrawl.screens.stats.RunData;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
 
@@ -63,6 +57,9 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
 
         CharacterDisplaySetModel characterDisplaySet = StreakTheSpire.get().getCharacterDisplaySetModel();
         DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
+        CharacterCoreDataSetModel characterCoreDataSet = StreakTheSpire.get().getCharacterCoreDataSetModel();
+        CharacterCoreDataSetController characterCoreDataSetController = new CharacterCoreDataSetController(characterCoreDataSet);
+        CharacterCoreDataModel characterCoreDataModel = characterCoreDataSetController.getCharacterData(model.identifier.get());
 
         CharacterDisplaySetController displaySetController = new CharacterDisplaySetController(characterDisplaySet);
 
@@ -76,10 +73,15 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         characterDisplayView = ViewFactoryManager.get().createView(displayModel);
         addChild((UIElement) characterDisplayView);
 
+        Color textColor =  new Color(0.95f, 0.95f, 0.95f, 1.0f);
+        if(characterCoreDataModel != null && preferences.colouredStreakNumbers.get()) {
+            textColor = characterCoreDataModel.streakTextColor.get();
+        }
+
         lastProcessedScore = model.currentStreak.get();
         BitmapFont font = StreakTheSpire.get().getFontCache().getFont(preferences.fontIdentifier.get());
         scoreDisplayElement = new UISDFTextElement(Vector2.Zero, font, String.valueOf(lastProcessedScore));
-        scoreDisplayElement.setColor(new Color(0.95f, 0.95f, 0.95f, 1.0f));
+        scoreDisplayElement.setColor(textColor);
         scoreDisplayElement.setHAlign(Align.center);
         scoreDisplayElement.setAutoScale(true);
         scoreDisplayElement.setAutoScalePaddingRelative(0.7f);
@@ -103,6 +105,8 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         model.highestStreakTimestamp.addOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidWins.addOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidLosses.addOnChangedSubscriber(this::markTipBodyTextDirty);
+
+        preferences.colouredStreakNumbers.addOnChangedSubscriber(this::updateTextColour);
 
         tipDataModel = tipSystemController.createTipDataModel(isVisible(), tipHitbox, headerText, bodyText, additionalLocalText);
     }
@@ -134,6 +138,20 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         return output;
     }
 
+    private void updateTextColour() {
+        DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
+        CharacterCoreDataSetModel characterCoreDataSet = StreakTheSpire.get().getCharacterCoreDataSetModel();
+        CharacterCoreDataSetController characterCoreDataSetController = new CharacterCoreDataSetController(characterCoreDataSet);
+        CharacterCoreDataModel characterCoreDataModel = characterCoreDataSetController.getCharacterData(model.identifier.get());
+
+        Color textColor =  new Color(0.95f, 0.95f, 0.95f, 1.0f);
+        if(characterCoreDataModel != null && preferences.colouredStreakNumbers.get()) {
+            textColor = characterCoreDataModel.streakTextColor.get();
+        }
+
+        scoreDisplayElement.setColor(textColor);
+    }
+
     @Override
     protected void elementDestroy() {
         super.elementDestroy();
@@ -150,6 +168,9 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         model.highestStreakTimestamp.removeOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidWins.removeOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidLosses.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+
+        DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
+        preferences.colouredStreakNumbers.addOnChangedSubscriber(this::updateTextColour);
 
         if(tipDataModel != null) {
             TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();

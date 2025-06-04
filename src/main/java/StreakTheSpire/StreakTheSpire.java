@@ -4,11 +4,14 @@ import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreDecreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreIncreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.SimpleTextScoreChangeCeremony;
+import StreakTheSpire.Config.CharactersModPanelPage;
 import StreakTheSpire.Config.ConfigModPanel;
 import StreakTheSpire.Config.CriteriaModPanelPage;
+import StreakTheSpire.Config.DisplayPreferencesModPanelPage;
 import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
+import StreakTheSpire.Data.RotatingConstants;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
 import StreakTheSpire.Utils.*;
@@ -21,7 +24,6 @@ import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -33,6 +35,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.Hitbox;
 import com.megacrit.cardcrawl.helpers.PowerTip;
+import com.megacrit.cardcrawl.localization.CharacterStrings;
 import com.megacrit.cardcrawl.localization.UIStrings;
 import dorkbox.tweenEngine.TweenEngine;
 import org.apache.logging.log4j.LogManager;
@@ -91,6 +94,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<DisplayPreferencesModel> displayPreferencesModel;
     private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
+    private Property<CharacterCoreDataSetModel> characterCoreDataSetModel;
     private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
     private Property<BorderStyleSetModel> borderStyleSetModel;
     private Property<TipSystemModel> tipSystemModel;
@@ -107,12 +111,14 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public DisplayPreferencesModel getDisplayPreferencesModel() { return displayPreferencesModel.get(); }
     public PlayerStreakStoreModel getStreakStoreDataModel() { return streakStoreDataModel.get(); }
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
+    public CharacterCoreDataSetModel getCharacterCoreDataSetModel() { return characterCoreDataSetModel.get(); }
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
     public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
     public TipSystemModel getTipSystemModel() { return tipSystemModel.get(); }
 
     public UIStrings getConfigUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(LocalizationConstants.Config.ID)); }
     public UIStrings getTipUIStrings() { return CardCrawlGame.languagePack.getUIString(prefixLocalizationID(LocalizationConstants.StreakTips.ID));  }
+    public CharacterStrings getCharacterStrings(String characterLocalisationID) { return CardCrawlGame.languagePack.getCharacterString(characterLocalisationID); }
     //endregion
 
     //region Base Initialisation
@@ -147,6 +153,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialisePreferenceModels();
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
+        initialiseCharacterDataModels();
         initialiseCeremonyModels();
         initialiseStreakDataModel();
         initialiseBorderStyleModels();
@@ -238,6 +245,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         settingsPanel = new ConfigModPanel();
 
         settingsPanel.addPage(new CriteriaModPanelPage());
+        settingsPanel.addPage(new CharactersModPanelPage());
+        settingsPanel.addPage(new DisplayPreferencesModPanelPage());
     }
     //endregion
 
@@ -325,15 +334,22 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     //region Text & Localisation
     private void initialiseLocalisation() {
+        // Fallback
+        loadLocalisation("eng");
+
         String langKey = Settings.language.toString().toLowerCase();
+        loadLocalisation(langKey);
+    }
 
-        if (!Gdx.files.internal("StreakTheSpire/localization/" + langKey + "/").exists()) {
-            langKey = "eng";
-        }
-
+    private void loadLocalisation(String langKey) {
         String filepath = "StreakTheSpire/localization/" + langKey + "/UIStrings.json";
         if (Gdx.files.internal(filepath).exists()) {
             BaseMod.loadCustomStringsFile(UIStrings.class, filepath);
+        }
+
+        filepath = "StreakTheSpire/localization/" + langKey + "/characters.json";
+        if (Gdx.files.internal(filepath).exists()) {
+            BaseMod.loadCustomStringsFile(CharacterStrings.class, filepath);
         }
     }
 
@@ -463,7 +479,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         controller.addCharacterDisplayModel(watcherSkeletonDisplayModel);
 
         CharacterSkeletonDisplayModel rotatingSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
-        rotatingSkeletonDisplayModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        rotatingSkeletonDisplayModel.identifier.set(RotatingConstants.Identifier);
         rotatingSkeletonDisplayModel.baseDimensions.set(new Vector2(61.64f * 1.325f, 64.4f * 1.325f));
         rotatingSkeletonDisplayModel.skeletonOffset.set(new Vector2(4, 0)); // Note: This is applied BEFORE rotation
         rotatingSkeletonDisplayModel.skeletonAtlasUrl.set("StreakTheSpire/skeletons/rotating_streak/skeleton.atlas");
@@ -490,6 +506,43 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         watcherTextDisplayModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
         watcherTextDisplayModel.displayText.set("Watcher");
         controller.addCharacterDisplayModel(watcherTextDisplayModel);
+    }
+
+    private void initialiseCharacterDataModels() {
+        characterCoreDataSetModel = new Property<>(new CharacterCoreDataSetModel());
+
+        CharacterCoreDataModel ironcladCoreModel = new CharacterCoreDataModel();
+        ironcladCoreModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
+        ironcladCoreModel.localisationID.set("Ironclad");
+        ironcladCoreModel.streakTextColor.set(Settings.RED_TEXT_COLOR);
+        ironcladCoreModel.displayOrderPriority.set(1);
+        characterCoreDataSetModel.get().characterLocalisations.add(ironcladCoreModel);
+
+        CharacterCoreDataModel silentCoreModel = new CharacterCoreDataModel();
+        silentCoreModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
+        silentCoreModel.localisationID.set("Silent");
+        silentCoreModel.streakTextColor.set(Settings.GREEN_TEXT_COLOR);
+        silentCoreModel.displayOrderPriority.set(2);
+        characterCoreDataSetModel.get().characterLocalisations.add(silentCoreModel);
+
+        CharacterCoreDataModel defectCoreModel = new CharacterCoreDataModel();
+        defectCoreModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
+        defectCoreModel.localisationID.set("Defect");
+        defectCoreModel.streakTextColor.set(Settings.BLUE_TEXT_COLOR);
+        defectCoreModel.displayOrderPriority.set(3);
+        characterCoreDataSetModel.get().characterLocalisations.add(defectCoreModel);
+
+        CharacterCoreDataModel watcherCoreModel = new CharacterCoreDataModel();
+        watcherCoreModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
+        watcherCoreModel.localisationID.set("Watcher");
+        watcherCoreModel.streakTextColor.set(Settings.PURPLE_COLOR);
+        watcherCoreModel.displayOrderPriority.set(4);
+        characterCoreDataSetModel.get().characterLocalisations.add(watcherCoreModel);
+
+        CharacterCoreDataModel rotatingCoreModel = new CharacterCoreDataModel();
+        rotatingCoreModel.identifier.set(RotatingConstants.Identifier);
+        rotatingCoreModel.localisationID.set(RotatingConstants.LocalisationID);
+        characterCoreDataSetModel.get().characterLocalisations.add(rotatingCoreModel);
     }
 
     private void initialiseCeremonyModels() {

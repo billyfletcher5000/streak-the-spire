@@ -31,7 +31,15 @@
       "render_layer_above_most_tooltip": "Seri panelini çoğu şeyin önünde, ancak fare imleci veya tam ekran kararmaların önünde göstermez",
       "render_layer_above_all_label": "Hepsinden Üstte",
       "render_layer_above_all_tooltip": "Seri panelini mümkün olan her şeyin önünde görüntüler",
-      "default_note_label": "* Varsayılan"
+      "default_note_label": "* Varsayılan",
+
+      "coloured_text_label": "Renkli Metin",
+      "coloured_text_tooltip": "Serileri karaktere özel renklerde görüntüler",
+      "suppress_save_notification_label": "Kaydetme Bildirimini Gizle",
+      "suppress_save_notification_tooltip": "Üst çubukta yer alan Oyun Kaydedildi! bildirimini gizler",
+      "characters_title": "Karakterler",
+      "track_characters_title": "Karakterleri Takip Et",
+      "track_characters_tooltip": "Bu karakterin takibe ve görüntülemeye dahil edilip edilmeyeceği"
     }
   },
   "streak_the_spire:StreakTips": {
