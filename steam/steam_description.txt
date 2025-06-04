@@ -1,5 +1,3 @@
-[img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/score-increase.gif[/img]
-
 [h1]Streak The Spire[/h1]
 Streak The Spire is a mod that adds automatic (and accurate!) streak calculation based upon your run history, with effects when you increase or lose your streaks, on a per character and rotating basis. It even has animated character icons using the existing animations from the game!
 
@@ -8,6 +6,8 @@ It is highly configurable, allowing you to drag and resize the display and put i
 It also provides helpful tooltips with more information on your historical play, including your best win streak of all time, the dates your streaks occurred and your win rate, all calculated depending on the criteria you select. It even integrates with Slay The Relics (+ Reborn)!
 
 [url=https://github.com/billyfletcher5000/streak-the-spire]Github[/url]
+
+[img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/score-increase.gif[/img]
 
 [h2]Supported Languages[/h2]
 [b]Note: Apart from English, these are autotranslated, please suggest fixes to them at any time![/b]
@@ -49,7 +49,7 @@ It also provides helpful tooltips with more information on your historical play,
 Configuration of the mod happens in one of two ways:
 
 [h3]Panel Configuration[/h3]
-To move, resize or change the background of the panel simply hold down `ALT`
+To move, resize or change the background of the panel simply hold down [b]ALT[/b]
 on your keyboard and your mouse will be able to resize and move the panel.
 
 You will also see a small button next to the panel, which allows you to cycle
@@ -67,18 +67,19 @@ To change your streak criteria, as well as what 'layer' the panel sits on:
 [/olist]
 Each option should have a tooltip that explains what it does in detail, simply hover over an option for more information.
 
-[url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/mod-menu-config-button.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/mod-menu-config-button-thumbnail.png[/img][/url][url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-thumbnail.png[/img][/url]
+[url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/mod-menu-config-button.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/mod-menu-config-button-thumbnail.png[/img][/url]
+[url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-3.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-3-thumbnail.png[/img][/url]
+[url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-1.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-1-thumbnail.png[/img][/url]
+[url=https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-2.png][img]https://raw.githubusercontent.com/billyfletcher5000/streak-the-spire/refs/heads/main/readme-images/config-menu-2-thumbnail.png[/img][/url]
 
 [h2]Known Issues[/h2]
 [list]
-[*] Panel resize/move handles are slightly misaligned and it's surprisingly frustrating
 [*] Cannot resize/move panel on the mod config screen
 [*] Localization is auto-translated and is likely full of errors!
 [/list]
 
 [h2]Planned Updates[/h2]
 [list]
-
 [*] Additional, configurable effects for streak increase/resets
 [*] Specific number and first time ever reached effects
 [*] Ability to add in historical, untracked streaks, in case you don't have your full run history
