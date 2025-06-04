@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "Πληροφορίες σερί",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "dd/MM/yyyy",
       "current_streak_text": "Τρέχον σερί: ",
       "highest_streak_text": "Υψηλότερο σερί: ",
       "date_time_achieved_text": "Επιτεύχθηκε: ",

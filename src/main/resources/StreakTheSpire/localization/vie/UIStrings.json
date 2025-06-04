@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "Thông Tin Chuỗi Thắng",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "dd/MM/yyyy",
       "current_streak_text": "Chuỗi Thắng Hiện Tại: ",
       "highest_streak_text": "Chuỗi Thắng Cao Nhất: ",
       "date_time_achieved_text": "Đạt Được: ",

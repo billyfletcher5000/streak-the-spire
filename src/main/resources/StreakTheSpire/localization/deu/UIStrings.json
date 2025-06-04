@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "Streak-Informationen",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "dd/MM/yyyy",
       "current_streak_text": "Aktuelle Serie: ",
       "highest_streak_text": "Höchste Serie: ",
       "date_time_achieved_text": "Erreicht: ",

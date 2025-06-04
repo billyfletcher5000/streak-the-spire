@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "ข้อมูลสตรีค",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "dd/MM/yyyy",
       "current_streak_text": "สตรีคปัจจุบัน: ",
       "highest_streak_text": "สตรีคสูงสุด: ",
       "date_time_achieved_text": "ทำสำเร็จเมื่อ: ",

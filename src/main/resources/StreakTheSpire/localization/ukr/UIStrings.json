@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "Інформація про серію",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "dd.MM.yyyy",
       "current_streak_text": "Поточна серія: ",
       "highest_streak_text": "Найвища серія: ",
       "date_time_achieved_text": "Досягнуто: ",

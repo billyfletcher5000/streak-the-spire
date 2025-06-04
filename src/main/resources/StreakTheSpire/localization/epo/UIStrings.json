@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "Serio-Informoj",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "yyyy-MM-dd",
       "current_streak_text": "Aktuala Serio: ",
       "highest_streak_text": "Plej Alta Serio: ",
       "date_time_achieved_text": "Atingita: ",

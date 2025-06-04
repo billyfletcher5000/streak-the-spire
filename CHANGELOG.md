@@ -20,3 +20,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added 'suppress save notification' option as it can look bad over the top of certain panel positions
 - Added 'coloured streak counts' option that colours each streak number with a colour associated with the character
 
+# 0.3.1
+- Updated date formats for all languages to be same as StS run history screen's localised formats

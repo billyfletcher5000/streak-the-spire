@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "연승 정보",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "yyyy/MM/dd",
       "current_streak_text": "현재 연승: ",
       "highest_streak_text": "최고 연승: ",
       "date_time_achieved_text": "달성: ",

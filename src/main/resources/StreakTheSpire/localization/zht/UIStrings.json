@@ -45,7 +45,7 @@
   "streak_the_spire:StreakTips": {
     "TEXT_DICT": {
       "tip_header_title": "連勝資訊",
-      "date_time_format": "M/d/yyyy",
+      "date_time_format": "yyyy/MM/dd",
       "current_streak_text": "當前連勝：",
       "highest_streak_text": "最高連勝：",
       "date_time_achieved_text": "達成時間：",
