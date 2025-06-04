@@ -76,16 +76,16 @@ Each option should have a tooltip that explains what it does in detail, simply h
 
 <p align="center">
     <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/mod-menu-config-button.png">
-    <img width="250" height="215" alt="Static image of the general Mods page. The Streak The Spire entry and Config button are marked." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/mod-menu-config-button-thumbnail.png" hspace=10 />
+    <img width="125" height="108" alt="Static image of the general Mods page. The Streak The Spire entry and Config button are marked." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/mod-menu-config-button-thumbnail.png" hspace=10 />
     </a>
     <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-1.png">
-    <img width="415" height="215" alt="Static image of the mod's configuration panel, showing criteria options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-1-thumbnail.png" hspace=10 />
+    <img width="208" height="108" alt="Static image of the mod's configuration panel, showing criteria options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-1-thumbnail.png" hspace=10 />
     </a>
     <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-2.png">
-    <img width="415" height="215" alt="Static image of the mod's configuration panel, showing character options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-2-thumbnail.png" hspace=10 />
+    <img width="208" height="108" alt="Static image of the mod's configuration panel, showing character options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-2-thumbnail.png" hspace=10 />
     </a>
     <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-3.png">
-    <img width="415" height="215" alt="Static image of the mod's configuration panel, showing display options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-3-thumbnail.png" hspace=10 />
+    <img width="208" height="108" alt="Static image of the mod's configuration panel, showing display options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-3-thumbnail.png" hspace=10 />
     </a>
 </p>
 
