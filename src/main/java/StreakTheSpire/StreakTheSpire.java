@@ -542,7 +542,6 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         CharacterCoreDataModel rotatingCoreModel = new CharacterCoreDataModel();
         rotatingCoreModel.identifier.set(RotatingConstants.Identifier);
         rotatingCoreModel.localisationID.set(RotatingConstants.LocalisationID);
-        rotatingCoreModel.streakTextColor.set(Settings.GOLD_COLOR);
         characterCoreDataSetModel.get().characterLocalisations.add(rotatingCoreModel);
     }
 
