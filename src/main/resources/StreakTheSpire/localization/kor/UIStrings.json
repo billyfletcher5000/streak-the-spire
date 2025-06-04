@@ -35,6 +35,8 @@
 
       "coloured_text_label": "컬러 텍스트",
       "coloured_text_tooltip": "연속 기록을 캐릭터별 색상으로 표시",
+      "suppress_save_notification_label": "저장 알림 억제",
+      "suppress_save_notification_tooltip": "상단 바의 게임 저장됨! 알림을 억제합니다",
       "characters_title": "캐릭터",
       "track_characters_title": "캐릭터 추적",
       "track_characters_tooltip": "이 캐릭터를 추적 및 표시에 포함할지 여부"

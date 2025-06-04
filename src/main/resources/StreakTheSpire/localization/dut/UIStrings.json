@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Gekleurde tekst",
       "coloured_text_tooltip": "Toont streaks in karakterspecifieke kleuren",
+      "suppress_save_notification_label": "Opslagmelding onderdrukken",
+      "suppress_save_notification_tooltip": "Onderdrukt de melding Spel opgeslagen! in de bovenbalk",
       "characters_title": "Personages",
       "track_characters_title": "Personages volgen",
       "track_characters_tooltip": "Of dit personage moet worden opgenomen in de tracking en weergave"

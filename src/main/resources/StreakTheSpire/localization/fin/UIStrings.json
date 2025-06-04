@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Värillinen teksti",
       "coloured_text_tooltip": "Näyttää putket hahmokohtaisissa väreissä",
+      "suppress_save_notification_label": "Piilota tallennusilmoitus",
+      "suppress_save_notification_tooltip": "Piilottaa Peli tallennettu! -ilmoituksen yläpalkista",
       "characters_title": "Hahmot",
       "track_characters_title": "Seuraa hahmoja",
       "track_characters_tooltip": "Sisällytetäänkö tämä hahmo seurantaan ja näyttöön"

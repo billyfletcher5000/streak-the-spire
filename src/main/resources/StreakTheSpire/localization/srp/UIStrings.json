@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Обојени текст",
       "coloured_text_tooltip": "Приказује низове у бојама специфичним за ликове",
+      "suppress_save_notification_label": "Потисни обавештење о чувању",
+      "suppress_save_notification_tooltip": "Потискује обавештење Игра сачувана! у горњој траци",
       "characters_title": "Ликови",
       "track_characters_title": "Прати ликове",
       "track_characters_tooltip": "Да ли укључити овог лика у праћење и приказ"

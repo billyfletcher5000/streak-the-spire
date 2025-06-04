@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Texte coloré",
       "coloured_text_tooltip": "Affiche les séries dans des couleurs spécifiques au personnage",
+      "suppress_save_notification_label": "Supprimer la notification de sauvegarde",
+      "suppress_save_notification_tooltip": "Supprime la notification Partie sauvegardée ! dans la barre supérieure",
       "characters_title": "Personnages",
       "track_characters_title": "Suivre les personnages",
       "track_characters_tooltip": "Indique si ce personnage doit être inclus dans le suivi et l'affichage"

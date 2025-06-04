@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Texto coloreado",
       "coloured_text_tooltip": "Muestra las rachas en colores específicos del personaje",
+      "suppress_save_notification_label": "Suprimir Notificación de Guardado",
+      "suppress_save_notification_tooltip": "Suprime la notificación ¡Juego Guardado! en la barra superior",
       "characters_title": "Personajes",
       "track_characters_title": "Rastrear Personajes",
       "track_characters_tooltip": "Si se debe incluir a este personaje en el seguimiento y la visualización"

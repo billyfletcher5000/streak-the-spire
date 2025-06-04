@@ -24,6 +24,8 @@
       "display_preferences_title" : "Display Preferences",
       "coloured_text_label" : "Coloured Text",
       "coloured_text_tooltip" : "Displays streaks in character specific colours",
+      "suppress_save_notification_label" : "Suppress Save Notification",
+      "suppress_save_notification_tooltip" : "Suppresses the Game Saved! notification in the top bar",
       "render_layer_title" : "Render Layer",
       "render_layer_pre_room_label" : "Pre-Room",
       "render_layer_pre_room_tooltip" : "Displays the streak panel behind characters, enemy and UI but in front of the background",

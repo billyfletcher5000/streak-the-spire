@@ -35,6 +35,8 @@
 
       "coloured_text_label": "彩色文本",
       "coloured_text_tooltip": "以角色特定顏色顯示連勝",
+      "suppress_save_notification_label": "抑制保存通知",
+      "suppress_save_notification_tooltip": "抑制頂部欄中的遊戲已保存！通知",
       "characters_title": "角色",
       "track_characters_title": "追蹤角色",
       "track_characters_tooltip": "是否將此角色包含在追蹤和顯示中"

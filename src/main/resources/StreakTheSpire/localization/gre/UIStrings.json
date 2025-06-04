@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Έγχρωμο Κείμενο",
       "coloured_text_tooltip": "Εμφανίζει τα σερί με χρώματα συγκεκριμένα για τον χαρακτήρα",
+      "suppress_save_notification_label": "Κατάργηση ειδοποίησης αποθήκευσης",
+      "suppress_save_notification_tooltip": "Καταργεί την ειδοποίηση Το παιχνίδι αποθηκεύτηκε! στην επάνω γραμμή",
       "characters_title": "Χαρακτήρες",
       "track_characters_title": "Παρακολούθηση Χαρακτήρων",
       "track_characters_tooltip": "Εάν θα συμπεριληφθεί αυτός ο χαρακτήρας στην παρακολούθηση και την εμφάνιση"

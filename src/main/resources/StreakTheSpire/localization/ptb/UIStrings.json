@@ -32,9 +32,11 @@
       "render_layer_above_all_label": "Acima de Tudo",
       "render_layer_above_all_tooltip": "Exibe o painel de sequência na frente de tudo que puder",
       "default_note_label": "* Padrão",
-      
+
       "coloured_text_label": "Texto colorido",
       "coloured_text_tooltip": "Exibe as sequências em cores específicas do personagem",
+      "suppress_save_notification_label": "Suprimir Notificação de Salvamento",
+      "suppress_save_notification_tooltip": "Suprime a notificação Jogo Salvo! na barra superior",
       "characters_title": "Personagens",
       "track_characters_title": "Rastrear Personagens",
       "track_characters_tooltip": "Se deve incluir este personagem no rastreamento e exibição"

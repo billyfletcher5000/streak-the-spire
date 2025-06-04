@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Renkli Metin",
       "coloured_text_tooltip": "Serileri karaktere özel renklerde görüntüler",
+      "suppress_save_notification_label": "Kaydetme Bildirimini Gizle",
+      "suppress_save_notification_tooltip": "Üst çubukta yer alan Oyun Kaydedildi! bildirimini gizler",
       "characters_title": "Karakterler",
       "track_characters_title": "Karakterleri Takip Et",
       "track_characters_tooltip": "Bu karakterin takibe ve görüntülemeye dahil edilip edilmeyeceği"

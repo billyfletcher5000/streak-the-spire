@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Kolorowy tekst",
       "coloured_text_tooltip": "Wyświetla serie w kolorach specyficznych dla postaci",
+      "suppress_save_notification_label": "Pomiń powiadomienie o zapisie",
+      "suppress_save_notification_tooltip": "Pomiń powiadomienie Gra zapisana! na górnym pasku",
       "characters_title": "Postacie",
       "track_characters_title": "Śledź postacie",
       "track_characters_tooltip": "Czy włączyć tę postać do śledzenia i wyświetlania"

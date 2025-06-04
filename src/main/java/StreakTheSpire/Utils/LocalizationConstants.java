@@ -28,6 +28,8 @@ public class LocalizationConstants {
         public static final String DisplayPreferencesTitle = "display_preferences_title";
         public static final String ColouredTextLabel = "coloured_text_label";
         public static final String ColouredTextTooltip = "coloured_text_tooltip";
+        public static final String SuppressSaveNotificationLabel = "suppress_save_notification_label";
+        public static final String SuppressSaveNotificationTooltip = "suppress_save_notification_tooltip";
         public static final String RenderLayerTitle = "render_layer_title";
         public static final String RenderLayerPreRoomLabel = "render_layer_pre_room_label";
         public static final String RenderLayerPreRoomTooltip = "render_layer_pre_room_tooltip";

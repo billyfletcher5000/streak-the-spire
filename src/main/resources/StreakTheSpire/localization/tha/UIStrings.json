@@ -35,6 +35,8 @@
 
       "coloured_text_label": "ข้อความสี",
       "coloured_text_tooltip": "แสดงสตรีคในสีเฉพาะของตัวละคร",
+      "suppress_save_notification_label": "ระงับการแจ้งเตือนการบันทึก",
+      "suppress_save_notification_tooltip": "ระงับการแจ้งเตือน บันทึกเกมแล้ว! ที่แถบด้านบน",
       "characters_title": "ตัวละคร",
       "track_characters_title": "ติดตามตัวละคร",
       "track_characters_tooltip": "ว่าจะรวมตัวละครนี้ในการติดตามและแสดงหรือไม่"

@@ -32,9 +32,11 @@
       "render_layer_above_all_label": "Над всем",
       "render_layer_above_all_tooltip": "Отображает панель серии перед всем, что она может",
       "default_note_label": "* По умолчанию",
-      
+
       "coloured_text_label": "Цветной текст",
       "coloured_text_tooltip": "Отображает серии в цветах, специфичных для персонажа",
+      "suppress_save_notification_label": "Подавлять уведомление о сохранении",
+      "suppress_save_notification_tooltip": "Подавляет уведомление Игра сохранена! в верхней панели",
       "characters_title": "Персонажи",
       "track_characters_title": "Отслеживать персонажей",
       "track_characters_tooltip": "Включать ли этого персонажа в отслеживание и отображение"

@@ -32,9 +32,11 @@
       "render_layer_above_all_label": "すべての上に",
       "render_layer_above_all_tooltip": "連勝パネルを可能な限りすべてのものの前面に表示します",
       "default_note_label": "* デフォルト",
-      
+
       "coloured_text_label": "色付きテキスト",
       "coloured_text_tooltip": "キャラクター固有の色で連勝を表示する",
+      "suppress_save_notification_label": "保存通知を非表示にする",
+      "suppress_save_notification_tooltip": "上部のゲームが保存されました！通知を非表示にします",
       "characters_title": "キャラクター",
       "track_characters_title": "キャラクターを追跡",
       "track_characters_tooltip": "このキャラクターを追跡と表示に含めるかどうか"

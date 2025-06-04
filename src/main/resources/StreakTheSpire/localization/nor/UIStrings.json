@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Farget tekst",
       "coloured_text_tooltip": "Viser streker i karaktersspesifikke farger",
+      "suppress_save_notification_label": "Undertrykk lagringsvarsel",
+      "suppress_save_notification_tooltip": "Undertrykker Spill lagret!-varselet i topplinjen",
       "characters_title": "Karakterer",
       "track_characters_title": "Spor karakterer",
       "track_characters_tooltip": "Om denne karakteren skal inkluderes i sporing og visning"

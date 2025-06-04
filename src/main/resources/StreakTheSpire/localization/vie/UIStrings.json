@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Văn bản có màu",
       "coloured_text_tooltip": "Hiển thị chuỗi thắng bằng màu sắc đặc trưng của nhân vật",
+      "suppress_save_notification_label": "Ẩn thông báo lưu",
+      "suppress_save_notification_tooltip": "Ẩn thông báo Đã lưu trò chơi! ở thanh trên cùng",
       "characters_title": "Nhân vật",
       "track_characters_title": "Theo dõi nhân vật",
       "track_characters_tooltip": "Có bao gồm nhân vật này trong việc theo dõi và hiển thị hay không"

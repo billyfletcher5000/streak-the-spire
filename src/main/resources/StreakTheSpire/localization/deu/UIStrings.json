@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Farbiger Text",
       "coloured_text_tooltip": "Zeigt Streaks in charakterspezifischen Farben an",
+      "suppress_save_notification_label": "Benachrichtigung zum Speichern unterdrücken",
+      "suppress_save_notification_tooltip": "Unterdrückt die Benachrichtigung Spiel gespeichert! in der oberen Leiste",
       "characters_title": "Charaktere",
       "track_characters_title": "Charaktere verfolgen",
       "track_characters_tooltip": "Ob dieser Charakter in die Verfolgung und Anzeige einbezogen werden soll"

@@ -41,9 +41,21 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.ColouredTextLabel),
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.ColouredTextTooltip),
                 modPanel,
-                (val) -> {}
+                (val) -> { StreakTheSpire.get().saveConfig(); }
         );
         addElement(textColourButton);
+
+        elementPosition.y -= ConfigModPanel.LineHeight;
+        IUIElement suppressSaveNotifButton = createBooleanPropElement(
+                elementPosition.x,
+                elementPosition.y,
+                displayPreferencesModel.suppressSaveNotification,
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.SuppressSaveNotificationLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.SuppressSaveNotificationTooltip),
+                modPanel,
+                (val) -> { StreakTheSpire.get().saveConfig(); }
+        );
+        addElement(suppressSaveNotifButton);
 
         elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabel renderLayerTitle = new FixedModLabel(

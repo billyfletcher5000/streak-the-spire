@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Kolora Teksto",
       "coloured_text_tooltip": "Montras seriojn en karakter-specifaj koloroj",
+      "suppress_save_notification_label": "Subpremi Savigan Sciigon",
+      "suppress_save_notification_tooltip": "Subpremas la sciigon Ludo Savita! en la supra stango",
       "characters_title": "Karakteroj",
       "track_characters_title": "Spuri Karakterojn",
       "track_characters_tooltip": "Ĉu inkluzivi ĉi tiun karakteron en spurado kaj montrado"

@@ -35,6 +35,8 @@
 
       "coloured_text_label": "Кольоровий текст",
       "coloured_text_tooltip": "Відображає серії перемог у кольорах, характерних для персонажа",
+      "suppress_save_notification_label": "Придушити сповіщення про збереження",
+      "suppress_save_notification_tooltip": "Придушує сповіщення Гру збережено! у верхній панелі",
       "characters_title": "Персонажі",
       "track_characters_title": "Відстежувати персонажів",
       "track_characters_tooltip": "Чи включати цього персонажа в відстеження та відображення"
