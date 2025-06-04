@@ -81,6 +81,8 @@ Each option should have a tooltip that explains what it does in detail, simply h
     <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-1.png">
     <img width="208" height="108" alt="Static image of the mod's configuration panel, showing criteria options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-1-thumbnail.png" hspace=10 />
     </a>
+</p>
+<p align="center">
     <a href="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-2.png">
     <img width="208" height="108" alt="Static image of the mod's configuration panel, showing character options." src="https://github.com/billyfletcher5000/streak-the-spire/blob/main/readme-images/config-menu-2-thumbnail.png" hspace=10 />
     </a>
