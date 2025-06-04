@@ -6,6 +6,7 @@ import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.FixedModLabel;
 import StreakTheSpire.Utils.FixedModLabeledToggleButton;
 import StreakTheSpire.Utils.LocalizationConstants;
+import basemod.IUIElement;
 import basemod.ModPanel;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.core.Settings;
@@ -30,8 +31,21 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
         final float NumCheckboxenPerLine = 3.0f;
         UIStrings uiStrings = StreakTheSpire.get().getConfigUIStrings();
 
-        Vector2 elementPosition = contentTopLeft.cpy();
+        DisplayPreferencesModel displayPreferencesModel = StreakTheSpire.get().getDisplayPreferencesModel();
 
+        Vector2 elementPosition = contentTopLeft.cpy();
+        IUIElement textColourButton = createBooleanPropElement(
+                elementPosition.x,
+                elementPosition.y,
+                displayPreferencesModel.colouredStreakNumbers,
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.ColouredTextLabel),
+                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.ColouredTextTooltip),
+                modPanel,
+                (val) -> {}
+        );
+        addElement(textColourButton);
+
+        elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabel renderLayerTitle = new FixedModLabel(
                 uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTitle),
                 elementPosition.x,
@@ -41,8 +55,6 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
                 (label) -> {}
         );
         addElement(renderLayerTitle);
-
-        DisplayPreferencesModel displayPreferencesModel = StreakTheSpire.get().getDisplayPreferencesModel();
 
         elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabeledToggleButton button = new FixedModLabeledToggleButton(

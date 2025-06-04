@@ -106,6 +106,8 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         model.totalValidWins.addOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidLosses.addOnChangedSubscriber(this::markTipBodyTextDirty);
 
+        preferences.colouredStreakNumbers.addOnChangedSubscriber(this::updateTextColour);
+
         tipDataModel = tipSystemController.createTipDataModel(isVisible(), tipHitbox, headerText, bodyText, additionalLocalText);
     }
 
@@ -136,6 +138,20 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         return output;
     }
 
+    private void updateTextColour() {
+        DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
+        CharacterCoreDataSetModel characterCoreDataSet = StreakTheSpire.get().getCharacterCoreDataSetModel();
+        CharacterCoreDataSetController characterCoreDataSetController = new CharacterCoreDataSetController(characterCoreDataSet);
+        CharacterCoreDataModel characterCoreDataModel = characterCoreDataSetController.getCharacterData(model.identifier.get());
+
+        Color textColor =  new Color(0.95f, 0.95f, 0.95f, 1.0f);
+        if(characterCoreDataModel != null && preferences.colouredStreakNumbers.get()) {
+            textColor = characterCoreDataModel.streakTextColor.get();
+        }
+
+        scoreDisplayElement.setColor(textColor);
+    }
+
     @Override
     protected void elementDestroy() {
         super.elementDestroy();
@@ -152,6 +168,9 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         model.highestStreakTimestamp.removeOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidWins.removeOnChangedSubscriber(this::markTipBodyTextDirty);
         model.totalValidLosses.removeOnChangedSubscriber(this::markTipBodyTextDirty);
+
+        DisplayPreferencesModel preferences = StreakTheSpire.get().getDisplayPreferencesModel();
+        preferences.colouredStreakNumbers.addOnChangedSubscriber(this::updateTextColour);
 
         if(tipDataModel != null) {
             TipSystemModel tipSystemModel = StreakTheSpire.get().getTipSystemModel();

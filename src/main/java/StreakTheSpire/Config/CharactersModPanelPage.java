@@ -48,7 +48,9 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
                 elementPosition.y,
                 FontHelper.tipBodyFont,
                 modPanel,
-                (label) -> {}
+                (label) -> {
+                    StreakTheSpire.get().saveConfig();
+                }
         );
         addElement(allowTitle);
 
