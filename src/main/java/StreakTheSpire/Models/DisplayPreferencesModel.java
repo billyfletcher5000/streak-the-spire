@@ -26,7 +26,7 @@ public class DisplayPreferencesModel implements IConfigDataModel, IModel {
     public Property<RenderLayer> renderLayer = new Property<>(RenderLayer.TopPanel);
     public Property<String> fontIdentifier = new Property<>("Kreon_SDF_Outline_Shadow");
     public Property<Boolean> suppressSaveNotification = new Property<>(false);
-    public Property<Boolean> colouredStreakNumbers = new Property<>(true);
+    public Property<Boolean> colouredStreakNumbers = new Property<>(false);
 
     public DisplayPreferencesModel() {}
 
