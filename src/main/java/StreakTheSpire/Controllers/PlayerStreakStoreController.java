@@ -1,5 +1,6 @@
 package StreakTheSpire.Controllers;
 
+import StreakTheSpire.Data.RotatingConstants;
 import StreakTheSpire.Data.RunDataSubset;
 import StreakTheSpire.Models.PlayerStreakModel;
 import StreakTheSpire.Models.StreakCriteriaModel;
@@ -58,6 +59,8 @@ public class PlayerStreakStoreController {
         else if (model.rotatingPlayerStreakModel.get() == null && criteria.trackContinuous.get()) {
             createRotatingModel();
         }
+
+        model.playerToStreak.removeIf(m -> !criteria.trackedCharacterClasses.contains(m.identifier.get()) && !m.identifier.get().equals(RotatingConstants.Identifier));
 
         FileHandle[] subfolders = Arrays.stream(Gdx.files.local("runs" + File.separator).list()).filter(fileHandle ->
             criteria.trackedCharacterClasses.contains(fileHandle.name())
@@ -178,7 +181,7 @@ public class PlayerStreakStoreController {
             PlayerStreakModel streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
 
             for(RunDataSubset data : allCharacterSubsets) {
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, PlayerStreakStoreModel.RotatingPlayerIdentifier);
+                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, RotatingConstants.Identifier);
                 if(result == ProcessResult.StreakIncreased) {
                     currentStreakCharacterIDs.add(0, data.character_chosen);
                 } else if(result == ProcessResult.StreakReset) {
@@ -198,7 +201,7 @@ public class PlayerStreakStoreController {
 
     private void createRotatingModel() {
         PlayerStreakModel rotatingModel = new PlayerStreakModel();
-        rotatingModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        rotatingModel.identifier.set(RotatingConstants.Identifier);
         model.rotatingPlayerStreakModel.set(rotatingModel);
     }
 

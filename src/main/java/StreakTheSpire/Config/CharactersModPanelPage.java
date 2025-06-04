@@ -1,14 +1,13 @@
 package StreakTheSpire.Config;
 
-import StreakTheSpire.Controllers.CharacterLocalisationSetController;
+import StreakTheSpire.Controllers.CharacterCoreDataSetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
+import StreakTheSpire.Data.RotatingConstants;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.FixedModLabel;
 import StreakTheSpire.Utils.FixedModLabeledToggleButton;
-import StreakTheSpire.Utils.FixedModToggleButton;
 import StreakTheSpire.Utils.LocalizationConstants;
-import basemod.IUIElement;
 import basemod.ModPanel;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.core.Settings;
@@ -36,8 +35,8 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
 
         UIStrings uiStrings = StreakTheSpire.get().getConfigUIStrings();
         StreakCriteriaModel criteriaModel = StreakTheSpire.get().getStreakCriteriaModel();
-        CharacterLocalisationSetModel localisationSetModel = StreakTheSpire.get().getCharacterLocalisationSetModel();
-        CharacterLocalisationSetController localisationSetController = new CharacterLocalisationSetController(localisationSetModel);
+        CharacterCoreDataSetModel characterCoreDataSetModel = StreakTheSpire.get().getCharacterCoreDataSetModel();
+        CharacterCoreDataSetController characterCoreDataSetController = new CharacterCoreDataSetController(characterCoreDataSetModel);
 
         float checkboxItemWidth = contentDimensions.x / NumCheckboxenPerLine;
 
@@ -56,12 +55,12 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
         elementPosition.y -= ConfigModPanel.LineHeight;
 
         ArrayList<String> trackedCharacterIDs = new ArrayList<>(criteriaModel.trackableCharacterClasses);
-        trackedCharacterIDs.add(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        trackedCharacterIDs.add(RotatingConstants.Identifier);
 
         int lineIndex = 0;
         for (int characterIndex = 0; characterIndex < trackedCharacterIDs.size(); characterIndex++) {
             String characterID = trackedCharacterIDs.get(characterIndex);
-            CharacterLocalisationModel localisationModel = localisationSetController.getLocalisationForCharacter(characterID);
+            CharacterCoreDataModel localisationModel = characterCoreDataSetController.getCharacterData(characterID);
             String characterName = characterID;
             if(localisationModel != null && localisationModel.localisationID.get() != null) {
                 CharacterStrings characterStrings = StreakTheSpire.get().getCharacterStrings(localisationModel.localisationID.get());
@@ -70,7 +69,7 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
             }
 
             boolean isEnabled = false;
-            if(criteriaModel.trackContinuous.get() && characterID.equals(PlayerStreakStoreModel.RotatingPlayerIdentifier)) {
+            if(criteriaModel.trackContinuous.get() && characterID.equals(RotatingConstants.Identifier)) {
                 isEnabled = true;
             }
             else {
@@ -109,9 +108,11 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
         StreakCriteriaModel criteriaModel = StreakTheSpire.get().getStreakCriteriaModel();
 
         if(isEnabled) {
-            if(characterID.equals(PlayerStreakStoreModel.RotatingPlayerIdentifier)) {
-                if(!criteriaModel.trackContinuous.get())
+            if(characterID.equals(RotatingConstants.Identifier)) {
+                if(!criteriaModel.trackContinuous.get()) {
                     criteriaModel.trackContinuous.set(true);
+                    recalculateStreaks();
+                }
             }
             else if(!criteriaModel.trackedCharacterClasses.contains(characterID)) {
                 criteriaModel.trackedCharacterClasses.add(characterID);
@@ -119,9 +120,11 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
             }
         }
         else {
-            if(characterID.equals(PlayerStreakStoreModel.RotatingPlayerIdentifier)) {
-                if(criteriaModel.trackContinuous.get())
+            if(characterID.equals(RotatingConstants.Identifier)) {
+                if(criteriaModel.trackContinuous.get()) {
                     criteriaModel.trackContinuous.set(false);
+                    recalculateStreaks();
+                }
             }
             else if(criteriaModel.trackedCharacterClasses.contains(characterID)) {
                 criteriaModel.trackedCharacterClasses.remove(characterID);

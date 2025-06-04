@@ -11,6 +11,7 @@ import StreakTheSpire.Config.DisplayPreferencesModPanelPage;
 import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
+import StreakTheSpire.Data.RotatingConstants;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.UI.*;
 import StreakTheSpire.Utils.*;
@@ -23,7 +24,6 @@ import basemod.interfaces.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -94,7 +94,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     private Property<DisplayPreferencesModel> displayPreferencesModel;
     private Property<PlayerStreakStoreModel> streakStoreDataModel;
     private Property<CharacterDisplaySetModel> characterDisplaySetModel;
-    private Property<CharacterLocalisationSetModel> characterLocalisationSetModel;
+    private Property<CharacterCoreDataSetModel> characterCoreDataSetModel;
     private Property<CeremonyPreferencesModel> ceremonyPreferencesModel;
     private Property<BorderStyleSetModel> borderStyleSetModel;
     private Property<TipSystemModel> tipSystemModel;
@@ -111,7 +111,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     public DisplayPreferencesModel getDisplayPreferencesModel() { return displayPreferencesModel.get(); }
     public PlayerStreakStoreModel getStreakStoreDataModel() { return streakStoreDataModel.get(); }
     public CharacterDisplaySetModel getCharacterDisplaySetModel() { return characterDisplaySetModel.get(); }
-    public CharacterLocalisationSetModel getCharacterLocalisationSetModel() { return characterLocalisationSetModel.get(); }
+    public CharacterCoreDataSetModel getCharacterCoreDataSetModel() { return characterCoreDataSetModel.get(); }
     public CeremonyPreferencesModel getCeremonyPreferences() { return ceremonyPreferencesModel.get(); }
     public BorderStyleSetModel getBorderStyles() { return borderStyleSetModel.get(); }
     public TipSystemModel getTipSystemModel() { return tipSystemModel.get(); }
@@ -153,7 +153,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         initialisePreferenceModels();
         initialiseGameStateModel();
         initialiseCharacterDisplayModels();
-        initialiseCharacterLocalisationModels();
+        initialiseCharacterDataModels();
         initialiseCeremonyModels();
         initialiseStreakDataModel();
         initialiseBorderStyleModels();
@@ -479,7 +479,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         controller.addCharacterDisplayModel(watcherSkeletonDisplayModel);
 
         CharacterSkeletonDisplayModel rotatingSkeletonDisplayModel = new CharacterSkeletonDisplayModel();
-        rotatingSkeletonDisplayModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
+        rotatingSkeletonDisplayModel.identifier.set(RotatingConstants.Identifier);
         rotatingSkeletonDisplayModel.baseDimensions.set(new Vector2(61.64f * 1.325f, 64.4f * 1.325f));
         rotatingSkeletonDisplayModel.skeletonOffset.set(new Vector2(4, 0)); // Note: This is applied BEFORE rotation
         rotatingSkeletonDisplayModel.skeletonAtlasUrl.set("StreakTheSpire/skeletons/rotating_streak/skeleton.atlas");
@@ -508,33 +508,42 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         controller.addCharacterDisplayModel(watcherTextDisplayModel);
     }
 
-    private void initialiseCharacterLocalisationModels() {
-        characterLocalisationSetModel = new Property<>(new CharacterLocalisationSetModel());
+    private void initialiseCharacterDataModels() {
+        characterCoreDataSetModel = new Property<>(new CharacterCoreDataSetModel());
 
-        CharacterLocalisationModel ironcladLocalisationModel = new CharacterLocalisationModel();
-        ironcladLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
-        ironcladLocalisationModel.localisationID.set("Ironclad");
-        characterLocalisationSetModel.get().characterLocalisations.add(ironcladLocalisationModel);
+        CharacterCoreDataModel ironcladCoreModel = new CharacterCoreDataModel();
+        ironcladCoreModel.identifier.set(AbstractPlayer.PlayerClass.IRONCLAD.toString());
+        ironcladCoreModel.localisationID.set("Ironclad");
+        ironcladCoreModel.streakTextColor.set(Settings.RED_TEXT_COLOR);
+        ironcladCoreModel.displayOrderPriority.set(1);
+        characterCoreDataSetModel.get().characterLocalisations.add(ironcladCoreModel);
 
-        CharacterLocalisationModel silentLocalisationModel = new CharacterLocalisationModel();
-        silentLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
-        silentLocalisationModel.localisationID.set("Silent");
-        characterLocalisationSetModel.get().characterLocalisations.add(silentLocalisationModel);
+        CharacterCoreDataModel silentCoreModel = new CharacterCoreDataModel();
+        silentCoreModel.identifier.set(AbstractPlayer.PlayerClass.THE_SILENT.toString());
+        silentCoreModel.localisationID.set("Silent");
+        silentCoreModel.streakTextColor.set(Settings.GREEN_TEXT_COLOR);
+        silentCoreModel.displayOrderPriority.set(2);
+        characterCoreDataSetModel.get().characterLocalisations.add(silentCoreModel);
 
-        CharacterLocalisationModel defectLocalisationModel = new CharacterLocalisationModel();
-        defectLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
-        defectLocalisationModel.localisationID.set("Defect");
-        characterLocalisationSetModel.get().characterLocalisations.add(defectLocalisationModel);
+        CharacterCoreDataModel defectCoreModel = new CharacterCoreDataModel();
+        defectCoreModel.identifier.set(AbstractPlayer.PlayerClass.DEFECT.toString());
+        defectCoreModel.localisationID.set("Defect");
+        defectCoreModel.streakTextColor.set(Settings.BLUE_TEXT_COLOR);
+        defectCoreModel.displayOrderPriority.set(3);
+        characterCoreDataSetModel.get().characterLocalisations.add(defectCoreModel);
 
-        CharacterLocalisationModel watcherLocalisationModel = new CharacterLocalisationModel();
-        watcherLocalisationModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
-        watcherLocalisationModel.localisationID.set("Watcher");
-        characterLocalisationSetModel.get().characterLocalisations.add(watcherLocalisationModel);
+        CharacterCoreDataModel watcherCoreModel = new CharacterCoreDataModel();
+        watcherCoreModel.identifier.set(AbstractPlayer.PlayerClass.WATCHER.toString());
+        watcherCoreModel.localisationID.set("Watcher");
+        watcherCoreModel.streakTextColor.set(Settings.PURPLE_COLOR);
+        watcherCoreModel.displayOrderPriority.set(4);
+        characterCoreDataSetModel.get().characterLocalisations.add(watcherCoreModel);
 
-        CharacterLocalisationModel rotatingLocalisationModel = new CharacterLocalisationModel();
-        rotatingLocalisationModel.identifier.set(PlayerStreakStoreModel.RotatingPlayerIdentifier);
-        rotatingLocalisationModel.localisationID.set("Rotating");
-        characterLocalisationSetModel.get().characterLocalisations.add(rotatingLocalisationModel);
+        CharacterCoreDataModel rotatingCoreModel = new CharacterCoreDataModel();
+        rotatingCoreModel.identifier.set(RotatingConstants.Identifier);
+        rotatingCoreModel.localisationID.set(RotatingConstants.LocalisationID);
+        rotatingCoreModel.streakTextColor.set(Settings.GOLD_COLOR);
+        characterCoreDataSetModel.get().characterLocalisations.add(rotatingCoreModel);
     }
 
     private void initialiseCeremonyModels() {

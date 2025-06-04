@@ -4,8 +4,6 @@ import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyLinkedHashSet;
 
 public class PlayerStreakStoreModel implements IModel, IConfigDataModel {
-    public static String RotatingPlayerIdentifier = "ROTATING";
-
     public PropertyLinkedHashSet<PlayerStreakModel> playerToStreak = new PropertyLinkedHashSet<>();
     public Property<PlayerStreakModel> rotatingPlayerStreakModel = new Property<>(null);
     public Property<SavedPanelModel> panelModel = new Property<>(new SavedPanelModel());

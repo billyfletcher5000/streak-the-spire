@@ -1,6 +1,7 @@
 package StreakTheSpire.Views;
 
 import StreakTheSpire.Controllers.BorderStyleSetController;
+import StreakTheSpire.Controllers.CharacterCoreDataSetController;
 import StreakTheSpire.Controllers.TipSystemController;
 import StreakTheSpire.Models.*;
 import StreakTheSpire.StreakTheSpire;
@@ -59,13 +60,18 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
         gridLayoutGroup = new UIGridLayoutGroup();
         addChild(gridLayoutGroup);
 
+        CharacterCoreDataSetModel coreDataSetModel = StreakTheSpire.get().getCharacterCoreDataSetModel();
+        CharacterCoreDataSetController coreDataSetController = new CharacterCoreDataSetController(coreDataSetModel);
+
         PlayerStreakModel[] sortedStreakModels = streakStoreModel.playerToStreak.stream()
                 .sorted((a, b) -> {
-            int indexA = preferences.characterOrder.indexOf(a.identifier.get());
-            int indexB = preferences.characterOrder.indexOf(b.identifier.get());
-            indexA = indexA == -1 ? preferences.characterOrder.indexOf(DisplayPreferencesModel.CharacterWildcard) : indexA;
-            indexB = indexB == -1 ? preferences.characterOrder.indexOf(DisplayPreferencesModel.CharacterWildcard) : indexB;
-            return Integer.compare(indexA, indexB);
+                    CharacterCoreDataModel coreDataA = coreDataSetController.getCharacterData(a.identifier.get());
+                    CharacterCoreDataModel coreDataB = coreDataSetController.getCharacterData(b.identifier.get());
+
+                    if(coreDataA == null || coreDataB == null)
+                        return 0;
+
+                    return Integer.compare(coreDataA.displayOrderPriority.get(), coreDataB.displayOrderPriority.get());
         }).toArray(PlayerStreakModel[]::new);
 
         for(PlayerStreakModel streakModel : sortedStreakModels) {
@@ -108,9 +114,34 @@ public class PlayerStreakStoreView extends UIResizablePanel implements IView {
     }
 
     private void onPlayerStreakModelAdded(Object item) {
+
+        CharacterCoreDataSetModel coreDataSetModel = StreakTheSpire.get().getCharacterCoreDataSetModel();
+        CharacterCoreDataSetController coreDataSetController = new CharacterCoreDataSetController(coreDataSetModel);
+
         PlayerStreakModel streakModel = (PlayerStreakModel) item;
         PlayerStreakView streakView = createStreakModelDisplay(streakModel);
         gridLayoutGroup.addChild(streakView);
+        gridLayoutGroup.getChildrenPropertyList().sort((elemA, elemB) -> {
+            PlayerStreakView viewA = (PlayerStreakView) elemA;
+            PlayerStreakView viewB = (PlayerStreakView) elemB;
+
+            if(viewA == null || viewB == null)
+                return 0;
+
+            PlayerStreakModel modelA = viewA.getModel();
+            PlayerStreakModel modelB = viewB.getModel();
+
+            if(modelA == null || modelB == null)
+                return 0;
+
+            CharacterCoreDataModel coreDataA = coreDataSetController.getCharacterData(modelA.identifier.get());
+            CharacterCoreDataModel coreDataB = coreDataSetController.getCharacterData(modelB.identifier.get());
+
+            if(coreDataA == null || coreDataB == null)
+                return 0;
+
+            return Integer.compare(coreDataA.displayOrderPriority.get(), coreDataB.displayOrderPriority.get());
+        });
     }
 
     private void onPlayerStreakModelRemoved(Object item) {
