@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Menampilkan panel streak di depan sebagian besar hal, tetapi tidak kursor mouse atau fade layar penuh",
       "render_layer_above_all_label": "Di Atas Segalanya",
       "render_layer_above_all_tooltip": "Menampilkan panel streak di depan segala sesuatu yang bisa",
-      "default_note_label": "* Default"
+      "default_note_label": "* Default",
+
+      "coloured_text_label": "Teks Berwarna",
+      "coloured_text_tooltip": "Menampilkan rekor beruntun dalam warna khusus karakter",
+      "characters_title": "Karakter",
+      "track_characters_title": "Lacak Karakter",
+      "track_characters_tooltip": "Apakah akan menyertakan karakter ini dalam pelacakan dan tampilan"
     }
   },
   "streak_the_spire:StreakTips": {

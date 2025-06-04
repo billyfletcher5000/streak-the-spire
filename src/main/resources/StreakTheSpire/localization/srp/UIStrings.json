@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Приказује панел низа победа испред већине ствари, али не испред курсора миша или потпуног затамњења екрана",
       "render_layer_above_all_label": "Изнад свега",
       "render_layer_above_all_tooltip": "Приказује панел низа победа испред свега што може",
-      "default_note_label": "* Подразумевано"
+      "default_note_label": "* Подразумевано",
+
+      "coloured_text_label": "Обојени текст",
+      "coloured_text_tooltip": "Приказује низове у бојама специфичним за ликове",
+      "characters_title": "Ликови",
+      "track_characters_title": "Прати ликове",
+      "track_characters_tooltip": "Да ли укључити овог лика у праћење и приказ"
     }
   },
   "streak_the_spire:StreakTips": {

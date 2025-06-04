@@ -22,6 +22,8 @@
       "allow_demo_label" : "Demo",
       "allow_demo_tooltip" : "Runs that were played with a demo version of Slay the Spire will be included",
       "display_preferences_title" : "Display Preferences",
+      "coloured_text_label" : "Coloured Text",
+      "coloured_text_tooltip" : "Displays streaks in character specific colours",
       "render_layer_title" : "Render Layer",
       "render_layer_pre_room_label" : "Pre-Room",
       "render_layer_pre_room_tooltip" : "Displays the streak panel behind characters, enemy and UI but in front of the background",

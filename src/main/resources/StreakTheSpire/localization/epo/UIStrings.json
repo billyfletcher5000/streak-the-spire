@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Montras la serion-panelon antaŭ la plej multaj aferoj, sed ne la muskurson aŭ tutekranajn svanadojn",
       "render_layer_above_all_label": "Super Ĉio",
       "render_layer_above_all_tooltip": "Montras la serion-panelon antaŭ ĉio kio eblas",
-      "default_note_label": "* Defaŭlte"
+      "default_note_label": "* Defaŭlte",
+
+      "coloured_text_label": "Kolora Teksto",
+      "coloured_text_tooltip": "Montras seriojn en karakter-specifaj koloroj",
+      "characters_title": "Karakteroj",
+      "track_characters_title": "Spuri Karakterojn",
+      "track_characters_tooltip": "Ĉu inkluzivi ĉi tiun karakteron en spurado kaj montrado"
     }
   },
   "streak_the_spire:StreakTips": {

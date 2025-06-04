@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Muestra el panel de racha por delante de la mayoría de las cosas, pero no del cursor del ratón o de los desvanecimientos a pantalla completa",
       "render_layer_above_all_label": "Por Encima de Todo",
       "render_layer_above_all_tooltip": "Muestra el panel de racha por delante de todo lo que pueda",
-      "default_note_label": "* Predeterminado"
+      "default_note_label": "* Predeterminado",
+
+      "coloured_text_label": "Texto coloreado",
+      "coloured_text_tooltip": "Muestra las rachas en colores específicos del personaje",
+      "characters_title": "Personajes",
+      "track_characters_title": "Rastrear Personajes",
+      "track_characters_tooltip": "Si se debe incluir a este personaje en el seguimiento y la visualización"
     }
   },
   "streak_the_spire:StreakTips": {

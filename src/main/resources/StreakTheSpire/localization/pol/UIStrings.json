@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Wyświetla panel passy przed większością rzeczy, ale nie przed kursorem myszy ani pełnoekranowymi zanikami",
       "render_layer_above_all_label": "Nad Wszystkim",
       "render_layer_above_all_tooltip": "Wyświetla panel passy przed wszystkim, co może",
-      "default_note_label": "* Domyślnie"
+      "default_note_label": "* Domyślnie",
+
+      "coloured_text_label": "Kolorowy tekst",
+      "coloured_text_tooltip": "Wyświetla serie w kolorach specyficznych dla postaci",
+      "characters_title": "Postacie",
+      "track_characters_title": "Śledź postacie",
+      "track_characters_tooltip": "Czy włączyć tę postać do śledzenia i wyświetlania"
     }
   },
   "streak_the_spire:StreakTips": {

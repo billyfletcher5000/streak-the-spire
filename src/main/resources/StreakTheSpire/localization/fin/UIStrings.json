@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Näyttää putkipaneelin useimpien asioiden edessä, mutta ei hiiren osoittimen tai koko näytön häivytysten edessä",
       "render_layer_above_all_label": "Kaiken yläpuolella",
       "render_layer_above_all_tooltip": "Näyttää putkipaneelin kaiken mahdollisen edessä",
-      "default_note_label": "* Oletus"
+      "default_note_label": "* Oletus",
+
+      "coloured_text_label": "Värillinen teksti",
+      "coloured_text_tooltip": "Näyttää putket hahmokohtaisissa väreissä",
+      "characters_title": "Hahmot",
+      "track_characters_title": "Seuraa hahmoja",
+      "track_characters_tooltip": "Sisällytetäänkö tämä hahmo seurantaan ja näyttöön"
     }
   },
   "streak_the_spire:StreakTips": {

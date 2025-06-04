@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Prikazuje panel niza pobeda ispred većine stvari, ali ne ispred kursora miša ili potpunog zatamnjenja ekrana",
       "render_layer_above_all_label": "Iznad svega",
       "render_layer_above_all_tooltip": "Prikazuje panel niza pobeda ispred svega što može",
-      "default_note_label": "* Podrazumevano"
+      "default_note_label": "* Podrazumevano",
+
+      "coloured_text_label": "Obojeni tekst",
+      "coloured_text_tooltip": "Prikazuje nizove u bojama specifičnim za likove",
+      "characters_title": "Likovi",
+      "track_characters_title": "Prati likove",
+      "track_characters_tooltip": "Da li uključiti ovog lika u praćenje i prikaz"
     }
   },
   "streak_the_spire:StreakTips": {

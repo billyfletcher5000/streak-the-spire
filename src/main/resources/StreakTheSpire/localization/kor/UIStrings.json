@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "연승 패널을 마우스 커서나 전체 화면 페이드가 아닌 대부분의 것들 앞에 표시합니다",
       "render_layer_above_all_label": "모든 것 위에",
       "render_layer_above_all_tooltip": "연승 패널을 가능한 모든 것 앞에 표시합니다",
-      "default_note_label": "* 기본값"
+      "default_note_label": "* 기본값",
+
+      "coloured_text_label": "컬러 텍스트",
+      "coloured_text_tooltip": "연속 기록을 캐릭터별 색상으로 표시",
+      "characters_title": "캐릭터",
+      "track_characters_title": "캐릭터 추적",
+      "track_characters_tooltip": "이 캐릭터를 추적 및 표시에 포함할지 여부"
     }
   },
   "streak_the_spire:StreakTips": {

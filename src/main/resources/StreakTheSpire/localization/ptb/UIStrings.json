@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Exibe o painel de sequência na frente da maioria das coisas, mas não do cursor do mouse ou de desvanecimentos em tela cheia",
       "render_layer_above_all_label": "Acima de Tudo",
       "render_layer_above_all_tooltip": "Exibe o painel de sequência na frente de tudo que puder",
-      "default_note_label": "* Padrão"
+      "default_note_label": "* Padrão",
+      
+      "coloured_text_label": "Texto colorido",
+      "coloured_text_tooltip": "Exibe as sequências em cores específicas do personagem",
+      "characters_title": "Personagens",
+      "track_characters_title": "Rastrear Personagens",
+      "track_characters_tooltip": "Se deve incluir este personagem no rastreamento e exibição"
     }
   },
   "streak_the_spire:StreakTips": {

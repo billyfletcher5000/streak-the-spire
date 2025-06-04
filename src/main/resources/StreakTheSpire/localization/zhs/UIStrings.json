@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "将连胜面板显示在大部分东西前面，但不在鼠标光标或全屏淡出前面",
       "render_layer_above_all_label": "在所有之上",
       "render_layer_above_all_tooltip": "将连胜面板显示在所有它能显示的东西前面",
-      "default_note_label": "* 默认"
+      "default_note_label": "* 默认",
+
+      "coloured_text_label": "彩色文本",
+      "coloured_text_tooltip": "以角色特定颜色显示连胜",
+      "characters_title": "角色",
+      "track_characters_title": "追踪角色",
+      "track_characters_tooltip": "是否将此角色包含在追踪和显示中"
     }
   },
   "streak_the_spire:StreakTips": {

@@ -31,7 +31,13 @@
       "render_layer_above_most_tooltip": "Viser streak-panelet foran det meste, men ikke musepekeren eller fullskjermsfader",
       "render_layer_above_all_label": "Over Alt",
       "render_layer_above_all_tooltip": "Viser streak-panelet foran alt det kan",
-      "default_note_label": "* Standard"
+      "default_note_label": "* Standard",
+
+      "coloured_text_label": "Farget tekst",
+      "coloured_text_tooltip": "Viser streker i karaktersspesifikke farger",
+      "characters_title": "Karakterer",
+      "track_characters_title": "Spor karakterer",
+      "track_characters_tooltip": "Om denne karakteren skal inkluderes i sporing og visning"
     }
   },
   "streak_the_spire:StreakTips": {
