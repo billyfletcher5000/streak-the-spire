@@ -8,6 +8,7 @@ import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.FixedModLabel;
 import StreakTheSpire.Utils.FixedModLabeledToggleButton;
 import StreakTheSpire.Utils.LocalizationConstants;
+import StreakTheSpire.Utils.LocalizationHelper;
 import basemod.ModPanel;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.core.Settings;
@@ -43,7 +44,7 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
         Vector2 elementPosition = contentTopLeft.cpy();
 
         FixedModLabel allowTitle = new FixedModLabel(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackCharactersTitle),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.TrackCharactersTitle),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,
@@ -80,7 +81,7 @@ public class CharactersModPanelPage extends ConfigModPanelPage {
 
             FixedModLabeledToggleButton button = new FixedModLabeledToggleButton(
                     characterName,
-                    uiStrings.TEXT_DICT.get(LocalizationConstants.Config.TrackCharactersTooltip),
+                    LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.TrackCharactersTooltip),
                     elementPosition.x,
                     elementPosition.y,
                     Settings.CREAM_COLOR,

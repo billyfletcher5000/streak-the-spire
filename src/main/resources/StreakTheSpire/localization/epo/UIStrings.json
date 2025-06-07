@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Subpremas la sciigon Ludo Savita! en la supra stango",
       "characters_title": "Karakteroj",
       "track_characters_title": "Spuri Karakterojn",
-      "track_characters_tooltip": "Ĉu inkluzivi ĉi tiun karakteron en spurado kaj montrado"
+      "track_characters_tooltip": "Ĉu inkluzivi ĉi tiun karakteron en spurado kaj montrado",
+
+      "troubleshooting_title": "Helpo",
+      "copy_error_log_button_label": "Kopii Eraran Registron",
+      "copy_error_log_button_tooltip": "Se vi havas problemojn, la supra butono kopios la eraran registron al via tondejo,\nbonvolu alglui ĝin al pastebin.com kaj poste ligi ĝin al Steam aŭ Github,\nkun priskribo de via problemo por helpi kun estontaj korektoj."
     }
   },
   "streak_the_spire:StreakTips": {

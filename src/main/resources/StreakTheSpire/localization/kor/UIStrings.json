@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "상단 바의 게임 저장됨! 알림을 억제합니다",
       "characters_title": "캐릭터",
       "track_characters_title": "캐릭터 추적",
-      "track_characters_tooltip": "이 캐릭터를 추적 및 표시에 포함할지 여부"
+      "track_characters_tooltip": "이 캐릭터를 추적 및 표시에 포함할지 여부",
+
+      "troubleshooting_title": "도움말",
+      "copy_error_log_button_label": "오류 로그 복사",
+      "copy_error_log_button_tooltip": "문제가 발생하면 위 버튼을 누르면 오류 로그가 클립보드에 복사됩니다,\npastebin.com에 붙여넣은 다음 Steam 또는 Github에 링크하고,\n문제에 대한 설명을 추가하여 향후 수정에 도움이 되도록 하십시오."
     }
   },
   "streak_the_spire:StreakTips": {

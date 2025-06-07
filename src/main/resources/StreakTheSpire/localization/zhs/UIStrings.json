@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "抑制顶部栏中的游戏已保存！通知",
       "characters_title": "角色",
       "track_characters_title": "追踪角色",
-      "track_characters_tooltip": "是否将此角色包含在追踪和显示中"
+      "track_characters_tooltip": "是否将此角色包含在追踪和显示中",
+
+      "troubleshooting_title": "帮助",
+      "copy_error_log_button_label": "复制错误日志",
+      "copy_error_log_button_tooltip": "如果您遇到问题，上面的按钮会将错误日志复制到您的剪贴板,\n请将其粘贴到 pastebin.com，然后在 Steam 或 Github 上链接它,\n并附上您问题的描述，以帮助未来的修复。"
     }
   },
   "streak_the_spire:StreakTips": {

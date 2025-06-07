@@ -1,22 +1,15 @@
 package StreakTheSpire.Config;
 
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
-import StreakTheSpire.Models.DisplayPreferencesModel;
 import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.Models.StreakCriteriaModel;
 import StreakTheSpire.StreakTheSpire;
-import StreakTheSpire.Utils.FixedModLabel;
-import StreakTheSpire.Utils.FixedModLabeledToggleButton;
-import StreakTheSpire.Utils.LocalizationConstants;
-import StreakTheSpire.Utils.TextureCache;
+import StreakTheSpire.Utils.*;
 import basemod.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.helpers.FontHelper;
-import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.localization.UIStrings;
-
-import java.util.HashMap;
 
 public class CriteriaModPanelPage extends ConfigModPanelPage {
 
@@ -28,7 +21,6 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
     private static final String maxButtonPressedPath = "StreakTheSpire/textures/ui/20_button_pressed.png";
 
     private boolean isInitialised = false;
-    private HashMap<DisplayPreferencesModel.RenderLayer, FixedModLabeledToggleButton> renderLayerToToggleButton = new HashMap<>();
 
     @Override
     public String getTitleLocalizationID() { return LocalizationConstants.Config.CriteriaSettingsTitle; }
@@ -48,8 +40,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.requireHeartKill,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequireHeartKillLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequireHeartKillTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RequireHeartKillLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RequireHeartKillTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -70,7 +62,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 criteriaModel.requiredAscensionLevel,
                 0,
                 20,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RequiredAscensionLevelLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RequiredAscensionLevelLabel),
                 minNormalTex,
                 minHoveredTex,
                 minPressedTex,
@@ -88,8 +80,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.enforceRotating,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.EnforceRotatingLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.EnforceRotatingTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.EnforceRotatingLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.EnforceRotatingTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -98,7 +90,7 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
         elementPosition.x = contentTopLeft.x;
         elementPosition.y -= ConfigModPanel.TitleLineHeight;
         FixedModLabel allowTitle = new FixedModLabel(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowTitle),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowTitle),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,
@@ -112,8 +104,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowCustomSeeds,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowCustomSeedsLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowCustomSeedsTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowCustomSeedsLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowCustomSeedsTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -124,8 +116,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowDailies,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDailiesLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDailiesTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowDailiesLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowDailiesTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -136,8 +128,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowDailies,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowEndlessLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowEndlessTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowEndlessLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowEndlessTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -149,8 +141,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowBeta,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowBetaLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowBetaTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowBetaLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowBetaTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );
@@ -161,8 +153,8 @@ public class CriteriaModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 criteriaModel.allowDemo,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDemoLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.AllowDemoTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowDemoLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.AllowDemoTooltip),
                 modPanel,
                 (val) -> recalculateStreaks()
         );

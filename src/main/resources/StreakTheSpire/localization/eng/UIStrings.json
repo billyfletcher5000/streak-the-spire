@@ -38,7 +38,10 @@
       "default_note_label" : "* Default",
       "characters_title" : "Characters",
       "track_characters_title" : "Track Characters",
-      "track_characters_tooltip" : "Whether or not to include this character in tracking and display"
+      "track_characters_tooltip" : "Whether or not to include this character in tracking and display",
+      "troubleshooting_title" : "Help",
+      "copy_error_log_button_label" : "Copy Error Log",
+      "copy_error_log_button_tooltip" : "If you have issues, the button above will copy the error log to your clipboard,\nplease paste it on to pastebin.com and then link it on Steam or Github,\nwith a description of your issue to help with future fixes."
     }
   },
   "streak_the_spire:StreakTips": {

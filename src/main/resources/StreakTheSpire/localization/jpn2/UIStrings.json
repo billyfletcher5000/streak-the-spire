@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "上部のゲームが保存されました！通知を非表示にします",
       "characters_title": "キャラクター",
       "track_characters_title": "キャラクターを追跡",
-      "track_characters_tooltip": "このキャラクターを追跡と表示に含めるかどうか"
+      "track_characters_tooltip": "このキャラクターを追跡と表示に含めるかどうか",
+
+      "troubleshooting_title": "ヘルプ",
+      "copy_error_log_button_label": "エラーログをコピー",
+      "copy_error_log_button_tooltip": "問題が発生した場合、上記のボタンでエラーログがクリップボードにコピーされます,\npastebin.comに貼り付けてから、SteamまたはGithubにリンクし,\n問題の説明を付けて今後の修正に役立ててください。"
     }
   },
   "streak_the_spire:StreakTips": {

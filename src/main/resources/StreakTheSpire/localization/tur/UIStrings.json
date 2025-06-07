@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Üst çubukta yer alan Oyun Kaydedildi! bildirimini gizler",
       "characters_title": "Karakterler",
       "track_characters_title": "Karakterleri Takip Et",
-      "track_characters_tooltip": "Bu karakterin takibe ve görüntülemeye dahil edilip edilmeyeceği"
+      "track_characters_tooltip": "Bu karakterin takibe ve görüntülemeye dahil edilip edilmeyeceği",
+
+      "troubleshooting_title": "Yardım",
+      "copy_error_log_button_label": "Hata Günlüğünü Kopyala",
+      "copy_error_log_button_tooltip": "Sorun yaşamanız durumunda, yukarıdaki düğme hata günlüğünü panonuza kopyalayacaktır,\nlütfen pastebin.com'a yapıştırın ve ardından Steam veya Github'da,\nsorununuzun bir açıklamasıyla birlikte bağlantı verin, bu gelecekteki düzeltmeler için yardımcı olacaktır."
     }
   },
   "streak_the_spire:StreakTips": {

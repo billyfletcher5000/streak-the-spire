@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Supprime la notification Partie sauvegardée ! dans la barre supérieure",
       "characters_title": "Personnages",
       "track_characters_title": "Suivre les personnages",
-      "track_characters_tooltip": "Indique si ce personnage doit être inclus dans le suivi et l'affichage"
+      "track_characters_tooltip": "Indique si ce personnage doit être inclus dans le suivi et l'affichage",
+
+      "troubleshooting_title": "Aide",
+      "copy_error_log_button_label": "Copier le journal d'erreurs",
+      "copy_error_log_button_tooltip": "En cas de problèmes, le bouton ci-dessus copiera le journal d'erreurs dans votre presse-papiers,\nveuillez le coller sur pastebin.com, puis le lier sur Steam ou Github,\navec une description de votre problème pour aider aux futures corrections."
     }
   },
   "streak_the_spire:StreakTips": {
