@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Undertrykker Spill lagret!-varselet i topplinjen",
       "characters_title": "Karakterer",
       "track_characters_title": "Spor karakterer",
-      "track_characters_tooltip": "Om denne karakteren skal inkluderes i sporing og visning"
+      "track_characters_tooltip": "Om denne karakteren skal inkluderes i sporing og visning",
+
+      "troubleshooting_title": "Hjelp",
+      "copy_error_log_button_label": "Kopier feillogg",
+      "copy_error_log_button_tooltip": "Hvis du har problemer, vil knappen ovenfor kopiere feilloggen til utklippstavlen din.\nVennligst lim den inn på pastebin.com og lenk den deretter på Steam eller Github,\nmed en beskrivelse av problemet ditt for å hjelpe med fremtidige løsninger."
     }
   },
   "streak_the_spire:StreakTips": {

@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Ẩn thông báo Đã lưu trò chơi! ở thanh trên cùng",
       "characters_title": "Nhân vật",
       "track_characters_title": "Theo dõi nhân vật",
-      "track_characters_tooltip": "Có bao gồm nhân vật này trong việc theo dõi và hiển thị hay không"
+      "track_characters_tooltip": "Có bao gồm nhân vật này trong việc theo dõi và hiển thị hay không",
+
+      "troubleshooting_title": "Trợ giúp",
+      "copy_error_log_button_label": "Sao chép nhật ký lỗi",
+      "copy_error_log_button_tooltip": "Nếu bạn gặp sự cố, nút trên sẽ sao chép nhật ký lỗi vào khay nhớ tạm của bạn,\nvui lòng dán nó lên pastebin.com và sau đó liên kết nó trên Steam hoặc Github,\nkèm theo mô tả vấn đề của bạn để giúp ích cho các bản sửa lỗi trong tương lai."
     }
   },
   "streak_the_spire:StreakTips": {

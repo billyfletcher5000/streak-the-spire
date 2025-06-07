@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Потискује обавештење Игра сачувана! у горњој траци",
       "characters_title": "Ликови",
       "track_characters_title": "Прати ликове",
-      "track_characters_tooltip": "Да ли укључити овог лика у праћење и приказ"
+      "track_characters_tooltip": "Да ли укључити овог лика у праћење и приказ",
+
+      "troubleshooting_title": "Помоћ",
+      "copy_error_log_button_label": "Копирај дневник грешака",
+      "copy_error_log_button_tooltip": "Ако имате проблема, дугме изнад ће копирати дневник грешака у ваш клипборд,\nмолимо вас да га залепите на pastebin.com, а затим га повежите на Steamu или Githubu,\nса описом вашег проблема како бисте помогли у будућим поправкама."
     }
   },
   "streak_the_spire:StreakTips": {

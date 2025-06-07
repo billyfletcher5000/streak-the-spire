@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Suprime a notificação Jogo Salvo! na barra superior",
       "characters_title": "Personagens",
       "track_characters_title": "Rastrear Personagens",
-      "track_characters_tooltip": "Se deve incluir este personagem no rastreamento e exibição"
+      "track_characters_tooltip": "Se deve incluir este personagem no rastreamento e exibição",
+
+      "troubleshooting_title": "Ajuda",
+      "copy_error_log_button_label": "Copiar Registro de Erros",
+      "copy_error_log_button_tooltip": "Se você tiver problemas, o botão acima copiará o registro de erros para a sua área de transferência,\npor favor, cole-o em pastebin.com e, em seguida, link-o no Steam ou Github,\ncom uma descrição do seu problema para ajudar com futuras correções."
     }
   },
   "streak_the_spire:StreakTips": {

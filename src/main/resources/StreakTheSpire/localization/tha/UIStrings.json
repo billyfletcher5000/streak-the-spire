@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "ระงับการแจ้งเตือน บันทึกเกมแล้ว! ที่แถบด้านบน",
       "characters_title": "ตัวละคร",
       "track_characters_title": "ติดตามตัวละคร",
-      "track_characters_tooltip": "ว่าจะรวมตัวละครนี้ในการติดตามและแสดงหรือไม่"
+      "track_characters_tooltip": "ว่าจะรวมตัวละครนี้ในการติดตามและแสดงหรือไม่",
+
+      "troubleshooting_title": "ช่วยเหลือ",
+      "copy_error_log_button_label": "คัดลอกบันทึกข้อผิดพลาด",
+      "copy_error_log_button_tooltip": "หากคุณมีปัญหา ปุ่มด้านบนจะคัดลอกบันทึกข้อผิดพลาดไปยังคลิปบอร์ดของคุณ,\nโปรดวางลงใน pastebin.com แล้วลิงก์บน Steam หรือ Github,\nพร้อมคำอธิบายปัญหาของคุณ เพื่อช่วยในการแก้ไขในอนาคต"
     }
   },
   "streak_the_spire:StreakTips": {

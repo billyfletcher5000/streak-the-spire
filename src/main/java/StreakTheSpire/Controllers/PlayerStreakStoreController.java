@@ -6,11 +6,9 @@ import StreakTheSpire.Models.PlayerStreakModel;
 import StreakTheSpire.Models.StreakCriteriaModel;
 import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
-import StreakTheSpire.Utils.Properties.Property;
-import StreakTheSpire.Utils.Properties.PropertyList;
+import StreakTheSpire.Utils.ExceptionUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.util.*;
@@ -62,13 +60,35 @@ public class PlayerStreakStoreController {
 
         model.playerToStreak.removeIf(m -> !criteria.trackedCharacterClasses.contains(m.identifier.get()) && !m.identifier.get().equals(RotatingConstants.Identifier));
 
-        FileHandle[] subfolders = Arrays.stream(Gdx.files.local("runs" + File.separator).list()).filter(fileHandle ->
-            criteria.trackedCharacterClasses.contains(fileHandle.name())
-        ).toArray(FileHandle[]::new);
+        FileHandle[] baseSubFolders;
+        FileHandle[] subfolders;
+
+        try {
+            baseSubFolders = Gdx.files.local("runs" + File.separator).list();
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed to find runs subfolders: " + ExceptionUtil.getFullMessage(e));
+            return;
+        }
+
+        try {
+            subfolders = Arrays.stream(baseSubFolders).filter(fileHandle ->
+                    criteria.trackedCharacterClasses.contains(fileHandle.name())
+            ).toArray(FileHandle[]::new);
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed to filter subfolders by tracked character names: " + ExceptionUtil.getFullMessage(e));
+            return;
+        }
 
         ArrayList<RunDataSubset> allCharacterSubsets = new ArrayList<>();
 
         for (FileHandle subFolder : subfolders) {
+            if(subFolder == null || !subFolder.isDirectory() || !subFolder.exists()) {
+                StreakTheSpire.logError("Failed to load subfolder: " + (subFolder != null ? subFolder.path() : "null"));
+                continue;
+            }
+
             StreakTheSpire.logDebug("Evaluating Subfolder: " + subFolder.path());
 
             String playerClass = subFolder.name();
@@ -124,78 +144,148 @@ public class PlayerStreakStoreController {
                     }
 
                     runDataToProcess.add(data);
-                } catch (JsonSyntaxException var19) {
-                    StreakTheSpire.logError("Failed to load RunDataSubset from JSON file: " + file.path());
+                } catch (Exception e) {
+                    StreakTheSpire.logError("Failed to load RunDataSubset from JSON file: " + file.path() + "\nException: " + ExceptionUtil.getFullMessage(e));
                 }
             }
 
-            // Same, somewhat bizarre way of doing a string compare on what is saved as a long integer as RunData does,
-            // but reversed, as we want the order to be from the first run rather than from the most recent.
-            // I'm presuming done this way because of some shortcoming in deserialising long ints in java appropriately?
-            runDataToProcess.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
+            try {
+                // Same, somewhat bizarre way of doing a string compare on what is saved as a long integer as RunData does,
+                // but reversed, as we want the order to be from the first run rather than from the most recent.
+                // I'm presuming done this way because of some shortcoming in deserialising long ints in java appropriately?
+                runDataToProcess.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
 
-            ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
+                ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
 
-            if(!temporaryStreakDuplicateMap.containsKey(streakModel)) {
-                temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
+                if (!temporaryStreakDuplicateMap.containsKey(streakModel)) {
+                    temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
+                }
+
+                PlayerStreakModel streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
+
+                for (RunDataSubset data : runDataToProcess) {
+                    if(data == null) {
+                        StreakTheSpire.logError("Failed during loop of runDataToProcess due to null runData!");
+                        continue;
+                    }
+
+                    try {
+                        if (!data.character_chosen.equals(playerClass)) {
+                            StreakTheSpire.logError("{}: character_chosen \"{}\" differs from player class: {}", data.filename, data.character_chosen, playerClass);
+                            continue;
+                        }
+                    }
+                    catch (Exception e) {
+                        StreakTheSpire.logError("Failed during check of character chosen before processing run data \"" + data.filename + "\": " + ExceptionUtil.getFullMessage(e));
+                        continue;
+                    }
+
+                    ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, playerClass);
+                    try {
+                        if (result != ProcessResult.Disqualified && criteria.trackContinuous.get()) {
+                            allCharacterSubsets.add(data);
+
+                            if (result == ProcessResult.StreakIncreased)
+                                currentStreakCharacterIDs.add(0, data.character_chosen);
+                            else if (result == ProcessResult.StreakReset)
+                                currentStreakCharacterIDs.clear();
+                        }
+                    }
+                    catch (Exception e) {
+                        StreakTheSpire.logError("Failed after processing run data \"" + data.filename + "\": " + ExceptionUtil.getFullMessage(e));
+                    }
+                }
             }
-
-            PlayerStreakModel streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
-
-            for (RunDataSubset data : runDataToProcess) {
-                if(!data.character_chosen.equals(playerClass)) {
-                    StreakTheSpire.logError("{}: character_chosen \"{}\" differs from player class: {}", data.filename, data.character_chosen, playerClass);
-                    continue;
-                }
-
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, playerClass);
-                if(result != ProcessResult.Disqualified && criteria.trackContinuous.get()) {
-                    allCharacterSubsets.add(data);
-
-                    if(result == ProcessResult.StreakIncreased)
-                        currentStreakCharacterIDs.add(0, data.character_chosen);
-                    else if(result == ProcessResult.StreakReset)
-                        currentStreakCharacterIDs.clear();
-                }
+            catch (Exception e) {
+                StreakTheSpire.logError("Failed prior to processing runDataLoop: " + ExceptionUtil.getFullMessage(e));
             }
         }
 
-        if(criteria.trackContinuous.get()) {
-            boolean addedRotatingCondition = false;
-            DisqualifyingCondition uniqueCharacterCondition = PlayerStreakStoreController::isUniqueCharacterInRotation;
-            if(criteria.enforceRotating.get()) {
-                disqualifyingConditions.put(uniqueCharacterCondition, "was_not_rotating_streak");
-                addedRotatingCondition = true;
-            }
+        try {
+            if (criteria.trackContinuous.get()) {
+                boolean addedRotatingCondition = false;
+                DisqualifyingCondition uniqueCharacterCondition = PlayerStreakStoreController::isUniqueCharacterInRotation;
+                try {
+                    if (criteria.enforceRotating.get()) {
+                        disqualifyingConditions.put(uniqueCharacterCondition, "was_not_rotating_streak");
+                        addedRotatingCondition = true;
+                    }
+                }
+                catch (Exception e) {
+                    StreakTheSpire.logError("Failed adding rotating streak disqualifying condition: " + ExceptionUtil.getFullMessage(e));
+                }
 
-            // Now process rotating streaks
-            allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
+                try {
+                    // Now process rotating streaks
+                    allCharacterSubsets.sort((runA, runB) -> runA.timestamp.compareTo(runB.timestamp));
+                }
+                catch (Exception e) {
+                    StreakTheSpire.logError("Failed when sorting rotating streak data subsets: " + ExceptionUtil.getFullMessage(e));
+                }
 
-            PlayerStreakModel streakModel = model.rotatingPlayerStreakModel.get();
-            ArrayList<String> currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
 
-            if(!temporaryStreakDuplicateMap.containsKey(streakModel)) {
-                temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
-            }
+                PlayerStreakModel streakModel = null;
+                ArrayList<String> currentStreakCharacterIDs = null;
+                PlayerStreakModel streakModelDuplicate = null;
+                boolean errorOccurred = false;
 
-            PlayerStreakModel streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
+                try {
+                    streakModel = model.rotatingPlayerStreakModel.get();
+                    currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
 
-            for(RunDataSubset data : allCharacterSubsets) {
-                ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, RotatingConstants.Identifier);
-                if(result == ProcessResult.StreakIncreased) {
-                    currentStreakCharacterIDs.add(0, data.character_chosen);
-                } else if(result == ProcessResult.StreakReset) {
-                    currentStreakCharacterIDs.clear();
+                    if (!temporaryStreakDuplicateMap.containsKey(streakModel)) {
+                        temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
+                    }
+
+                    streakModelDuplicate = temporaryStreakDuplicateMap.get(streakModel);
+                }
+                catch (Exception e) {
+                    StreakTheSpire.logError("Failed when duplicating rotating streak model: " + ExceptionUtil.getFullMessage(e));
+                    errorOccurred = true;
+                }
+
+                if(!errorOccurred) {
+                    for (RunDataSubset data : allCharacterSubsets) {
+                        if(data == null) {
+                            StreakTheSpire.logError("Failed during loop of runDataToProcess for rotating streak due to null runData!");
+                            continue;
+                        }
+
+                        ProcessResult result = processRunData(criteria, data, currentStreakCharacterIDs, streakModelDuplicate, RotatingConstants.Identifier);
+                        try {
+                            if (result == ProcessResult.StreakIncreased) {
+                                currentStreakCharacterIDs.add(0, data.character_chosen);
+                            } else if (result == ProcessResult.StreakReset) {
+                                currentStreakCharacterIDs.clear();
+                            }
+                        }
+                        catch (Exception e) {
+                            StreakTheSpire.logError("Failed after processing run data for rotating streak \"" + data.filename + "\": " + ExceptionUtil.getFullMessage(e));
+                        }
+                    }
+                }
+
+                try {
+                    if (addedRotatingCondition) {
+                        disqualifyingConditions.remove(uniqueCharacterCondition);
+                    }
+                }
+                catch (Exception e) {
+                    StreakTheSpire.logError("Failed removing rotating streak disqualifying condition: " + ExceptionUtil.getFullMessage(e));
                 }
             }
-
-            if(addedRotatingCondition) {
-                disqualifyingConditions.remove(uniqueCharacterCondition);
-            }
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed when processing continuous, prior to runDataLoop: " + ExceptionUtil.getFullMessage(e));
         }
 
-        for(Map.Entry<PlayerStreakModel, PlayerStreakModel> entry : temporaryStreakDuplicateMap.entrySet()) {
-            entry.getKey().set(entry.getValue());
+        try {
+            for (Map.Entry<PlayerStreakModel, PlayerStreakModel> entry : temporaryStreakDuplicateMap.entrySet()) {
+                entry.getKey().set(entry.getValue());
+            }
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed when copying temporary streak map to data models: " + ExceptionUtil.getFullMessage(e));
         }
     }
 
@@ -214,64 +304,68 @@ public class PlayerStreakStoreController {
 
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering
     private static ProcessResult processRunData(StreakCriteriaModel criteria, RunDataSubset data, ArrayList<String> currentStreakCharacterIDs, PlayerStreakModel streakModel, String identifier) {
-        String currentStreakTimestamp = streakModel.highestStreakTimestamp.get();
-        if(currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
-            StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
-            return ProcessResult.Disqualified;
-        }
-
-        int streakCount = streakModel.currentStreak.get();
-
-        ProcessResult processResult = ProcessResult.Undefined;
-        boolean disqualified = false;
-        for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
-            DisqualifyingCondition condition = entry.getKey();
-            String reason = entry.getValue();
-
-            StreakTheSpire.logDebug("{} {}: Testing disqualifying condition: {}", data.filename, identifier, reason);
-            if(condition.test(data, currentStreakCharacterIDs, criteria)) {
-                processResult = ProcessResult.Disqualified;
-                StreakTheSpire.logDebug("{} {}: Disqualified due to: {}", data.filename, identifier, reason);
-                break;
+        try {
+            String currentStreakTimestamp = streakModel.highestStreakTimestamp.get();
+            if (currentStreakTimestamp != null && data.timestamp.compareTo(currentStreakTimestamp) < 0) {
+                StreakTheSpire.logError("{} {}: Highest streak timestamp \"{}\" appears to be from after data.timestamp: {}", data.filename, identifier, currentStreakTimestamp, data.timestamp);
+                return ProcessResult.Disqualified;
             }
-        }
 
-        if(processResult != ProcessResult.Disqualified) {
-            boolean failed = false;
-            for (Map.Entry<LosingCondition, String> entry : losingConditions.entrySet()) {
-                LosingCondition condition = entry.getKey();
+            int streakCount = streakModel.currentStreak.get();
+
+            ProcessResult processResult = ProcessResult.Undefined;
+            for (Map.Entry<DisqualifyingCondition, String> entry : disqualifyingConditions.entrySet()) {
+                DisqualifyingCondition condition = entry.getKey();
                 String reason = entry.getValue();
 
-                StreakTheSpire.logDebug("{} {}: Testing losing condition: {}", data.filename, identifier, reason);
+                StreakTheSpire.logDebug("{} {}: Testing disqualifying condition: {}", data.filename, identifier, reason);
                 if (condition.test(data, currentStreakCharacterIDs, criteria)) {
-                    failed = true;
-                    StreakTheSpire.logDebug("{} {}: Lost due to: {}", data.filename, identifier, reason);
+                    processResult = ProcessResult.Disqualified;
+                    StreakTheSpire.logDebug("{} {}: Disqualified due to: {}", data.filename, identifier, reason);
                     break;
                 }
             }
 
-            if (failed) {
-                streakCount = 0;
-                streakModel.totalValidLosses.set(streakModel.totalValidLosses.get() + 1);
-                processResult = ProcessResult.StreakReset;
-            }
-            else {
-                streakCount++;
-                streakModel.totalValidWins.set(streakModel.totalValidWins.get() + 1);
-                processResult = ProcessResult.StreakIncreased;
+            if (processResult != ProcessResult.Disqualified) {
+                boolean failed = false;
+                for (Map.Entry<LosingCondition, String> entry : losingConditions.entrySet()) {
+                    LosingCondition condition = entry.getKey();
+                    String reason = entry.getValue();
+
+                    StreakTheSpire.logDebug("{} {}: Testing losing condition: {}", data.filename, identifier, reason);
+                    if (condition.test(data, currentStreakCharacterIDs, criteria)) {
+                        failed = true;
+                        StreakTheSpire.logDebug("{} {}: Lost due to: {}", data.filename, identifier, reason);
+                        break;
+                    }
+                }
+
+                if (failed) {
+                    streakCount = 0;
+                    streakModel.totalValidLosses.set(streakModel.totalValidLosses.get() + 1);
+                    processResult = ProcessResult.StreakReset;
+                } else {
+                    streakCount++;
+                    streakModel.totalValidWins.set(streakModel.totalValidWins.get() + 1);
+                    processResult = ProcessResult.StreakIncreased;
+                }
+
+                streakModel.currentStreak.set(streakCount);
+                streakModel.currentStreakTimestamp.set(data.timestamp);
+
+                if (streakModel.highestStreak.get() < streakCount) {
+                    streakModel.highestStreak.set(streakCount);
+                    streakModel.highestStreakTimestamp.set(data.timestamp);
+                }
             }
 
-            streakModel.currentStreak.set(streakCount);
-            streakModel.currentStreakTimestamp.set(data.timestamp);
-
-            if (streakModel.highestStreak.get() < streakCount) {
-                streakModel.highestStreak.set(streakCount);
-                streakModel.highestStreakTimestamp.set(data.timestamp);
-            }
+            streakModel.processedFilenames.add(data.filename);
+            return processResult;
         }
-
-        streakModel.processedFilenames.add(data.filename);
-        return processResult;
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed to process runData \"" + (data != null ? data.filename : "null") + "\": " + ExceptionUtil.getFullMessage(e));
+            return null;
+        }
     }
 
     public String createStreakDebugReport() {

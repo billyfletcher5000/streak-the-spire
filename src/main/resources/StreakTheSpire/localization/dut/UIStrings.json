@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Onderdrukt de melding Spel opgeslagen! in de bovenbalk",
       "characters_title": "Personages",
       "track_characters_title": "Personages volgen",
-      "track_characters_tooltip": "Of dit personage moet worden opgenomen in de tracking en weergave"
+      "track_characters_tooltip": "Of dit personage moet worden opgenomen in de tracking en weergave",
+
+      "troubleshooting_title": "Hulp",
+      "copy_error_log_button_label": "Foutlogboek kopiëren",
+      "copy_error_log_button_tooltip": "Als u problemen ondervindt, kopieert de bovenstaande knop het foutlogboek naar uw klembord,\nplak het op pastebin.com en link het vervolgens op Steam of Github,\nmet een beschrijving van uw probleem om toekomstige oplossingen te vergemakkelijken."
     }
   },
   "streak_the_spire:StreakTips": {

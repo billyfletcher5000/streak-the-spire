@@ -44,6 +44,10 @@ public class LocalizationConstants {
         public static final String CharactersTitle = "characters_title";
         public static final String TrackCharactersTitle = "track_characters_title";
         public static final String TrackCharactersTooltip = "track_characters_tooltip";
+
+        public static final String TroubleshootingTitle = "troubleshooting_title";
+        public static final String CopyErrorLogButtonLabel = "copy_error_log_button_label";
+        public static final String CopyErrorLogButtonTooltip = "copy_error_log_button_tooltip";
     }
 
     public static class StreakTips {

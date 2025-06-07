@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Menyembunyikan notifikasi Game Tersimpan! di bilah atas",
       "characters_title": "Karakter",
       "track_characters_title": "Lacak Karakter",
-      "track_characters_tooltip": "Apakah akan menyertakan karakter ini dalam pelacakan dan tampilan"
+      "track_characters_tooltip": "Apakah akan menyertakan karakter ini dalam pelacakan dan tampilan",
+
+      "troubleshooting_title": "Bantuan",
+      "copy_error_log_button_label": "Salin Log Kesalahan",
+      "copy_error_log_button_tooltip": "Jika Anda mengalami masalah, tombol di atas akan menyalin log kesalahan ke papan klip Anda,\nharap tempelkan di pastebin.com dan kemudian tautkan di Steam atau Github,\ndengan deskripsi masalah Anda untuk membantu perbaikan di masa mendatang."
     }
   },
   "streak_the_spire:StreakTips": {

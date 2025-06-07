@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Pomiń powiadomienie Gra zapisana! na górnym pasku",
       "characters_title": "Postacie",
       "track_characters_title": "Śledź postacie",
-      "track_characters_tooltip": "Czy włączyć tę postać do śledzenia i wyświetlania"
+      "track_characters_tooltip": "Czy włączyć tę postać do śledzenia i wyświetlania",
+
+      "troubleshooting_title": "Pomoc",
+      "copy_error_log_button_label": "Kopiuj dziennik błędów",
+      "copy_error_log_button_tooltip": "W przypadku problemów, powyższy przycisk skopiuje dziennik błędów do schowka.\nProsimy wkleić go na pastebin.com, a następnie zamieścić link na Steam lub Github,\nwraz z opisem problemu, aby pomóc w przyszłych poprawkach."
     }
   },
   "streak_the_spire:StreakTips": {

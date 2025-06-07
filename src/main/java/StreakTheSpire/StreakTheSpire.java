@@ -4,10 +4,7 @@ import StreakTheSpire.Ceremonies.CeremonyManager;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreDecreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.LightFlourishScoreIncreaseCeremony;
 import StreakTheSpire.Ceremonies.Panel.SimpleTextScoreChangeCeremony;
-import StreakTheSpire.Config.CharactersModPanelPage;
-import StreakTheSpire.Config.ConfigModPanel;
-import StreakTheSpire.Config.CriteriaModPanelPage;
-import StreakTheSpire.Config.DisplayPreferencesModPanelPage;
+import StreakTheSpire.Config.*;
 import StreakTheSpire.Controllers.BorderStyleSetController;
 import StreakTheSpire.Controllers.CharacterDisplaySetController;
 import StreakTheSpire.Controllers.PlayerStreakStoreController;
@@ -54,6 +51,8 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     //region Static Data
     private static final Logger logger = LogManager.getLogger(StreakTheSpire.class);
     public static final LoggingLevel loggingLevel = LoggingLevel.INFO;
+    private static final StringBuilder errorLogBuilder = new StringBuilder();
+    public static String getErrorLog() { return errorLogBuilder.toString(); }
     public static float getDeltaTime() { return Gdx.graphics.getDeltaTime(); }
     public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(PropertyTypeAdapters.PropertyTypeAdapter.FACTORY).create();
 
@@ -123,6 +122,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
 
     //region Base Initialisation
     public static void initialize() {
+        errorLogBuilder.append("Error log:\n");
         new StreakTheSpire();
 
         logInfo("Initializing StreakTheSpire!");
@@ -247,6 +247,7 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
         settingsPanel.addPage(new CriteriaModPanelPage());
         settingsPanel.addPage(new CharactersModPanelPage());
         settingsPanel.addPage(new DisplayPreferencesModPanelPage());
+        settingsPanel.addPage(new TroubleshootingModPanelPage());
     }
     //endregion
 
@@ -633,10 +634,12 @@ public class StreakTheSpire implements PostInitializeSubscriber, PostUpdateSubsc
     //region Logging
     public static void logError(String message) {
         logger.error(message);
+        errorLogBuilder.append(message).append("\n");
     }
 
     public static void logError(String message, Object... params) {
         logger.error(message, params);
+        errorLogBuilder.append(String.format(message, params)).append("\n");
     }
 
     public static void logWarning(String message) {

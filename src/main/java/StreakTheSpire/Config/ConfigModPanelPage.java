@@ -1,8 +1,9 @@
 package StreakTheSpire.Config;
 
+import StreakTheSpire.Utils.FixedModButton;
 import StreakTheSpire.Utils.FixedModLabel;
 import StreakTheSpire.Utils.FixedModLabeledToggleButton;
-import StreakTheSpire.Utils.ImprovedModButton;
+import StreakTheSpire.Utils.MultiImageFixedModButton;
 import basemod.*;
 import StreakTheSpire.Utils.Properties.Property;
 import com.badlogic.gdx.graphics.Color;
@@ -113,18 +114,20 @@ public abstract class ConfigModPanelPage {
                                                         Texture maxPressedTexture,
                                                         ModPanel modPanel,
                                                         Consumer<Property<Integer>> callback) {
-        final float buttonWidth = 48.0f * Settings.scale;
-        final float labelWidthPerCharacter = 16.0f * Settings.scale;
-        final float labelYOffset = 12.0f * Settings.scale;
-        final float minMaxYOffset = 5.0f * Settings.scale;
-        final float overallYOffset = -4.0f * Settings.scale;
-        final float buttonPadding = 4.0f * Settings.scale;
+        final float labelWidthPerCharacter = 16.0f;
+        final float labelYOffset = 12.0f;
+        final float minMaxYOffset = 5.0f;
+        final float overallYOffset = -4.0f;
+        final float buttonPadding = 4.0f;
 
         y += overallYOffset;
-        
+
+        Texture leftButtonTex = ImageMaster.loadImage("img/tinyLeftArrow.png");
+        Texture rightButtonTex = ImageMaster.loadImage("img/tinyRightArrow.png");
+
         int maxNumCharacters = String.valueOf(max).length();
 
-        float displayLabelBaseX = x + buttonWidth;
+        float displayLabelBaseX = x + leftButtonTex.getWidth();
         float displayLabelMaxWidth = (maxNumCharacters * labelWidthPerCharacter);
 
         String displayLabelText = property.get().toString();
@@ -138,14 +141,14 @@ public abstract class ConfigModPanelPage {
                 modPanel,
                 label -> {
                     int numCharacters = label.text.length();
-                    label.x = displayLabelBaseX + (displayLabelMaxWidth * 0.5f) - ((labelWidthPerCharacter * numCharacters) * 0.5f);
+                    label.x = (displayLabelBaseX + (displayLabelMaxWidth * 0.5f) - ((labelWidthPerCharacter * numCharacters) * 0.5f)) * Settings.xScale;
                 }
         );
 
-        IUIElement leftButton = new ModButton(
+        IUIElement leftButton = new FixedModButton(
                 x,
                 y,
-                ImageMaster.loadImage("img/tinyLeftArrow.png"),
+                leftButtonTex,
                 modPanel,
                 (btn) -> {
                     if(addToIntPropValue(property, -1, min, max, displayLabel))
@@ -153,12 +156,12 @@ public abstract class ConfigModPanelPage {
                 }
         );
 
-        float newX = x + buttonWidth + displayLabelMaxWidth;
+        float newX = x + leftButtonTex.getWidth() + displayLabelMaxWidth;
 
-        IUIElement rightButton = new ModButton(
+        IUIElement rightButton = new FixedModButton(
                 newX,
                 y,
-                ImageMaster.loadImage("img/tinyRightArrow.png"),
+                rightButtonTex,
                 modPanel,
                 (btn) -> {
                     if(addToIntPropValue(property, 1, min, max, displayLabel))
@@ -166,9 +169,9 @@ public abstract class ConfigModPanelPage {
                 }
         );
 
-        newX += buttonWidth;
+        newX += rightButtonTex.getWidth();
 
-        IUIElement minButton = new ImprovedModButton(
+        IUIElement minButton = new MultiImageFixedModButton(
                 newX,
                 y + minMaxYOffset,
                 minNormalTexture,
@@ -183,7 +186,7 @@ public abstract class ConfigModPanelPage {
 
         newX += minNormalTexture.getWidth() + buttonPadding;
 
-        IUIElement maxButton = new ImprovedModButton(
+        IUIElement maxButton = new MultiImageFixedModButton(
                 newX,
                 y + minMaxYOffset,
                 maxNormalTexture,

@@ -8,13 +8,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.Hitbox;
-import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 
 import java.util.function.Consumer;
 
-public class ImprovedModButton implements IUIElement {
-    private Consumer<ImprovedModButton> click;
+public class MultiImageFixedModButton implements IUIElement {
+    private Consumer<MultiImageFixedModButton> click;
     private Hitbox hb;
     private Texture normalTexture;
     private Texture hoverTexture;
@@ -25,7 +24,7 @@ public class ImprovedModButton implements IUIElement {
     private float h;
     public ModPanel parent;
 
-    public ImprovedModButton(float xPos, float yPos, Texture normalTex, Texture hoverTex, Texture pressedTex, ModPanel p, Consumer<ImprovedModButton> c) {
+    public MultiImageFixedModButton(float xPos, float yPos, Texture normalTex, Texture hoverTex, Texture pressedTex, ModPanel p, Consumer<MultiImageFixedModButton> c) {
         this.normalTexture = normalTex;
         this.hoverTexture = hoverTex;
         this.pressedTexture = pressedTex;

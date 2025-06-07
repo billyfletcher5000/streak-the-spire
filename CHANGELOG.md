@@ -22,3 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 # 0.3.1
 - Updated date formats for all languages to be same as StS run history screen's localised formats
+- Added considerably more exception handling and error logging for streak calculation logic
+- Possibly fixed issues with UI on config screen not scaling properly
+- Added 'Help' section that has a 'Copy Error Log' button that copies the error log to clipboard for error reporting

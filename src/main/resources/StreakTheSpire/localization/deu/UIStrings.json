@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Unterdrückt die Benachrichtigung Spiel gespeichert! in der oberen Leiste",
       "characters_title": "Charaktere",
       "track_characters_title": "Charaktere verfolgen",
-      "track_characters_tooltip": "Ob dieser Charakter in die Verfolgung und Anzeige einbezogen werden soll"
+      "track_characters_tooltip": "Ob dieser Charakter in die Verfolgung und Anzeige einbezogen werden soll",
+
+      "troubleshooting_title": "Hilfe",
+      "copy_error_log_button_label": "Fehlerprotokoll kopieren",
+      "copy_error_log_button_tooltip": "Sollten Probleme auftreten, kopiert die Schaltfläche oben das Fehlerprotokoll in Ihre Zwischenablage,\nbitte fügen Sie es auf pastebin.com ein und dann verlinken Sie es auf Steam oder Github,\nmit einer Beschreibung Ihres Problems, um zukünftige Korrekturen zu unterstützen."
     }
   },
   "streak_the_spire:StreakTips": {

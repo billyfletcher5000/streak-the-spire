@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Подавляет уведомление Игра сохранена! в верхней панели",
       "characters_title": "Персонажи",
       "track_characters_title": "Отслеживать персонажей",
-      "track_characters_tooltip": "Включать ли этого персонажа в отслеживание и отображение"
+      "track_characters_tooltip": "Включать ли этого персонажа в отслеживание и отображение",
+
+      "troubleshooting_title": "Помощь",
+      "copy_error_log_button_label": "Скопировать журнал ошибок",
+      "copy_error_log_button_tooltip": "Если у вас возникнут проблемы, кнопка выше скопирует журнал ошибок в буфер обмена,\nпожалуйста, вставьте его на pastebin.com, а затем прикрепите ссылку на Steam или Github,\nс описанием вашей проблемы, чтобы помочь с будущими исправлениями."
     }
   },
   "streak_the_spire:StreakTips": {

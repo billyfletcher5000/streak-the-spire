@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Придушує сповіщення Гру збережено! у верхній панелі",
       "characters_title": "Персонажі",
       "track_characters_title": "Відстежувати персонажів",
-      "track_characters_tooltip": "Чи включати цього персонажа в відстеження та відображення"
+      "track_characters_tooltip": "Чи включати цього персонажа в відстеження та відображення",
+
+      "troubleshooting_title": "Допомога",
+      "copy_error_log_button_label": "Копіювати журнал помилок",
+      "copy_error_log_button_tooltip": "Якщо у вас виникнуть проблеми, кнопка вище скопіює журнал помилок у буфер обміну,\nбудь ласка, вставте його на pastebin.com, а потім посилайтеся на Steam або Github,\nз описом вашої проблеми, щоб допомогти з майбутніми виправленнями."
     }
   },
   "streak_the_spire:StreakTips": {

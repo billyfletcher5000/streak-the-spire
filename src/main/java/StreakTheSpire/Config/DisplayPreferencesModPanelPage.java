@@ -1,11 +1,11 @@
 package StreakTheSpire.Config;
 
 import StreakTheSpire.Models.DisplayPreferencesModel;
-import StreakTheSpire.Models.StreakCriteriaModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.FixedModLabel;
 import StreakTheSpire.Utils.FixedModLabeledToggleButton;
 import StreakTheSpire.Utils.LocalizationConstants;
+import StreakTheSpire.Utils.LocalizationHelper;
 import basemod.IUIElement;
 import basemod.ModPanel;
 import com.badlogic.gdx.math.Vector2;
@@ -38,8 +38,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 displayPreferencesModel.colouredStreakNumbers,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.ColouredTextLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.ColouredTextTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.ColouredTextLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.ColouredTextTooltip),
                 modPanel,
                 (val) -> { StreakTheSpire.get().saveConfig(); }
         );
@@ -50,8 +50,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
                 elementPosition.x,
                 elementPosition.y,
                 displayPreferencesModel.suppressSaveNotification,
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.SuppressSaveNotificationLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.SuppressSaveNotificationTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.SuppressSaveNotificationLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.SuppressSaveNotificationTooltip),
                 modPanel,
                 (val) -> { StreakTheSpire.get().saveConfig(); }
         );
@@ -59,7 +59,7 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
 
         elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabel renderLayerTitle = new FixedModLabel(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTitle),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerTitle),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,
@@ -70,8 +70,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
 
         elementPosition.y -= ConfigModPanel.LineHeight;
         FixedModLabeledToggleButton button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerPreRoomLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerPreRoomTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerPreRoomLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerPreRoomTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -89,8 +89,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x += (contentDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTopPanelLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerTopPanelTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerTopPanelLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerTopPanelTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -109,8 +109,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
         elementPosition.x = contentTopLeft.x;
         elementPosition.y -= ConfigModPanel.LineHeight;
         button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveMostLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveMostTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerAboveMostLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerAboveMostTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -128,8 +128,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x += (contentDimensions.x / NumCheckboxenPerLine);
         button = new FixedModLabeledToggleButton(
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveAllLabel),
-                uiStrings.TEXT_DICT.get(LocalizationConstants.Config.RenderLayerAboveAllTooltip),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerAboveAllLabel),
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.RenderLayerAboveAllTooltip),
                 elementPosition.x,
                 elementPosition.y,
                 Settings.CREAM_COLOR,
@@ -147,7 +147,8 @@ public class DisplayPreferencesModPanelPage extends ConfigModPanelPage {
 
         elementPosition.x = contentTopLeft.x;
         elementPosition.y = contentTopLeft.y - contentDimensions.y + 0f;
-        FixedModLabel defaultNoteLabel = new FixedModLabel(uiStrings.TEXT_DICT.get(LocalizationConstants.Config.DefaultNoteLabel),
+        FixedModLabel defaultNoteLabel = new FixedModLabel(
+                LocalizationHelper.locDict(uiStrings, LocalizationConstants.Config.DefaultNoteLabel),
                 elementPosition.x,
                 elementPosition.y,
                 FontHelper.tipBodyFont,

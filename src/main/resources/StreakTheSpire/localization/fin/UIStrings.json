@@ -39,7 +39,11 @@
       "suppress_save_notification_tooltip": "Piilottaa Peli tallennettu! -ilmoituksen yläpalkista",
       "characters_title": "Hahmot",
       "track_characters_title": "Seuraa hahmoja",
-      "track_characters_tooltip": "Sisällytetäänkö tämä hahmo seurantaan ja näyttöön"
+      "track_characters_tooltip": "Sisällytetäänkö tämä hahmo seurantaan ja näyttöön",
+
+      "troubleshooting_title": "Ohje",
+      "copy_error_log_button_label": "Kopioi virheloki",
+      "copy_error_log_button_tooltip": "Jos sinulla on ongelmia, yllä oleva painike kopioi virhelokin leikepöydällesi.\nLiitä se pastebin.com-sivustolle ja linkitä se sitten Steamissa tai Githubissa,\nja lisää kuvauksen ongelmastasi auttaaksesi tulevissa korjauksissa."
     }
   },
   "streak_the_spire:StreakTips": {

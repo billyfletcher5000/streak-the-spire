@@ -1,29 +1,37 @@
 package StreakTheSpire.Config;
 
 import StreakTheSpire.StreakTheSpire;
+import StreakTheSpire.Utils.FixedModLabeledButton;
+import StreakTheSpire.Utils.LocalizationHelper;
 import basemod.IUIElement;
-import basemod.ModLabeledButton;
 import basemod.ModPanel;
 import com.badlogic.gdx.math.Vector2;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.localization.UIStrings;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class ConfigModPanel extends ModPanel {
-    public static final Vector2 PageTopLeft = new Vector2(355.0f * Settings.scale, 800.0f * Settings.scale);
-    public static final Vector2 PageDimensions = new Vector2((1400.0f - 355.0f) * Settings.scale, (730.0f - 140.0f) * Settings.scale);
+    /*
+    public static final Vector2 PageTopLeft = new Vector2(355.0f * Settings.xScale, 800.0f * Settings.yScale);
+    public static final Vector2 PageDimensions = new Vector2((1400.0f - 355.0f) * Settings.xScale, (730.0f - 140.0f) * Settings.yScale);
+    public static final float TabLineHeight = 50.0f * Settings.yScale;
+    public static final float TitleLineHeight = 60.0f * Settings.yScale;
+    public static final float LineHeight = 50.0f * Settings.yScale;
+     */
+
+    public static final Vector2 PageTopLeft = new Vector2(355.0f, 800.0f);
+    public static final Vector2 PageDimensions = new Vector2((1400.0f - 355.0f), (730.0f - 140.0f));
     public static final float TabLineHeight = 50.0f;
     public static final float TitleLineHeight = 60.0f;
     public static final float LineHeight = 50.0f;
 
+
     private ConfigModPanelPage currentPage = null;
     private ArrayList<ConfigModPanelPage> pages = new ArrayList<>();
-    private HashMap<ConfigModPanelPage, ModLabeledButton> pageButtons = new HashMap<>();
+    private HashMap<ConfigModPanelPage, FixedModLabeledButton> pageButtons = new HashMap<>();
     private ConfigModPanelPage queuedNextPage = null;
 
     public ConfigModPanelPage getCurrentPage() { return currentPage; }
@@ -49,7 +57,7 @@ public class ConfigModPanel extends ModPanel {
             this.getRenderElements().removeAll(elements);
             this.getUpdateElements().removeAll(elements);
 
-            ModLabeledButton modLabeledButton = pageButtons.get(currentPage);
+            FixedModLabeledButton modLabeledButton = pageButtons.get(currentPage);
             if(modLabeledButton != null) {
                 modLabeledButton.color = Settings.CREAM_COLOR;
             }
@@ -64,7 +72,7 @@ public class ConfigModPanel extends ModPanel {
                 addUIElement(element);
             }
 
-            ModLabeledButton modLabeledButton = pageButtons.get(currentPage);
+            FixedModLabeledButton modLabeledButton = pageButtons.get(currentPage);
             if(modLabeledButton != null) {
                 modLabeledButton.color = Settings.GOLD_COLOR;
             }
@@ -100,8 +108,9 @@ public class ConfigModPanel extends ModPanel {
         float xOffset = 0.0f;
 
         for(ConfigModPanelPage page : pages) {
-            String pageTitle = uiStrings.TEXT_DICT.get(page.getTitleLocalizationID());
-            ModLabeledButton tabButton = new ModLabeledButton(pageTitle,
+            String pageTitle = LocalizationHelper.locDict(uiStrings, page.getTitleLocalizationID());
+            FixedModLabeledButton tabButton = new FixedModLabeledButton(
+                    pageTitle,
                     topLeft.x + xOffset,
                     topLeft.y,
                     Settings.CREAM_COLOR,
@@ -114,8 +123,8 @@ public class ConfigModPanel extends ModPanel {
 
             page.initialise(this, offsetPageTopLeft, offsetPageDimensions);
 
-            float tabButtonWidth = Math.max(0.0F, FontHelper.getSmartWidth(FontHelper.buttonLabelFont, pageTitle, 9999.0f, 0.0f) - 18.0f * Settings.scale) + 70.0f;
-            xOffset += tabButtonWidth + (10f * Settings.scale);
+            float tabButtonWidth = Math.max(0.0F, FontHelper.getSmartWidth(FontHelper.buttonLabelFont, pageTitle, 9999.0f, 0.0f) - 18.0f) + (70.0f * Settings.xScale);
+            xOffset += (tabButtonWidth * (1.0f / Settings.xScale)) + 10f;
         }
 
         setPageIndex(0);
