@@ -127,13 +127,16 @@ public class PlayerStreakView extends UIHorizontalLayoutGroup implements IView {
         String currentStreakAchievedDateTime = model.currentStreakTimestamp.get() != null ? StreakTheSpire.get().getDateTimeString(model.currentStreakTimestamp.get(), dateTimeFormat) : "";
         String highestStreakAchievedDateTime = model.highestStreakTimestamp.get() != null ? StreakTheSpire.get().getDateTimeString(model.highestStreakTimestamp.get(), dateTimeFormat) : "";
 
+        float winRateDecimal = ((float)model.totalValidWins.get() / (float)(model.totalValidWins.get() + model.totalValidLosses.get()));
+        int winRate = Math.round(winRateDecimal * 100.0f);
+
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.CurrentStreakText) + model.currentStreak.get() + " NL ";
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeAchievedText) + currentStreakAchievedDateTime + " NL ";
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.HighestStreakText) + model.highestStreak.get() + " NL ";
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.DateTimeAchievedText) + highestStreakAchievedDateTime + " NL ";
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.TotalWinsText) + model.totalValidWins.get() + " NL ";
         output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.TotalLossesText) + model.totalValidLosses.get() + " NL ";
-        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.WinRateText) + ((float)model.totalValidWins.get() / (float)model.totalValidLosses.get());
+        output += tipUIStrings.TEXT_DICT.get(LocalizationConstants.StreakTips.WinRateText) + winRate + "%";
 
         return output;
     }
