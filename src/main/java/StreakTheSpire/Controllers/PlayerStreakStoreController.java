@@ -9,6 +9,7 @@ import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.ExceptionUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 
 import java.io.File;
 import java.util.*;
@@ -60,7 +61,23 @@ public class PlayerStreakStoreController {
 
         model.playerToStreak.removeIf(m -> !criteria.trackedCharacterClasses.contains(m.identifier.get()) && !m.identifier.get().equals(RotatingConstants.Identifier));
 
+        try {
+            for(String playerClass : criteria.trackedCharacterClasses) {
+                PlayerStreakModel streakModel = getStreakModel(playerClass);
+                if (streakModel == null) {
+                    streakModel = new PlayerStreakModel();
+                    streakModel.identifier.set(playerClass);
+                    model.playerToStreak.add(streakModel);
+                }
+            }
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed while creating missing streak models: " + ExceptionUtil.getFullMessage(e));
+            return;
+        }
+
         FileHandle[] baseSubFolders;
+        FileHandle[] profileFilteredSubFolders;
         FileHandle[] subfolders;
 
         try {
@@ -72,8 +89,30 @@ public class PlayerStreakStoreController {
         }
 
         try {
-            subfolders = Arrays.stream(baseSubFolders).filter(fileHandle ->
-                    criteria.trackedCharacterClasses.contains(fileHandle.name())
+            profileFilteredSubFolders = Arrays.stream(baseSubFolders).filter(subFolder -> {
+                switch (CardCrawlGame.saveSlot) {
+                    case 0:
+                        if (subFolder.name().contains("0_") || subFolder.name().contains("1_") || subFolder.name().contains("2_")) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        if (!subFolder.name().contains(CardCrawlGame.saveSlot + "_")) {
+                            return false;
+                        }
+                }
+
+                return true;
+            }).toArray(FileHandle[]::new);
+        }
+        catch (Exception e) {
+            StreakTheSpire.logError("Failed to find runs subfolders: " + ExceptionUtil.getFullMessage(e));
+            return;
+        }
+
+        try {
+            subfolders = Arrays.stream(profileFilteredSubFolders).filter(fileHandle ->
+                    criteria.trackedCharacterClasses.contains(getProfileIndependentFolderName(fileHandle.name()))
             ).toArray(FileHandle[]::new);
         }
         catch (Exception e) {
@@ -91,7 +130,7 @@ public class PlayerStreakStoreController {
 
             StreakTheSpire.logDebug("Evaluating Subfolder: " + subFolder.path());
 
-            String playerClass = subFolder.name();
+            String playerClass = getProfileIndependentFolderName(subFolder.name());
 
             if(playerClass == null)
                 continue;
@@ -300,6 +339,18 @@ public class PlayerStreakStoreController {
         StreakReset,
         Disqualified,
         Undefined
+    }
+
+    public static final int MAX_NUM_PROFILES = 3;
+    private String getProfileIndependentFolderName(String folderName) {
+        for(int i = 0; i < MAX_NUM_PROFILES; i++) {
+            String testPrefix = i + "_";
+            if(folderName.startsWith(testPrefix)) {
+                return folderName.substring(testPrefix.length());
+            }
+        }
+
+        return folderName;
     }
 
     // Returns whether or not the run qualified for victory testing, not whether it was a pass or not, to aid in filtering

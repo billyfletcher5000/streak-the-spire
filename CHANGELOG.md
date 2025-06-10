@@ -25,3 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added considerably more exception handling and error logging for streak calculation logic
 - Possibly fixed issues with UI on config screen not scaling properly
 - Added 'Help' section that has a 'Copy Error Log' button that copies the error log to clipboard for error reporting
+
+# 0.3.2
+- Fixed win-rate being calculated incorrectly, is now a percentage of wins out of total games played
+- Fixed support for multiple profiles, it will now load runs dependent on profile and recalculate streak data when switching profile
