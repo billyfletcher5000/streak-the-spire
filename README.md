@@ -103,7 +103,7 @@ Each option should have a tooltip that explains what it does in detail, simply h
 - Ability to add in historical, untracked streaks, in case you don't have your full run history
 - Static image and text displays for characters
 - Custom character support
-- Localised date formats with option for UK vs US style when using english
+- More filtering options for historical data
 
 ## Development Instructions
 
