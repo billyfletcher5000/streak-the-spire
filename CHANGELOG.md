@@ -29,3 +29,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 # 0.3.2
 - Fixed win-rate being calculated incorrectly, is now a percentage of wins out of total games played
 - Fixed support for multiple profiles, it will now load runs dependent on profile and recalculate streak data when switching profile
+
+# 0.3.3
+- Fixed issue where winning with a single character multiple times in a row would increase the rotating streak if you didn't cause the full data to be recalculated by changing an option

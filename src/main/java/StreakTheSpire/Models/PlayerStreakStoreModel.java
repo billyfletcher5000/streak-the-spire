@@ -2,6 +2,7 @@ package StreakTheSpire.Models;
 
 import StreakTheSpire.Utils.Properties.Property;
 import StreakTheSpire.Utils.Properties.PropertyLinkedHashSet;
+import StreakTheSpire.Utils.Properties.PropertyList;
 
 public class PlayerStreakStoreModel implements IModel, IConfigDataModel {
     public PropertyLinkedHashSet<PlayerStreakModel> playerToStreak = new PropertyLinkedHashSet<>();
