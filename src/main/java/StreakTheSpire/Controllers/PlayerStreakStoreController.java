@@ -7,6 +7,7 @@ import StreakTheSpire.Models.StreakCriteriaModel;
 import StreakTheSpire.Models.PlayerStreakStoreModel;
 import StreakTheSpire.StreakTheSpire;
 import StreakTheSpire.Utils.ExceptionUtil;
+import StreakTheSpire.Utils.Properties.PropertyList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -264,13 +265,13 @@ public class PlayerStreakStoreController {
 
 
                 PlayerStreakModel streakModel = null;
-                ArrayList<String> currentStreakCharacterIDs = null;
+                PropertyList<String> currentStreakCharacterIDs = null;
                 PlayerStreakModel streakModelDuplicate = null;
                 boolean errorOccurred = false;
 
                 try {
                     streakModel = model.rotatingPlayerStreakModel.get();
-                    currentStreakCharacterIDs = streakModel.currentStreakCharacterIDs;
+                    currentStreakCharacterIDs = new PropertyList<>(streakModel.currentStreakCharacterIDs);
 
                     if (!temporaryStreakDuplicateMap.containsKey(streakModel)) {
                         temporaryStreakDuplicateMap.put(streakModel, streakModel.cpy());
@@ -311,6 +312,16 @@ public class PlayerStreakStoreController {
                 }
                 catch (Exception e) {
                     StreakTheSpire.logError("Failed removing rotating streak disqualifying condition: " + ExceptionUtil.getFullMessage(e));
+                }
+
+                try {
+                    if(!errorOccurred) {
+                        streakModelDuplicate.currentStreakCharacterIDs.clear();
+                        streakModelDuplicate.currentStreakCharacterIDs.addAll(currentStreakCharacterIDs);
+                    }
+                }
+                catch (Exception e) {
+                    StreakTheSpire.logError("Failed when updating current streak rotating character IDs: " + ExceptionUtil.getFullMessage(e));
                 }
             }
         }
